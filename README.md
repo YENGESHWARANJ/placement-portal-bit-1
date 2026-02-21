@@ -1,3 +1,5 @@
+# placement-portal
+
 # 🚀 Quick Start Guide - AI Placement Platform
 
 ## Instant Setup (3 Steps)
