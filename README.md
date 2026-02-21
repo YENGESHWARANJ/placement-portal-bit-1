@@ -2,6 +2,43 @@
 
 # 🚀 Quick Start Guide - AI Placement Platform
 
+---
+
+## 🌐 Deploy frontend + backend (Render + Vercel)
+
+Your repo is ready. Deploy **backend first**, then **frontend**.
+
+### Backend (Render)
+
+1. Go to **[render.com](https://render.com)** → **New +** → **Web Service**.
+2. Connect GitHub and select repo **YENGESHWARANJ/placement-portal**.
+3. Set:
+   - **Root Directory:** `backend`
+   - **Build Command:** `npm install && npm run build`
+   - **Start Command:** `npm start`
+4. **Environment** → Add:
+   - `NODE_ENV` = `production`
+   - `MONGODB_URI` = your [MongoDB Atlas](https://www.mongodb.com/atlas) connection string
+   - `JWT_SECRET` = long random string (32+ chars)
+   - `JWT_REFRESH_SECRET` = another long random string
+   - `CORS_ORIGIN` = `https://your-app.vercel.app` (add your Vercel URL after frontend deploy)
+5. **Create Web Service** → wait for deploy → copy the URL (e.g. `https://placement-api.onrender.com`).  
+   Your **API URL** = that URL + `/api` → `https://placement-api.onrender.com/api`
+
+### Frontend (Vercel)
+
+1. Go to **[vercel.com](https://vercel.com)** → **Add New** → **Project**.
+2. Import the same repo **YENGESHWARANJ/placement-portal**.
+3. Set **Root Directory** to `frontend` (click Edit).
+4. **Environment Variables** → Add:
+   - `VITE_API_URL` = `https://YOUR-RENDER-URL.onrender.com/api` (from step 5 above)
+5. **Deploy** → copy your Vercel URL (e.g. `https://placement-portal.vercel.app`).
+6. In **Render** → your backend service → **Environment** → set `CORS_ORIGIN` = your Vercel URL → Save.
+
+Full details: **[DEPLOY-RENDER-VERCEL.md](./DEPLOY-RENDER-VERCEL.md)**
+
+---
+
 ## Instant Setup (3 Steps)
 
 ### 1️⃣ Start Services
