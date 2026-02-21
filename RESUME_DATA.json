@@ -1,0 +1,59 @@
+{
+    "name": "Harry Potter",
+    "role": "Senior Designer",
+    "email": "harry.potter@hogwarts.edu",
+    "phone": "+44 123 456 7890",
+    "summary": "An artist with conceptual creative practice with a strong background in print and digital media. Experienced in creating and implementing branding guidelines, layout, packaging and UI for desktop and mobile designs. Adept in visualizing and executing creative concepts, multitasking and adhering to tight deadlines.",
+    "experience": [
+        {
+            "role": "Senior Graphic Designer",
+            "company": "Vertical Inc",
+            "duration": "Aug 2012 - Present",
+            "details": [
+                "Designed and implemented HTML email templates for marketing campaigns.",
+                "Created engaging and interactive websites for clients.",
+                "Worked closely with the development team to ensure designs were implemented correctly.",
+                "Collaborated with clients to understand their needs and create original artwork."
+            ]
+        },
+        {
+            "role": "Junior Graphic Designer",
+            "company": "Frost Inc",
+            "duration": "Feb 2011 - Jul 2012",
+            "details": [
+                "Assisted in the design of print and digital marketing materials.",
+                "Created visual assets for social media.",
+                "Support the creative team in brainstorming and executing concepts."
+            ]
+        }
+    ],
+    "education": [
+        {
+            "degree": "Masters in Graphic Design",
+            "institution": "University of Hogwarts",
+            "duration": "Sep 2008 - Dec 2010",
+            "details": "Specialized in digital media and UI/UX design."
+        },
+        {
+            "degree": "Bachelors in Fine Arts",
+            "institution": "University of Hogwarts",
+            "duration": "Sep 2005 - July 2008",
+            "details": "Focus on visual arts and design theory."
+        }
+    ],
+    "skills": [
+        "Leadership",
+        "Communication",
+        "Teamwork",
+        "Typography",
+        "Branding",
+        "UI/UX Design",
+        "Adobe Creative Suite",
+        "HTML/CSS"
+    ],
+    "languages": [
+        "English",
+        "Spanish",
+        "French"
+    ]
+}

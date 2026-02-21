@@ -1,0 +1,47 @@
+﻿
+≡ƒöä Attempting to connect to MongoDB... (Attempt 1/3)
+≡ƒôí Connection string: mongodb://***:***@ac-d7j7adw-shard-00-00.m6vmoms.mongodb.net:27017,ac-d7j7adw-shard-00-01.m6vmoms.mongodb.net:27017,ac-d7j7adw-shard-00-02.m6vmoms.mongodb.net:27017/placement?ssl=true&authSource=admin&retryWrites=true&w=majority&appName=Cluster0
+Γ£à MongoDB connected successfully!
+≡ƒôè Database: placement
+≡ƒîÉ Host: ac-d7j7adw-shard-00-00.m6vmoms.mongodb.net
+node.exe : Error: listen 
+EADDRINUSE: address already 
+in use :::5000
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
+    + CategoryInfo          
+    : NotSpecified: (Error  
+  : listen E... in use ::   
+ :5000:String) [], Remot    
+eException
+    + FullyQualifiedErrorId 
+    : NativeCommandError
+ 
+    at 
+Server.setupListenHandle 
+[as _listen2] 
+(node:net:1940:16)
+    at listenInCluster 
+(node:net:1997:12)
+    at Server.listen 
+(node:net:2102:7)
+    at C:\Users\ADMIN\Deskto
+p\ai_application\placement a
+pplication\backend\src\serve
+r.ts:17:14
+    at 
+processTicksAndRejections (n
+ode:internal/process/task_qu
+eues:105:5) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 5000
+}

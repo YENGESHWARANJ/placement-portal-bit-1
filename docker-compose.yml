@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+
+  mongo:
+    image: mongo:7
+    container_name: placement-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+
+  ai-gateway:
+    build:
+      context: ./ai-services
+      dockerfile: Dockerfile
+    container_name: placement-ai
+    restart: always
+    ports:
+      - "8000:8000"
+
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: placement-backend
+    restart: always
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - mongo
+      - ai-gateway
+
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: placement-frontend
+    restart: always
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+
+  nginx:
+    image: nginx:latest
+    container_name: placement-nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - backend
+      - ai-gateway
+
+
+volumes:
+  mongo_data:

@@ -1,0 +1,235 @@
+/* ======================
+   BACKGROUND STAGE
+====================== */
+
+.neo-stage {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #130a2a, #02010a);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* moving meshes */
+
+.mesh {
+  position: absolute;
+  width: 60vw;
+  height: 60vw;
+  filter: blur(160px);
+  opacity: 0.35;
+  animation: drift 18s linear infinite;
+}
+
+.mesh-1 {
+  background: #8b5cf6;
+  top: -20%;
+  left: -20%;
+}
+
+.mesh-2 {
+  background: #ec4899;
+  bottom: -30%;
+  right: -20%;
+  animation-delay: 6s;
+}
+
+.mesh-3 {
+  background: #22d3ee;
+  top: 30%;
+  right: 20%;
+  animation-delay: 12s;
+}
+
+@keyframes drift {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(120px, -140px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* ======================
+   MAIN CARD
+====================== */
+
+.neo-card {
+  width: 100%;
+  max-width: 1200px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(28px);
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  z-index: 5;
+  animation: pop 1.2s ease forwards;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ======================
+   LEFT PANEL
+====================== */
+
+.neo-left {
+  padding: 80px;
+  color: white;
+}
+
+.neo-left h1 {
+  font-size: 72px;
+  font-weight: 900;
+}
+
+.neo-left h1 span {
+  background: linear-gradient(90deg, #22d3ee, #a855f7);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.neo-left p {
+  margin-top: 20px;
+  opacity: 0.7;
+  max-width: 380px;
+}
+
+.badges span {
+  display: inline-block;
+  margin: 30px 10px 0 0;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ======================
+   RIGHT PANEL
+====================== */
+
+.neo-right {
+  padding: 80px;
+  color: white;
+}
+
+.neo-right h2 {
+  font-size: 36px;
+  margin-bottom: 40px;
+}
+
+/* floating input */
+
+.neo-input {
+  position: relative;
+  margin-bottom: 28px;
+}
+
+.neo-input input {
+  width: 100%;
+  padding: 18px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  outline: none;
+  color: white;
+}
+
+.neo-input label {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  opacity: 0.6;
+  transition: 0.3s;
+}
+
+.neo-input input:focus + label,
+.neo-input input:not(:placeholder-shown) + label {
+  top: 6px;
+  font-size: 12px;
+  opacity: 1;
+}
+
+/* ======================
+   BUTTON
+====================== */
+
+.neo-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 18px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #8b5cf6, #ec4899);
+  border: none;
+  color: white;
+  font-weight: 700;
+  position: relative;
+  overflow: hidden;
+}
+
+.neo-btn i {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  to {
+    transform: translateX(200%);
+  }
+}
+
+.neo-btn:hover {
+  transform: scale(1.03);
+}
+
+/* ======================
+   LINKS
+====================== */
+
+.neo-links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  opacity: 0.7;
+}
+
+.neo-links span:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* responsive */
+
+@media (max-width: 900px) {
+  .neo-card {
+    grid-template-columns: 1fr;
+  }
+
+  .neo-left {
+    display: none;
+  }
+}
