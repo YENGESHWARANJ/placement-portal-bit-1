@@ -128,8 +128,8 @@ export default function RecruiterProfile() {
                     <div className="bg-indigo-600 rounded-[50px] p-10 text-white shadow-2xl relative overflow-hidden group">
                         <div className="absolute bottom-0 left-0 h-40 w-40 bg-white/10 rounded-full blur-[80px] -ml-20 -mb-20 group-hover:bg-white/20 transition-all"></div>
                         <h3 className="text-2xl font-black mb-10 tracking-tight">Recruiting Performance</h3>
-                        <div className="h-40">
-                            <ResponsiveContainer width="100%" height="100%">
+                        <div className="h-40 w-full">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={100}>
                                 <BarChart data={hiringData}>
                                     <Bar dataKey="hires" radius={[5, 5, 0, 0]}>
                                         {hiringData.map((entry, index) => (

@@ -7,6 +7,10 @@ export interface SavedJobItem {
     id: string;
     title: string;
     company: string;
+    logo?: string;
+    location?: string;
+    type?: string;
+    salary?: string;
 }
 
 function loadSavedFromStorage(): SavedJobItem[] {
@@ -47,15 +51,22 @@ export function useSavedJobs() {
     const isSaved = useCallback((id: string) => savedItems.some((s) => s.id === id), [savedItems]);
 
     const toggleSave = useCallback(
-        async (job: { _id: string; title?: string; company?: string }) => {
+        async (job: { _id: string; title?: string; company?: string; logo?: string; location?: string; type?: string; salary?: string }) => {
             const id = job._id;
             const title = job.title ?? "Untitled";
             const company = job.company ?? "Unknown";
+            const logo = job.logo;
+            const location = job.location;
+            const type = job.type;
+            const salary = job.salary;
+
             let wasRemoved = false;
             setSavedItems((prev) => {
                 const exists = prev.some((s) => s.id === id);
                 wasRemoved = exists;
-                const next = exists ? prev.filter((s) => s.id !== id) : [...prev, { id, title, company }];
+                const next = exists
+                    ? prev.filter((s) => s.id !== id)
+                    : [...prev, { id, title, company, logo, location, type, salary }];
                 saveToStorage(next);
                 return next;
             });

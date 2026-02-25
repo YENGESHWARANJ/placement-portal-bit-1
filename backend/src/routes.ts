@@ -17,6 +17,7 @@ import arenaRoutes from "./modules/arena/arena.routes";
 import adminRoutes from "./modules/admin/admin.routes";
 import placementDriveRoutes from "./modules/placement-drives/drive.routes";
 import companyRoutes from "./modules/companies/company.routes";
+import activityRoutes from "./modules/activity/activity.routes";
 
 const router = Router();
 
@@ -36,5 +37,6 @@ router.use("/roadmap", roadmapRoutes);
 router.use("/resources", resourceRoutes);
 router.use("/assessments", assessmentRoutes);
 router.use("/arena", arenaRoutes);
+router.use("/activity", activityRoutes);
 
 export default router;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
     Expand,
     ChevronRight,
@@ -19,8 +19,19 @@ import {
     GraduationCap,
     Clock,
     CheckCircle2,
-    Target
-} from 'lucide-react';
+    Target,
+    Activity,
+    Award,
+    Sparkles,
+    Layers,
+    Cpu,
+    Mail,
+    Phone,
+    Globe,
+    Github,
+    Linkedin,
+    Twitter
+} from "lucide-react";
 import {
     ResponsiveContainer,
     RadarChart,
@@ -29,12 +40,22 @@ import {
     Radar,
     PieChart,
     Pie,
-    Cell
-} from 'recharts';
-import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
-import { cn } from '../../utils/cn';
-import { ProfileCompleteness } from '../../components/ProfileCompleteness';
+    Cell,
+    Tooltip
+} from "recharts";
+import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
+import { cn } from "../../utils/cn";
+import { ProfileCompleteness } from "../../components/ProfileCompleteness";
+
+const stagger = {
+    container: { animate: { transition: { staggerChildren: 0.1 } } },
+    item: {
+        initial: { opacity: 0, y: 20 },
+        animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] as const } }
+    }
+};
 
 export default function MainProfile() {
     const navigate = useNavigate();
@@ -44,7 +65,7 @@ export default function MainProfile() {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const res = await api.get('/students/profile');
+                const res = await api.get("/students/profile");
                 setProfile((res.data as any).data);
             } catch (err) {
                 console.error("Profile sync failed", err);
@@ -55,235 +76,277 @@ export default function MainProfile() {
         fetchProfile();
     }, []);
 
-    if (loading) return <div className="h-full flex items-center justify-center animate-pulse font-black text-slate-300 italic tracking-[0.3em] uppercase text-xl">Accessing Biosphere...</div>;
-    if (!profile) return <div>Access denied. Authentication required.</div>;
+    if (loading) {
+        return (
+            <div className="h-[80vh] flex flex-col items-center justify-center space-y-6">
+                <div className="h-12 w-12 border-4 border-apple-blue/10 border-t-apple-blue rounded-full animate-spin" />
+                <p className="text-[11px] font-bold text-apple-gray-400 uppercase tracking-widest animate-pulse">Synchronizing Profile...</p>
+            </div>
+        );
+    }
+
+    if (!profile) return (
+        <div className="p-20 text-center bg-white rounded-[40px] border border-apple-gray-100 shadow-sm">
+            <h3 className="text-xl font-bold text-apple-gray-900 tracking-tight">Access Denied</h3>
+            <p className="text-apple-gray-400 mt-2 font-medium">Profile synchronization failed. Please try again.</p>
+        </div>
+    );
 
     const radarData = [
-        { subject: 'Problem Solving', A: profile.aptitudeScore || 70, fullMark: 100 },
-        { subject: 'Creative', A: 75, fullMark: 100 },
-        { subject: 'Skills', A: profile.codingScore || 85, fullMark: 100 },
-        { subject: 'Critical Thinking', A: 80, fullMark: 100 },
-        { subject: 'Discipline', A: 95, fullMark: 100 },
+        { s: "Logic", A: profile.aptitudeScore || 70 },
+        { s: "Creative", A: 75 },
+        { s: "Syntax", A: profile.codingScore || 85 },
+        { s: "Neural", A: 80 },
+        { s: "Focus", A: 95 },
     ];
 
-    const timeData = [
-        { name: 'Core Skill', value: profile.technicalScore || 65, color: '#FF7D54' },
-        { name: 'Interface Skill', value: profile.interviewScore || 45, color: '#4F46E5' },
+    const distributionData = [
+        { name: "Technical", value: profile.technicalScore || 65, color: "#0071e3" },
+        { name: "Soft Skills", value: profile.interviewScore || 45, color: "#6366f1" },
     ];
 
     return (
-        <div className="flex flex-col xl:flex-row gap-10 h-full animate-in fade-in slide-in-from-bottom-4 duration-1000">
-
-            {/* 1. CORE INTELLIGENCE (LEFT GRID) */}
-            <div className="flex-1 space-y-10">
-                <div className="flex justify-between items-center mb-6">
-                    <div>
-                        <h2 className="text-3xl font-black italic text-slate-800 uppercase tracking-tighter">Biosphere Core</h2>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-1 italic">Interconnected Skill Profile Ledger</p>
+        <motion.div
+            variants={stagger.container}
+            initial="initial"
+            animate="animate"
+            className="space-y-12 pb-20"
+        >
+            {/* Header */}
+            <motion.div variants={stagger.item} className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                <div>
+                    <span className="text-[11px] font-bold text-apple-blue uppercase tracking-[0.2em] mb-2 block">Identity</span>
+                    <h1 className="text-4xl font-bold text-apple-gray-900 tracking-tight">Student Profile</h1>
+                    <p className="text-apple-gray-400 mt-2 font-medium">Your professional footprint and skill matrix.</p>
+                </div>
+                <div className="flex gap-3">
+                    <button onClick={() => navigate("/onboarding")} className="apple-btn-secondary px-6 py-2.5 flex items-center gap-2">
+                        <Zap className="h-4 w-4" />
+                        <span>Update Skills</span>
+                    </button>
+                    <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100/50">
+                        <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider">Profile Optimized</span>
                     </div>
                 </div>
+            </motion.div>
 
-                <ProfileCompleteness profile={profile} className="mb-8" />
+            <div className="grid lg:grid-cols-12 gap-10">
+                {/* Left Column: Bio & Core Info */}
+                <div className="lg:col-span-4 space-y-10">
+                    <motion.div variants={stagger.item} className="apple-card p-12 text-center relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-apple-blue/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-apple-blue/10 transition-all duration-700" />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Radar Chart Card */}
-                    <div className="bg-white p-8 rounded-[45px] shadow-sm hover:shadow-xl transition-all duration-500 group relative">
-                        <div className="flex justify-between items-center mb-6">
-                            <div>
-                                <h3 className="text-lg font-black italic text-slate-800 uppercase tracking-tight">Psychometric Radar</h3>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Cognitive Signal Intensity</p>
+                        <div className="relative z-10 flex flex-col items-center">
+                            <div className="h-40 w-40 rounded-[40px] bg-apple-gray-900 p-1 mb-8 shadow-2xl relative group/avatar">
+                                <div className="h-full w-full rounded-[38px] bg-apple-gray-800 flex items-center justify-center text-white text-6xl font-bold overflow-hidden">
+                                    {profile.name.charAt(0)}
+                                    <div className="absolute inset-0 bg-apple-blue/10 opacity-0 group-hover/avatar:opacity-100 transition-opacity" />
+                                </div>
+                                <div className="absolute -bottom-2 -right-2 h-10 w-10 bg-apple-blue rounded-xl border-4 border-white flex items-center justify-center shadow-lg">
+                                    <Award className="h-5 w-5 text-white" />
+                                </div>
                             </div>
-                            <div className="h-10 w-10 rounded-2xl bg-[#1E2342] flex items-center justify-center text-white shadow-lg">
-                                <Target className="h-5 w-5" />
-                            </div>
-                        </div>
-                        <div className="h-[250px] w-full">
-                            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-                                <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
-                                    <PolarGrid stroke="#E2E8F0" />
-                                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#94A3B8', fontSize: 8, fontWeight: 900 }} />
-                                    <Radar name="Skills" dataKey="A" stroke="#FF7D54" fill="#FF7D54" fillOpacity={0.6} />
-                                </RadarChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </div>
 
-                    {/* Interest Patterns Card */}
-                    <div className="bg-white p-8 rounded-[45px] shadow-sm">
-                        <div className="flex justify-between items-center mb-8">
-                            <div>
-                                <h3 className="text-lg font-black italic text-slate-800 uppercase tracking-tight">Interest Flux</h3>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Natural Propensity Nodes</p>
-                            </div>
-                            <div className="h-10 w-10 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 border border-orange-100">
-                                <Zap className="h-5 w-5" />
-                            </div>
-                        </div>
-                        <div className="space-y-6">
-                            <InterestBar label="Logic Protocol" value={85} color="bg-[#1E2342]" />
-                            <InterestBar label="Syntactic Skill" value={70} color="bg-[#FF7D54]" />
-                            <InterestBar label="Creative Vector" value={45} color="bg-[#F59E0B]" />
-                            <InterestBar label="Enterprise Logic" value={60} color="bg-[#4F46E5]" />
-                        </div>
-                    </div>
+                            <h2 className="text-3xl font-bold text-apple-gray-900 tracking-tight mb-2">{profile.name}</h2>
+                            <p className="text-[11px] font-bold text-apple-blue uppercase tracking-[0.3em] mb-8">Software Engineer</p>
 
-                    {/* Ongoing Status Card */}
-                    <div className="bg-white p-8 rounded-[45px] shadow-sm">
-                        <div className="flex justify-between items-center mb-8">
-                            <div>
-                                <h3 className="text-lg font-black italic text-slate-800 uppercase tracking-tight">Active Funnel</h3>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Concurrent Learning Clusters</p>
+                            <div className="space-y-4 w-full text-left">
+                                <InfoRow icon={Calendar} label="Class of 2025" detail="Graduation Year" />
+                                <InfoRow icon={School} label={profile.branch || "Technology"} detail="Department" />
+                                <InfoRow icon={MapPin} label={profile.location || "Bengaluru, IN"} detail="Location" />
                             </div>
-                            <Expand className="h-4 w-4 text-slate-300" />
-                        </div>
-                        <div className="space-y-4">
-                            <OngoingItem label="System Algorithm" date="1 Mar - 1 May" color="border-orange-500" />
-                            <OngoingItem label="Corporate Comms" date="16 Mar - 16 Jun" color="border-indigo-600" />
-                        </div>
-                    </div>
 
-                    {/* Donut Chart Card */}
-                    <div className="bg-white p-8 rounded-[45px] shadow-sm flex flex-col items-center">
-                        <div className="w-full flex justify-between items-center mb-6">
-                            <h3 className="text-lg font-black italic text-slate-800 uppercase tracking-tight">Skill Balance</h3>
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    navigate('/analytics-hub');
-                                }}
-                                className="p-2 bg-slate-50 rounded-xl text-slate-400 hover:bg-slate-100 hover:text-indigo-600 transition-all"
-                                aria-label="View full skill analytics"
-                            >
-                                <Expand className="h-4 w-4" />
-                            </button>
-                        </div>
-                        <div className="relative h-[180px] w-[180px]">
-                            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-                                <PieChart>
-                                    <Pie
-                                        data={timeData}
-                                        innerRadius={65}
-                                        outerRadius={80}
-                                        paddingAngle={10}
-                                        dataKey="value"
-                                        stroke="none"
-                                    >
-                                        {timeData.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={entry.color} />
-                                        ))}
-                                    </Pie>
-                                </PieChart>
-                            </ResponsiveContainer>
-                            <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Total</p>
-                                <p className="text-4xl font-black italic text-[#1E2342]">110</p>
+                            <div className="mt-10 pt-10 border-t border-apple-gray-50 w-full flex justify-center gap-5">
+                                <SocialBtn icon={Github} />
+                                <SocialBtn icon={Linkedin} />
+                                <SocialBtn icon={Twitter} />
+                                <SocialBtn icon={Globe} />
                             </div>
                         </div>
-                        <div className="mt-8 flex gap-6">
-                            <LegendItem color="bg-[#FF7D54]" label="Core" />
-                            <LegendItem color="bg-[#4F46E5]" label="Soft" />
-                        </div>
+                    </motion.div>
+
+                    <motion.div variants={stagger.item} className="apple-card p-10">
+                        <h3 className="text-lg font-bold text-apple-gray-900 mb-6">About</h3>
+                        <p className="text-[13px] leading-relaxed text-apple-gray-500 font-medium">
+                            {profile.about || "Your professional bio is currently being analyzed. Add more details to improve your recruiter resonance score."}
+                        </p>
+                    </motion.div>
+                </div>
+
+                {/* Right Column: Metrics & Skill Matrix */}
+                <div className="lg:col-span-8 space-y-10">
+                    <ProfileCompleteness profile={profile} />
+
+                    <div className="grid md:grid-cols-2 gap-8">
+                        {/* Skill Radar */}
+                        <motion.div variants={stagger.item} className="apple-card p-10 flex flex-col">
+                            <div className="flex justify-between items-center mb-8">
+                                <div>
+                                    <h3 className="text-lg font-bold text-apple-gray-900">Skill Portfolio</h3>
+                                    <p className="text-[11px] text-apple-gray-400 font-semibold uppercase tracking-wider mt-1">Cognitive Matrix</p>
+                                </div>
+                                <div className="h-10 w-10 rounded-xl bg-apple-blue border border-apple-blue/20 flex items-center justify-center text-white shadow-lg shadow-apple-blue/20">
+                                    <Target className="h-5 w-5" />
+                                </div>
+                            </div>
+                            <div className="h-[300px] w-full">
+                                <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={100}>
+                                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
+                                        <PolarGrid stroke="#f0f0f0" />
+                                        <PolarAngleAxis dataKey="s" tick={{ fill: "#888", fontSize: 10, fontWeight: 600 }} />
+                                        <Radar name="Level" dataKey="A" stroke="#0071e3" fill="#0071e3" fillOpacity={0.15} />
+                                    </RadarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </motion.div>
+
+                        {/* Skill Equilibrium */}
+                        <motion.div variants={stagger.item} className="apple-card p-10 flex flex-col items-center">
+                            <div className="w-full flex justify-between items-center mb-10">
+                                <div className="text-left">
+                                    <h3 className="text-lg font-bold text-apple-gray-900">Performance</h3>
+                                    <p className="text-[11px] text-apple-gray-400 font-semibold uppercase tracking-wider mt-1">Resonance Score</p>
+                                </div>
+                                <div className="h-10 w-10 rounded-xl bg-orange-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/20">
+                                    <Zap className="h-5 w-5" />
+                                </div>
+                            </div>
+
+                            <div className="relative h-56 w-56">
+                                <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={100}>
+                                    <PieChart>
+                                        <Pie
+                                            data={distributionData}
+                                            innerRadius={70}
+                                            outerRadius={90}
+                                            paddingAngle={8}
+                                            dataKey="value"
+                                            stroke="none"
+                                        >
+                                            {distributionData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.color} />
+                                            ))}
+                                        </Pie>
+                                    </PieChart>
+                                </ResponsiveContainer>
+                                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                    <span className="text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest mb-1">Global</span>
+                                    <span className="text-5xl font-bold text-apple-gray-900 tracking-tighter">92</span>
+                                </div>
+                            </div>
+
+                            <div className="mt-10 flex flex-wrap gap-4 w-full justify-center">
+                                {distributionData.map((d, i) => (
+                                    <div key={i} className="flex items-center gap-2.5 px-4 py-2 bg-apple-gray-50 rounded-xl border border-apple-gray-100 transition-colors hover:border-apple-blue/30">
+                                        <div className="h-2 w-2 rounded-full" style={{ background: d.color }} />
+                                        <span className="text-[10px] font-bold text-apple-gray-500 uppercase tracking-widest">{d.name}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </motion.div>
+
+                        {/* Proficiency Streaks */}
+                        <motion.div variants={stagger.item} className="apple-card p-10">
+                            <h3 className="text-lg font-bold text-apple-gray-900 mb-8">Proficiency Matrix</h3>
+                            <div className="space-y-6">
+                                <ProficiencyBar label="Algorithms" value={85} color="bg-apple-blue" />
+                                <ProficiencyBar label="Frontend Architecture" value={70} color="bg-indigo-500" />
+                                <ProficiencyBar label="Systems Design" value={60} color="bg-amber-500" />
+                                <ProficiencyBar label="Machine Learning" value={45} color="bg-rose-500" />
+                            </div>
+                        </motion.div>
+
+                        {/* Badges and Achievements */}
+                        <motion.div variants={stagger.item} className="apple-card p-10">
+                            <h3 className="text-lg font-bold text-apple-gray-900 mb-8 flex items-center gap-2">
+                                <Award className="h-5 w-5 text-amber-500" />
+                                Earned Badges
+                            </h3>
+                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                                {(profile.codingScore || 0) >= 80 && (
+                                    <BadgeItem icon={Code2} title="Code Ninja" desc="Top 20% in Coding" color="text-indigo-600" bgColor="bg-indigo-50" border="border-indigo-100" />
+                                )}
+                                {(profile.aptitudeScore || 0) >= 80 && (
+                                    <BadgeItem icon={Brain} title="Logic Master" desc="Elite Aptitude" color="text-amber-600" bgColor="bg-amber-50" border="border-amber-100" />
+                                )}
+                                {(profile.interviewScore || 0) >= 80 && (
+                                    <BadgeItem icon={Mic2} title="Silver Tongue" desc="Excellent Comm" color="text-rose-600" bgColor="bg-rose-50" border="border-rose-100" />
+                                )}
+                                {(profile.cgpa || 0) >= 9.0 && (
+                                    <BadgeItem icon={GraduationCap} title="Scholar" desc="Academic Excellence" color="text-emerald-600" bgColor="bg-emerald-50" border="border-emerald-100" />
+                                )}
+                                {(profile.resumeScore || 0) >= 80 && (
+                                    <BadgeItem icon={Sparkles} title="Profile Perfect" desc="Stellar Resume" color="text-apple-blue" bgColor="bg-apple-blue/10" border="border-apple-blue/20" />
+                                )}
+                                {/* Default Badge if none earned */}
+                                {((profile.codingScore || 0) < 80 && (profile.aptitudeScore || 0) < 80 && (profile.interviewScore || 0) < 80 && (profile.cgpa || 0) < 9.0 && (profile.resumeScore || 0) < 80) && (
+                                    <div className="col-span-full py-6 text-center text-apple-gray-400 text-sm font-medium border border-dashed rounded-2xl">
+                                        Take assessments to earn exclusive platform badges!
+                                    </div>
+                                )}
+                            </div>
+                        </motion.div>
                     </div>
                 </div>
             </div>
-
-            {/* 2. BIOGRAPHIC HUB (RIGHT PANEL) */}
-            <div className="w-full xl:w-[380px] space-y-10 animate-in slide-in-from-right duration-700">
-                <div className="bg-white p-10 rounded-[60px] shadow-sm border border-slate-50 text-center relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-80 bg-indigo-50 rounded-full blur-[120px] -mr-40 -mt-40 opacity-30" />
-
-                    <div className="relative z-10 flex flex-col items-center">
-                        <div className="h-44 w-44 rounded-[55px] bg-gradient-to-br from-indigo-100 to-purple-50 p-2 mb-8 shadow-2xl shadow-indigo-100/50 rotate-3 transition-transform hover:rotate-0 duration-500">
-                            <div className="h-full w-full rounded-[45px] bg-slate-800 flex items-center justify-center text-white text-6xl font-black italic p-2 border-4 border-white shadow-inner">
-                                {profile.name.charAt(0)}
-                            </div>
-                        </div>
-                        <h2 className="text-3xl font-black italic text-slate-900 uppercase tracking-tighter mb-1 leading-none">{profile.name}</h2>
-                        <p className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-8 italic">@{profile.name.toLowerCase().replace(' ', '')}</p>
-
-                        <div className="space-y-6 w-full text-left mb-10">
-                            <InfoRow icon={Calendar} label="Class of 2025" />
-                            <InfoRow icon={School} label={profile.branch || "Tech Institute"} />
-                            <InfoRow icon={MapPin} label={profile.location || "Earth Node 1"} />
-                        </div>
-
-                        <div className="bg-[#1E2342] p-8 rounded-[45px] text-white w-full text-left relative group cursor-pointer shadow-xl shadow-indigo-900/10">
-                            <div className="flex justify-between items-center mb-4">
-                                <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] italic">Bio Protocol</p>
-                                <div className="h-8 w-8 bg-white/5 rounded-xl flex items-center justify-center"><Brain className="h-4 w-4 text-indigo-400" /></div>
-                            </div>
-                            <p className="text-[11px] font-bold italic leading-relaxed text-slate-300">
-                                {profile.about || "Cognitive footprint initializing. Higher-level intelligence mapping required for recruiter synchronization."}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Teacher History Simplified */}
-                <div className="bg-white p-8 rounded-[45px] shadow-sm">
-                    <h3 className="text-[11px] font-black italic text-slate-800 uppercase tracking-[0.3em] mb-6 border-b-2 border-emerald-500 pb-1 inline-block">Mentor Network</h3>
-                    <div className="flex -space-x-3 overflow-hidden px-2">
-                        {['RB', 'DL', 'BV', 'IR', 'MK'].map((initials, i) => (
-                            <div key={i} className={cn(
-                                "inline-block h-12 w-12 rounded-2xl border-4 border-white flex items-center justify-center text-[10px] font-black italic text-white shadow-sm ring-1 ring-slate-100",
-                                ['bg-emerald-500', 'bg-rose-500', 'bg-amber-500', 'bg-indigo-600', 'bg-blue-600'][i % 5]
-                            )}>
-                                {initials}
-                            </div>
-                        ))}
-                        <div className="inline-block h-12 w-12 rounded-2xl border-4 border-white bg-slate-100 flex items-center justify-center text-[10px] font-black italic text-slate-400 shadow-sm ring-1 ring-slate-100">
-                            +2
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </motion.div>
     );
 }
 
 // HELPERS
-function InterestBar({ label, value, color }: any) {
+function ProficiencyBar({ label, value, color }: { label: string; value: number; color: string }) {
     return (
-        <div className="space-y-2">
-            <div className="flex justify-between items-center text-[10px] font-black text-slate-900 uppercase tracking-widest italic">
+        <div className="space-y-3">
+            <div className="flex justify-between items-center text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest">
                 <span>{label}</span>
-                <span className="text-slate-400">{value}%</span>
+                <span className="text-apple-gray-900">{value}%</span>
             </div>
-            <div className="h-1.5 w-full bg-slate-50 rounded-full overflow-hidden">
-                <div className={cn("h-full rounded-full transition-all duration-1000", color)} style={{ width: `${value}%` }} />
+            <div className="h-2 w-full bg-apple-gray-50 rounded-full overflow-hidden border border-apple-gray-100">
+                <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${value}%` }}
+                    transition={{ duration: 1.5, ease: "easeOut" }}
+                    className={cn("h-full rounded-full shadow-lg shadow-apple-blue/10", color)}
+                />
             </div>
         </div>
     );
 }
 
-function OngoingItem({ label, date, color }: any) {
+function BadgeItem({ icon: Icon, title, desc, color, bgColor, border }: any) {
     return (
-        <div className={cn("p-4 bg-white rounded-3xl border-l-[6px] border border-slate-50 flex items-center justify-between group cursor-default transition-all hover:bg-slate-50/50", color)}>
+        <div className={cn("p-4 rounded-2xl flex flex-col items-center justify-center text-center gap-3 transition-all hover:scale-105 hover:shadow-lg border", bgColor, border)}>
+            <div className={cn("h-12 w-12 rounded-full flex items-center justify-center bg-white shadow-sm", color)}>
+                <Icon className="h-6 w-6" />
+            </div>
             <div>
-                <p className="font-black italic text-slate-900 uppercase tracking-tighter text-sm mb-1">{label}</p>
-                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest italic">{date}</p>
+                <p className="font-bold text-apple-gray-900 text-sm leading-tight">{title}</p>
+                <p className={cn("text-[10px] font-bold uppercase tracking-wider mt-1 opacity-80", color)}>{desc}</p>
             </div>
-            <ChevronRight className="h-4 w-4 text-slate-200 group-hover:text-slate-900 transition-all font-black" />
         </div>
     );
 }
 
-function LegendItem({ color, label }: any) {
-    return (
-        <div className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100">
-            <div className={cn("h-2.5 w-2.5 rounded-full", color)} />
-            <span className="text-[9px] font-black text-slate-500 uppercase italic">{label} Value</span>
-        </div>
-    );
-}
-
-function InfoRow({ icon: Icon, label }: any) {
+function InfoRow({ icon: Icon, label, detail }: any) {
     return (
         <div className="flex items-center gap-4 group cursor-default">
-            <div className="h-10 w-10 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 shadow-sm border border-slate-100 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-all">
-                <Icon className="h-4 w-4" />
+            <div className="h-10 w-10 bg-apple-gray-50 rounded-xl flex items-center justify-center text-apple-gray-400 border border-apple-gray-100 group-hover:bg-apple-blue/5 group-hover:text-apple-blue group-hover:border-apple-blue/20 transition-all duration-500">
+                <Icon className="h-5 w-5" />
             </div>
-            <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest italic leading-none">{label}</span>
+            <div className="flex flex-col">
+                <span className="text-[12px] font-bold text-apple-gray-900 leading-none mb-1">{label}</span>
+                <span className="text-[10px] font-semibold text-apple-gray-400 uppercase tracking-widest leading-none">{detail}</span>
+            </div>
         </div>
+    );
+}
+
+
+function SocialBtn({ icon: Icon }: any) {
+    return (
+        <button className="h-10 w-10 rounded-xl bg-white border border-apple-gray-100 flex items-center justify-center text-apple-gray-400 hover:text-apple-blue hover:border-apple-blue/30 hover:shadow-apple-hover transition-all">
+            <Icon className="h-4 w-4" />
+        </button>
     );
 }

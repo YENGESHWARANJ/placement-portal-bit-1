@@ -19,9 +19,12 @@ import {
 import api from "../../services/api";
 import { cn } from "../../utils/cn";
 import { toast } from "react-hot-toast";
+import { useAuth } from "../../features/auth/AuthContext";
+import { getSocket } from "../../hooks/useSocket";
 
 interface Student {
     _id: string;
+    userId: string;
     name: string;
     email: string;
     usn: string;
@@ -47,41 +50,86 @@ export default function StudentManagement() {
     const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
     const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
 
+    // Server-side pagination and debouncing
+    const [debouncedSearch, setDebouncedSearch] = useState("");
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+    const { user } = useAuth();
+    const [onlineUserIds, setOnlineUserIds] = useState<Set<string>>(new Set());
+
+    useEffect(() => {
+        api.get<{ onlineUserIds: string[] }>('/students/online').then(res => {
+            setOnlineUserIds(new Set(res.data.onlineUserIds || []));
+        }).catch(err => console.error("Could not fetch online statuses", err));
+
+        if (!user?._id) return;
+        const socket = getSocket(user._id);
+        if (!socket) return;
+
+        const handleStatus = ({ userId, isOnline }: { userId: string, isOnline: boolean }) => {
+            setOnlineUserIds(prev => {
+                const updated = new Set(prev);
+                if (isOnline) updated.add(userId);
+                else updated.delete(userId);
+                return updated;
+            });
+        };
+
+        socket.on("user_status_change", handleStatus);
+        return () => {
+            socket.off("user_status_change", handleStatus);
+        };
+    }, [user?._id]);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedSearch(searchQuery);
+            setPage(1);
+        }, 500);
+        return () => clearTimeout(handler);
+    }, [searchQuery]);
+
     useEffect(() => {
         const fetchStudents = async () => {
+            setLoading(true);
             try {
-                const { data } = await api.get<{ students: any[] }>("/students");
+                const queryParams = new URLSearchParams({
+                    page: page.toString(),
+                    limit: "12",
+                });
+                if (debouncedSearch) queryParams.append("search", debouncedSearch);
+                if (branchFilter !== "All") queryParams.append("branch", branchFilter);
+                if (statusFilter !== "All") queryParams.append("status", statusFilter);
+
+                const { data } = await api.get<{ students: any[], totalPages: number }>(`/students?${queryParams.toString()}`);
+
                 // Enhance mock data for demo if needed
                 const enhanced = data.students.map(s => ({
                     ...s,
-                    aiMatchScore: Math.floor(Math.random() * (99 - 60) + 60), // Mock AI score
-                    location: "Bangalore, India",
-                    phone: "+91 98765 43210"
+                    aiMatchScore: s.aiMatchScore || Math.floor(Math.random() * (99 - 60) + 60), // Mock AI score
+                    location: s.location || "Bangalore, India",
+                    phone: s.phone || "+91 98765 43210"
                 }));
                 setStudents(enhanced || []);
+                setTotalPages(data.totalPages || 1);
             } catch (error) {
                 console.error("Failed to fetch students", error);
-                toast.error("Failed to load student directory");
+                // toast.error("Failed to load student directory");
             } finally {
                 setLoading(false);
             }
         };
 
         fetchStudents();
-    }, []);
+    }, [page, debouncedSearch, branchFilter, statusFilter]);
 
-    const filteredStudents = students.filter((student) => {
-        const matchesSearch =
-            student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (student.usn && student.usn.toLowerCase().includes(searchQuery.toLowerCase())) ||
-            (student.skills && student.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase())));
+    // Handle filter change reset page
+    useEffect(() => {
+        setPage(1);
+    }, [branchFilter, statusFilter]);
 
-        const studentBranch = student.branch || (student as any).department;
-        const matchesBranch = branchFilter === "All" || studentBranch === branchFilter;
-        const matchesStatus = statusFilter === "All" || student.status === statusFilter;
 
-        return matchesSearch && matchesBranch && matchesStatus;
-    });
 
     const toggleSelection = (id: string) => {
         setSelectedStudents(prev =>
@@ -145,6 +193,16 @@ export default function StudentManagement() {
                             <option value="IS">Information Science</option>
                             <option value="EC">Electronics</option>
                         </select>
+                        <select
+                            className="bg-transparent text-sm font-medium text-slate-600 focus:outline-none cursor-pointer"
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                        >
+                            <option value="All">All Status</option>
+                            <option value="Unplaced">Unplaced</option>
+                            <option value="Offers Received">Offers Received</option>
+                            <option value="Placed">Placed</option>
+                        </select>
                     </div>
                 </div>
 
@@ -195,7 +253,7 @@ export default function StudentManagement() {
                         <div key={i} className="h-64 bg-slate-100 rounded-xl animate-pulse"></div>
                     ))}
                 </div>
-            ) : filteredStudents.length === 0 ? (
+            ) : students.length === 0 ? (
                 <div className="text-center py-20 bg-white rounded-xl border border-dashed border-slate-200">
                     <div className="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
                         <Search className="h-8 w-8 text-slate-300" />
@@ -207,7 +265,7 @@ export default function StudentManagement() {
                 <>
                     {viewMode === 'grid' ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {filteredStudents.map((student) => (
+                            {students.map((student) => (
                                 <div
                                     key={student._id}
                                     className={cn(
@@ -231,12 +289,19 @@ export default function StudentManagement() {
 
                                     <div className="p-6">
                                         <div className="flex items-start justify-between mb-4 mt-2">
-                                            <div className="flex items-center gap-4">
-                                                <div className="h-14 w-14 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-blue-700 font-bold text-xl border-2 border-white shadow-sm">
+                                            <div className="flex items-center gap-4 relative">
+                                                <div className="h-14 w-14 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-blue-700 font-bold text-xl border-2 border-white shadow-sm relative">
                                                     {student.name.charAt(0)}
+                                                    {onlineUserIds.has(student.userId) && (
+                                                        <span className="absolute bottom-0 right-0 h-3.5 w-3.5 bg-green-500 border-2 border-white rounded-full">
+                                                            <span className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75"></span>
+                                                        </span>
+                                                    )}
                                                 </div>
                                                 <div>
-                                                    <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{student.name}</h3>
+                                                    <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors flex items-center gap-2">
+                                                        {student.name}
+                                                    </h3>
                                                     <p className="text-xs text-slate-500 font-medium bg-slate-100 px-2 py-0.5 rounded-full w-fit mt-1">{student.usn}</p>
                                                 </div>
                                             </div>
@@ -313,7 +378,7 @@ export default function StudentManagement() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
-                                    {filteredStudents.map((student) => (
+                                    {students.map((student) => (
                                         <tr key={student._id} className="hover:bg-slate-50/50 transition-colors group">
                                             <td className="px-6 py-4">
                                                 <input
@@ -325,8 +390,11 @@ export default function StudentManagement() {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="h-9 w-9 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-600 text-xs">
+                                                    <div className="h-9 w-9 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-600 text-xs relative">
                                                         {student.name.charAt(0)}
+                                                        {onlineUserIds.has(student.userId) && (
+                                                            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 bg-green-500 border-2 border-white rounded-full"></span>
+                                                        )}
                                                     </div>
                                                     <div>
                                                         <div className="font-semibold text-slate-900">{student.name}</div>
@@ -373,6 +441,29 @@ export default function StudentManagement() {
                                     ))}
                                 </tbody>
                             </table>
+                        </div>
+                    )}
+
+                    {/* Pagination Controls */}
+                    {totalPages > 1 && (
+                        <div className="flex justify-center items-center gap-4 mt-8 bg-white px-6 py-3 border border-slate-200 shadow-sm rounded-full w-max mx-auto">
+                            <button
+                                onClick={() => setPage(p => Math.max(1, p - 1))}
+                                disabled={page === 1}
+                                className="px-3 py-1 text-sm font-medium text-slate-600 disabled:opacity-40 transition-opacity hover:bg-slate-100 rounded-md"
+                            >
+                                Previous
+                            </button>
+                            <span className="text-sm font-bold text-slate-800 px-4 border-x border-slate-200">
+                                Page {page} of {totalPages}
+                            </span>
+                            <button
+                                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                                disabled={page === totalPages}
+                                className="px-3 py-1 text-sm font-medium text-slate-600 disabled:opacity-40 transition-opacity hover:bg-slate-100 rounded-md"
+                            >
+                                Next
+                            </button>
                         </div>
                     )}
                 </>

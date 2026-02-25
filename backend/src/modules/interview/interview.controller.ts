@@ -4,6 +4,7 @@ import Student from "../students/student.model";
 import Application from "../applications/application.model";
 import InterviewSession from "./interview-session.model";
 import { sendNotification } from "../../config/socket.config";
+import Notice from "../notices/notice.model";
 
 // ==================================
 // MOCK INTERVIEW LOGIC (Student)
@@ -15,11 +16,8 @@ export const generateQuestions = async (req: AuthRequest, res: Response) => {
 
         const student = await Student.findOne({ userId });
 
-        if (!student) {
-            return res.status(404).json({ message: "Student profile not found. Please upload resume first." });
-        }
-
-        const skills = student.skills || [];
+        // If no student profile exists, we default to generic questions
+        const skills = student?.skills || [];
 
         // Dynamic question pool based on student skills
         const techQuestions: string[] = [];
@@ -123,6 +121,15 @@ export const scheduleInterview = async (req: AuthRequest, res: Response) => {
         sendNotification(studentUserId, {
             message: `New Interview Scheduled! ${(application.jobId as any).title} at ${new Date(scheduledAt).toLocaleString()}`,
             type: "info"
+        });
+
+        await Notice.create({
+            title: "Interview Scheduled",
+            content: `You have a new interview scheduled for ${(application.jobId as any).title} at ${new Date(scheduledAt).toLocaleString()}`,
+            type: "Student",
+            priority: "High",
+            createdBy: userId,
+            targetUser: studentUserId
         });
 
         return res.status(201).json({ message: "Interview scheduled", interview });

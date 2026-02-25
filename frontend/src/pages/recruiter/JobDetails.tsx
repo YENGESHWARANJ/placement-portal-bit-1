@@ -5,8 +5,22 @@ import {
     ChevronLeft, Share2, Bookmark, CheckCircle, Info,
     Users, TrendingUp, ShieldCheck, ArrowRight
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import api from '../../services/api';
 import { toast } from 'react-hot-toast';
+import { cn } from '../../utils/cn';
+
+const stagger = {
+    container: { initial: { opacity: 0 }, animate: { opacity: 1, transition: { staggerChildren: 0.1 } } },
+    item: {
+        initial: { opacity: 0, y: 20 },
+        animate: {
+            opacity: 1,
+            y: 0,
+            transition: { type: "spring" as const, damping: 25, stiffness: 200 }
+        }
+    }
+};
 
 interface Job {
     _id: string;
@@ -38,14 +52,13 @@ export default function JobDetails() {
             const { data } = await api.get<Job>(`/jobs/${id}`);
             setJob(data);
 
-            // Check if already applied
             const { data: appsData } = await api.get<{ applications: any[] }>("/applications/my");
             const applied = appsData.applications.some((app: any) => app.jobId._id === id);
             setHasApplied(applied);
         } catch (error) {
             console.error("Failed to fetch job", error);
             toast.error("Job details not found");
-            navigate("/dashboard");
+            navigate("/recruit/jobs"); // Changed to recruiter path
         } finally {
             setLoading(false);
         }
@@ -65,216 +78,242 @@ export default function JobDetails() {
     };
 
     if (loading) return (
-        <div className="p-10 animate-pulse space-y-8">
-            <div className="h-48 bg-slate-100 rounded-3xl"></div>
-            <div className="space-y-4">
-                <div className="h-8 bg-slate-100 w-1/3 rounded-lg"></div>
-                <div className="h-4 bg-slate-100 w-full rounded-lg"></div>
-                <div className="h-4 bg-slate-100 w-5/6 rounded-lg"></div>
-            </div>
+        <div className="p-20 flex flex-col items-center justify-center space-y-4">
+            <div className="h-10 w-10 border-4 border-apple-blue/20 border-t-apple-blue rounded-full animate-spin" />
+            <p className="text-apple-gray-400 font-bold uppercase tracking-widest text-[10px]">Processing Listing Intelligence...</p>
         </div>
     );
 
     if (!job) return null;
 
     return (
-        <div className="animate-in fade-in zoom-in duration-500 pb-20">
+        <motion.div
+            variants={stagger.container}
+            initial="initial"
+            animate="animate"
+            className="space-y-10 pb-20 mt-4"
+        >
 
             {/* Header / Navigation */}
-            <div className="flex items-center justify-between mb-8">
+            <motion.div variants={stagger.item} className="flex items-center justify-between">
                 <button
                     onClick={() => navigate(-1)}
-                    className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors font-medium group"
+                    className="flex items-center gap-3 text-apple-gray-400 hover:text-apple-blue transition-all font-black text-[10px] uppercase tracking-widest group"
                 >
-                    <ChevronLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
-                    Back to Jobs
+                    <div className="h-10 w-10 rounded-2xl bg-white border border-apple-gray-100 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                        <ChevronLeft className="h-4 w-4" />
+                    </div>
+                    Recruitment Intelligence
                 </button>
-                <div className="flex gap-3">
-                    <button className="p-2.5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-all shadow-sm">
-                        <Share2 className="h-5 w-5" />
-                    </button>
-                    <button className="p-2.5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-all shadow-sm">
-                        <Bookmark className="h-5 w-5" />
-                    </button>
+                <div className="flex gap-4">
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="h-10 w-10 bg-white border border-apple-gray-100 rounded-xl hover:bg-apple-gray-50 text-apple-gray-400 hover:text-apple-blue transition-all shadow-sm flex items-center justify-center"
+                    >
+                        <Share2 className="h-4 w-4" />
+                    </motion.button>
                 </div>
-            </div>
+            </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
                 {/* Main Job Info (Left 2 Columns) */}
-                <div className="lg:col-span-2 space-y-8">
+                <div className="lg:col-span-2 space-y-10">
 
-                    {/* Hero Card */}
-                    <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 relative">
-                        {/* Decorative Banner */}
-                        <div className="h-32 bg-gradient-to-r from-blue-600 to-indigo-700 relative">
-                            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                    {/* Hero Listing Card */}
+                    <motion.div variants={stagger.item} className="apple-card bg-white overflow-hidden border border-apple-gray-50 relative p-1 shadow-sm group">
+                        <div className="h-48 md:h-60 bg-apple-gray-50 rounded-[36px] relative overflow-hidden flex items-center justify-center">
+                            <div className="absolute inset-0 bg-gradient-to-br from-apple-blue/10 via-purple-500/10 to-transparent" />
+                            <motion.div
+                                animate={{
+                                    scale: [1, 1.05, 1],
+                                    rotate: [0, 2, -2, 0]
+                                }}
+                                transition={{
+                                    duration: 20,
+                                    repeat: Infinity,
+                                    ease: "linear"
+                                }}
+                            >
+                                <Building2 className="h-24 w-24 text-apple-blue/20" />
+                            </motion.div>
                         </div>
 
-                        <div className="px-8 pb-8">
-                            <div className="relative -mt-12 mb-6">
-                                <div className="h-24 w-24 bg-white p-2 rounded-2xl shadow-xl border border-slate-100 group transition-transform hover:scale-105">
-                                    <div className="h-full w-full bg-slate-50 rounded-xl flex items-center justify-center text-slate-400">
-                                        <Building2 className="h-10 w-10 text-blue-600" />
+                        <div className="p-8 md:p-12">
+                            <div className="flex flex-col md:flex-row md:items-start justify-between gap-10">
+                                <div className="space-y-6">
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-apple-blue/5 text-apple-blue rounded-full text-[9px] font-black uppercase tracking-[0.2em] border border-apple-blue/10">
+                                        <ShieldCheck className="h-3 w-3" /> Verified Protocol
+                                    </div>
+                                    <h1 className="text-4xl md:text-5xl font-black text-apple-gray-900 tracking-tight leading-none">{job.title}</h1>
+                                    <div className="flex flex-wrap items-center gap-y-4 gap-x-10">
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-10 w-10 rounded-xl bg-apple-gray-50 flex items-center justify-center text-apple-blue shadow-inner">
+                                                <Building2 className="h-5 w-5" />
+                                            </div>
+                                            <div>
+                                                <p className="text-[8px] font-black uppercase tracking-widest text-apple-gray-400 leading-none mb-1">Company</p>
+                                                <p className="text-[15px] font-black text-apple-gray-900 tracking-tight">{job.company}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-10 w-10 rounded-xl bg-apple-gray-50 flex items-center justify-center text-apple-gray-400 shadow-inner">
+                                                <MapPin className="h-5 w-5" />
+                                            </div>
+                                            <div>
+                                                <p className="text-[8px] font-black uppercase tracking-widest text-apple-gray-400 leading-none mb-1">Origin</p>
+                                                <p className="text-[15px] font-black text-apple-gray-900 tracking-tight">{job.location}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-10 w-10 rounded-xl bg-apple-gray-50 flex items-center justify-center text-apple-gray-400 shadow-inner">
+                                                <Briefcase className="h-5 w-5" />
+                                            </div>
+                                            <div>
+                                                <p className="text-[8px] font-black uppercase tracking-widest text-apple-gray-400 leading-none mb-1">Mission</p>
+                                                <p className="text-[15px] font-black text-apple-gray-900 tracking-tight">{job.type}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                                <div>
-                                    <h1 className="text-3xl font-bold text-slate-900 mb-2">{job.title}</h1>
-                                    <div className="flex flex-wrap items-center gap-y-2 gap-x-6 text-slate-500 font-medium">
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-blue-600 font-bold hover:underline cursor-pointer">{job.company}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <MapPin className="h-4 w-4" />
-                                            {job.location}
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Briefcase className="h-4 w-4" />
-                                            {job.type}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="text-right flex flex-col items-start md:items-end gap-2">
-                                    <div className="px-4 py-1.5 bg-green-50 text-green-700 rounded-full text-sm font-bold border border-green-100 flex items-center gap-2">
-                                        <DollarSign className="h-4 w-4" />
+                                <div className="flex flex-col items-start md:items-end gap-4 shrink-0 bg-apple-gray-50/50 p-6 rounded-[28px] border border-apple-gray-100">
+                                    <div className="px-5 py-2.5 bg-apple-gray-900 text-white rounded-2xl text-[12px] font-black tracking-widest uppercase shadow-xl">
                                         {job.salary}
                                     </div>
-                                    <span className="text-xs text-slate-400 flex items-center gap-1.5">
-                                        <Calendar className="h-3.5 w-3.5" />
-                                        Posted 2 days ago
+                                    <span className="text-[9px] font-black text-apple-gray-400 flex items-center gap-2 uppercase tracking-[0.2em]">
+                                        <Calendar className="h-3.5 w-3.5" /> Deployment: 48h Ago
                                     </span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
 
-                    {/* Job Description */}
-                    <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
-                        <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
-                            <Info className="h-5 w-5 text-blue-500" />
-                            Job Description
+                    {/* Job Intelligence */}
+                    <motion.div variants={stagger.item} className="apple-card p-12 bg-white border border-apple-gray-50 shadow-sm">
+                        <h2 className="text-[11px] font-black text-apple-gray-300 uppercase tracking-[0.4em] mb-10 flex items-center gap-3">
+                            <Info className="h-4 w-4" /> Operational Briefing
                         </h2>
-                        <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed space-y-4">
-                            {job.description || "No description provided."}
+                        <div className="text-apple-gray-700 font-bold leading-relaxed text-[16px] space-y-8 prose prose-apple max-w-none">
+                            {job.description || "Analytical parameters pending deployment."}
                         </div>
-                    </div>
+                    </motion.div>
 
-                    {/* Requirements */}
-                    <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
-                        <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
-                            <CheckCircle className="h-5 w-5 text-green-500" />
-                            What you'll need
+                    {/* Tactical Requirements */}
+                    <motion.div variants={stagger.item} className="apple-card p-12 bg-white border border-apple-gray-50 shadow-sm">
+                        <h2 className="text-[11px] font-black text-apple-gray-300 uppercase tracking-[0.4em] mb-10 flex items-center gap-3">
+                            <CheckCircle className="h-4 w-4" /> Core Prerequisites
                         </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {job?.requirements?.length ? (
                                 job.requirements.map((req, i) => (
-                                    <div key={i} className="flex gap-3 bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-blue-200 transition-colors">
-                                        <div className="h-5 w-5 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shadow-sm shrink-0 mt-0.5">
-                                            <CheckCircle className="h-3 w-3" />
+                                    <motion.div
+                                        key={i}
+                                        whileHover={{ scale: 1.02, backgroundColor: 'rgba(0,113,227,0.02)' }}
+                                        className="flex gap-5 bg-apple-gray-50/30 p-6 rounded-2xl border border-apple-gray-100 hover:border-apple-blue/30 transition-all group"
+                                    >
+                                        <div className="h-7 w-7 rounded-xl bg-white flex items-center justify-center text-apple-blue shadow-sm border border-apple-gray-100 group-hover:bg-apple-blue group-hover:text-white transition-all shrink-0">
+                                            <CheckCircle className="h-4 w-4" />
                                         </div>
-                                        <span className="text-sm text-slate-700 font-medium">{req}</span>
-                                    </div>
+                                        <span className="text-[14px] text-apple-gray-800 font-bold leading-tight">{req}</span>
+                                    </motion.div>
                                 ))
                             ) : (
-                                <p className="text-slate-500 text-sm italic col-span-full">No specific requirements listed.</p>
+                                <p className="text-apple-gray-300 text-[11px] font-black uppercase tracking-widest col-span-full italic">Parameters not specified.</p>
                             )}
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
 
                 {/* Sidebar Info & Apply (Right 1 Column) */}
-                <div className="space-y-6">
+                <div className="space-y-8">
 
-                    {/* Apply Card */}
-                    <div className="bg-slate-900 p-8 rounded-3xl shadow-xl text-white relative overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 opacity-50"></div>
-                        <div className="relative z-10">
-                            <h3 className="text-xl font-bold mb-4">Start your journey at {job.company}</h3>
-                            <p className="text-slate-400 text-sm mb-8 leading-relaxed">
-                                Join a high-performing team and build the future of technology. Applications close on <span className="text-white font-bold">{job.deadline ? new Date(job.deadline).toLocaleDateString() : "TBD"}</span>.
-                            </p>
+                    {/* Apply Card - THE ACTION HUB */}
+                    <motion.div variants={stagger.item} className="apple-card p-10 bg-apple-gray-900 border border-black shadow-2xl relative overflow-hidden flex flex-col items-center text-center">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-apple-blue to-transparent opacity-50" />
+                        <div className="relative z-10 space-y-8 w-full">
+                            <div>
+                                <h3 className="text-xl font-black text-white tracking-tight leading-tight mb-4 uppercase">Intake Terminal</h3>
+                                <p className="text-apple-gray-400 text-[13px] font-bold leading-relaxed">
+                                    Finalizing selection for {job.company}. Intel window closes <span className="text-white font-black">{job.deadline ? new Date(job.deadline).toLocaleDateString() : "TBD"}</span>.
+                                </p>
+                            </div>
 
                             {hasApplied ? (
-                                <div className="w-full bg-green-500/20 text-green-400 py-3.5 rounded-xl text-center font-bold border border-green-500/30 flex items-center justify-center gap-2">
-                                    <CheckCircle className="h-5 w-5" />
-                                    Application Submitted
-                                </div>
+                                <motion.div
+                                    initial={{ scale: 0.9, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    className="w-full bg-apple-blue/20 text-apple-blue py-5 rounded-2xl font-black text-[11px] uppercase tracking-widest border border-apple-blue/30 flex items-center justify-center gap-3"
+                                >
+                                    <CheckCircle className="h-5 w-5" /> Dossier Finalized
+                                </motion.div>
                             ) : (
-                                <button
+                                <motion.button
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
                                     onClick={handleApply}
                                     disabled={applying}
-                                    className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-blue-900/50 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
+                                    className="w-full bg-apple-blue hover:bg-white hover:text-apple-gray-900 text-white py-5 rounded-2xl font-black text-[11px] uppercase tracking-[0.3em] shadow-apple-hover transition-all flex items-center justify-center gap-3 group"
                                 >
-                                    {applying ? "Applying..." : "Apply Now"}
-                                    {!applying && <ArrowRight className="h-4 w-4" />}
-                                </button>
+                                    {applying ? "Synchronizing..." : "Initialize Profile"}
+                                    {!applying && <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />}
+                                </motion.button>
                             )}
 
-                            <p className="text-[10px] text-center text-slate-500 mt-4 uppercase tracking-widest font-bold">
-                                AI Matching: <span className="text-blue-400">92% Strength</span>
-                            </p>
+                            <div className="pt-8 border-t border-white/10 flex flex-col items-center">
+                                <span className="text-[9px] font-black text-apple-gray-500 uppercase tracking-[0.4em] mb-4">Neural Match Signal</span>
+                                <div className="flex items-center gap-4">
+                                    <div className="h-1.5 w-32 bg-white/10 rounded-full overflow-hidden">
+                                        <motion.div
+                                            initial={{ width: 0 }}
+                                            animate={{ width: '92%' }}
+                                            transition={{ duration: 1.5, delay: 0.5 }}
+                                            className="h-full bg-apple-blue rounded-full shadow-[0_0_15px_rgba(0,113,227,0.8)]"
+                                        />
+                                    </div>
+                                    <span className="text-[12px] font-black text-apple-blue">92%</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </motion.div>
 
                     {/* Company Metrics */}
-                    <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                        <h3 className="font-bold text-slate-900 mb-6">Candidate Activity</h3>
-                        <div className="space-y-6">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
-                                        <Users className="h-5 w-5" />
-                                    </div>
-                                    <span className="text-sm font-medium text-slate-600">Total Applicants</span>
-                                </div>
-                                <span className="font-bold text-slate-900">142</span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-purple-50 rounded-lg text-purple-600">
-                                        <TrendingUp className="h-5 w-5" />
-                                    </div>
-                                    <span className="text-sm font-medium text-slate-600">Avg. CTC</span>
-                                </div>
-                                <span className="font-bold text-slate-900">12 - 18 LPA</span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-green-50 rounded-lg text-green-600">
-                                        <ShieldCheck className="h-5 w-5" />
-                                    </div>
-                                    <span className="text-sm font-medium text-slate-600">Hiring Success</span>
-                                </div>
-                                <span className="font-bold text-slate-900">85%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Similar Jobs Preview */}
-                    <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                        <h3 className="font-bold text-slate-900 mb-6">Similar Opportunities</h3>
-                        <div className="space-y-4">
-                            {[1, 2].map((i) => (
-                                <Link key={i} to="/dashboard" className="block group">
-                                    <div className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
-                                        <div className="h-10 w-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 font-bold group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
-                                            {i === 1 ? "M" : "A"}
+                    <motion.div variants={stagger.item} className="apple-card p-10 bg-white border border-apple-gray-50 shadow-sm">
+                        <h3 className="text-[11px] font-black text-apple-gray-900 tracking-[0.3em] uppercase mb-10">Neural Activity</h3>
+                        <div className="space-y-10">
+                            {[
+                                { icon: Users, label: 'Applicants', value: '142', color: 'text-apple-blue', bg: 'bg-apple-blue/5' },
+                                { icon: TrendingUp, label: 'CTC Target', value: '12 - 18L', color: 'text-purple-500', bg: 'bg-purple-100/50' },
+                                { icon: ShieldCheck, label: 'Confidence', value: 'High', color: 'text-emerald-500', bg: 'bg-emerald-50' },
+                            ].map((stat, i) => (
+                                <div key={i} className="flex items-center justify-between group">
+                                    <div className="flex items-center gap-5">
+                                        <div className={cn("h-11 w-11 rounded-2xl flex items-center justify-center transition-all shadow-inner border border-apple-gray-50", stat.bg, stat.color)}>
+                                            <stat.icon className="h-5 w-5" />
                                         </div>
-                                        <div>
-                                            <h4 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-1">{i === 1 ? "Full Stack Engineer" : "Backend Developer"}</h4>
-                                            <p className="text-xs text-slate-500">{i === 1 ? "Microsoft" : "Apple"}</p>
-                                        </div>
+                                        <span className="text-[11px] font-black text-apple-gray-400 uppercase tracking-widest">{stat.label}</span>
                                     </div>
-                                </Link>
+                                    <span className="font-black text-apple-gray-900 tracking-tighter text-[16px]">{stat.value}</span>
+                                </div>
                             ))}
                         </div>
-                    </div>
+                    </motion.div>
+
+                    {/* Navigation Link */}
+                    <motion.div variants={stagger.item}>
+                        <Link to="/recruit/jobs" className="flex items-center justify-between p-8 bg-apple-gray-50 rounded-[32px] border border-apple-gray-100 group transition-all hover:bg-white hover:shadow-apple-hover">
+                            <div>
+                                <p className="text-[9px] font-black text-apple-gray-400 uppercase tracking-[0.2em] mb-1">Global Command</p>
+                                <p className="text-[14px] font-black text-apple-gray-900 uppercase">Universal Access</p>
+                            </div>
+                            <div className="h-10 w-10 rounded-full bg-white border border-apple-gray-100 flex items-center justify-center text-apple-gray-300 group-hover:text-apple-blue group-hover:scale-110 transition-all">
+                                <ChevronLeft className="h-5 w-5 rotate-180" />
+                            </div>
+                        </Link>
+                    </motion.div>
                 </div>
 
             </div>
-        </div>
+        </motion.div>
     );
 }

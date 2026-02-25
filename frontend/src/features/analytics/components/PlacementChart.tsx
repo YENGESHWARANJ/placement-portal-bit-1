@@ -25,7 +25,7 @@ export default function PlacementChart() {
         <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
             <h3 className="text-lg font-semibold mb-6">Placement Trends</h3>
             <div className="h-[350px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1} debounce={100}>
                     <LineChart data={data}>
                         <CartesianGrid strokeDasharray="3 3" opacity={0.3} vertical={false} />
                         <XAxis

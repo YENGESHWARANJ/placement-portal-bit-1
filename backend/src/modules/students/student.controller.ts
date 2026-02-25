@@ -6,6 +6,8 @@ import User from "../users/user.model";
 import Student from "./student.model";
 import Job from "../jobs/job.model";
 import { AuthRequest } from "../../middleware/auth.middleware";
+import { logActivity } from "../activity/activity.controller";
+import { onlineUsers } from "../../config/socket.config";
 
 // ... existing code ...
 
@@ -95,17 +97,49 @@ export const registerStudent = async (
 };
 
 export const getStudents = async (req: Request, res: Response) => {
-  // ... existing getStudents logic ...
   try {
-    const students = await Student.find({}).sort({ createdAt: -1 });
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const skip = (page - 1) * limit;
+
+    const search = req.query.search as string;
+    const branch = req.query.branch as string;
+    const status = req.query.status as string;
+
+    const query: any = {};
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { usn: { $regex: search, $options: "i" } },
+        { skills: { $regex: search, $options: "i" } }
+      ];
+    }
+    if (branch && branch !== "All") query.branch = branch;
+    if (status && status !== "All") query.status = status;
+
+    const students = await Student.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit);
+    const totalItems = await Student.countDocuments(query);
+
     return res.status(200).json({
       students,
+      totalPages: Math.ceil(totalItems / limit),
+      currentPage: page,
+      totalItems
     });
   } catch (error) {
     console.error("GET STUDENTS ERROR:", error);
     return res.status(500).json({
       message: "Failed to fetch students",
     });
+  }
+};
+
+export const getOnlineStudents = async (req: Request, res: Response) => {
+  try {
+    const onlineUserIds = Array.from(onlineUsers);
+    return res.json({ onlineUserIds });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to fetch online statuses" });
   }
 };
 
@@ -200,6 +234,8 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
       });
     }
 
+    await logActivity(userId!, "Update Profile", "Updated Student Profile Details");
+
     return res.status(200).json({
       success: true,
       message: "Profile updated",
@@ -260,12 +296,15 @@ export const getSavedJobs = async (req: AuthRequest, res: Response) => {
     const userId = req.user?.userId;
     if (!userId) return res.status(401).json({ message: "Unauthorized" });
 
-    const student = await Student.findOne({ userId }).populate("savedJobIds", "title company");
+    const student = await Student.findOne({ userId }).populate("savedJobIds", "title company location type salary");
     const list = (student?.savedJobIds || []) as any[];
     const savedJobs = list.map((j) => ({
       id: j._id?.toString(),
       title: j.title || "Untitled",
       company: j.company || "Unknown",
+      location: j.location || "Remote",
+      type: j.type || "Full-time",
+      salary: j.salary || "Negotiable"
     }));
     return res.json({ savedJobs });
   } catch (error) {
@@ -314,5 +353,38 @@ export const removeSavedJob = async (req: AuthRequest, res: Response) => {
   } catch (error) {
     console.error("REMOVE SAVED JOB ERROR:", error);
     return res.status(500).json({ message: "Failed to remove saved job" });
+  }
+};
+
+export const getLeaderboard = async (req: Request, res: Response) => {
+  try {
+    const students = await Student.find({}, 'name usn cgpa aptitudeScore codingScore interviewScore resumeScore');
+
+    const leaderboard = students.map(student => {
+      let score = 0;
+      score += (student.aptitudeScore || 0) * 0.2;
+      score += (student.codingScore || 0) * 0.4;
+      score += (student.interviewScore || 0) * 0.3;
+      score += (student.resumeScore || 0) * 0.1;
+
+      return {
+        _id: student._id,
+        name: student.name,
+        usn: student.usn,
+        cgpa: student.cgpa,
+        aptitudeScore: student.aptitudeScore,
+        codingScore: student.codingScore,
+        interviewScore: student.interviewScore,
+        resumeScore: student.resumeScore,
+        totalScore: Math.round(score * 10) // ELO
+      };
+    });
+
+    leaderboard.sort((a, b) => b.totalScore - a.totalScore);
+
+    return res.json({ leaderboard });
+  } catch (error) {
+    console.error("GET LEADERBOARD ERROR:", error);
+    return res.status(500).json({ message: "Failed to fetch leaderboard" });
   }
 };

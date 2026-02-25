@@ -35,6 +35,24 @@ export default function ArenaHub() {
     const [discForm, setDiscForm] = useState({ title: '', content: '', tags: '' });
     const [arenaSearch, setArenaSearch] = useState("");
     const [arenaDisplayCount, setArenaDisplayCount] = useState(8);
+    const [selectedDiscussion, setSelectedDiscussion] = useState<any>(null);
+    const [replyContent, setReplyContent] = useState("");
+    const [submittingReply, setSubmittingReply] = useState(false);
+    const [leaderboard, setLeaderboard] = useState<any[]>([]);
+
+    useEffect(() => {
+        fetchLeaderboard();
+    }, []);
+
+    const fetchLeaderboard = async () => {
+        try {
+            const res: any = await api.get('/students/leaderboard');
+            setLeaderboard(res.data.leaderboard || []);
+        } catch (e) {
+            console.error("Failed to sync ELO ratings", e);
+        }
+    };
+
 
     useEffect(() => {
         fetchData();
@@ -87,6 +105,23 @@ export default function ArenaHub() {
         }
     };
 
+    const handlePostReply = async () => {
+        if (!replyContent.trim()) return;
+        setSubmittingReply(true);
+        try {
+            const res: any = await api.post(`/arena/reply/${selectedDiscussion._id}`, { content: replyContent });
+            toast.success("Reply added to the flux");
+            setReplyContent("");
+            setSelectedDiscussion(res.data.discussion);
+            fetchData();
+        } catch {
+            toast.error("Failed to post reply");
+        } finally {
+            setSubmittingReply(false);
+        }
+    };
+
+
     const filterExperiences = (list: any[]) => {
         if (!arenaSearch.trim()) return list;
         const q = arenaSearch.toLowerCase();
@@ -124,8 +159,17 @@ export default function ArenaHub() {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="relative overflow-hidden bg-[#080B1A] rounded-[60px] p-16 text-white mb-14 border border-white/5 shadow-[0_40px_100px_rgba(0,0,0,0.5)]"
+                className="neural-map relative overflow-hidden bg-[#080B1A] rounded-[60px] p-16 text-white mb-14 shadow-[0_40px_100px_rgba(0,0,0,0.5)] border border-white/5"
             >
+                {/* Hot Topics Bar */}
+                <div className="flex flex-wrap gap-2 mb-8 relative z-10">
+                    {['#Google_OA', '#Microsoft_SDE2', '#System_Design', '#DSA_Blind75'].map(tag => (
+                        <span key={tag} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[8px] font-black uppercase tracking-[0.2em] text-indigo-300 backdrop-blur-md animate-pulse">
+                            {tag}
+                        </span>
+                    ))}
+                </div>
+
                 {/* Glows */}
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/15 rounded-full blur-[150px] -mr-40 -mt-40 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[120px] -ml-40 -mb-40 pointer-events-none" />
@@ -148,47 +192,46 @@ export default function ArenaHub() {
 
                 <div className="relative z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-12">
                     <div className="max-w-3xl">
-                        <div className="flex items-center gap-4 mb-8">
+                        <div className="flex items-center gap-5 mb-10">
                             <motion.div
-                                whileHover={{ rotate: 15, scale: 1.1 }}
-                                className="h-16 w-16 rounded-[28px] bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-[0_10px_30px_rgba(99,102,241,0.4)] border border-white/20"
+                                whileHover={{ rotate: 15, scale: 1.1, boxShadow: "0 0 40px rgba(99,102,241,0.5)" }}
+                                className="h-20 w-20 rounded-[35px] bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-2xl border border-white/20 relative overflow-hidden"
                             >
-                                <Swords className="h-8 w-8 text-white" />
+                                <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent pointer-events-none" />
+                                <Swords className="h-10 w-10 text-white relative z-10" />
                             </motion.div>
                             <div>
-                                <p className="text-[11px] font-black uppercase tracking-[0.5em] text-indigo-400">Collaborative Intelligence Network</p>
-                                <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest mt-0.5">Decentralized Knowledge Protocol</p>
+                                <p className="text-[12px] font-black uppercase tracking-[0.6em] text-indigo-400 italic">Neural Network Active</p>
+                                <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1">Convergence Factor: 0.982_SECURE</p>
                             </div>
                         </div>
 
-                        <h1 className="text-7xl md:text-8xl font-black tracking-[-0.05em] leading-[0.9] mb-8 uppercase">
-                            The{' '}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 drop-shadow-[0_0_30px_rgba(99,102,241,0.5)]">
-                                Arena
+                        <h1 className="text-8xl md:text-[10rem] font-black tracking-[-0.08em] leading-[0.85] mb-12 uppercase italic">
+                            THE{' '}
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 drop-shadow-[0_0_50px_rgba(99,102,241,0.6)]">
+                                ARENA
                             </span>
                         </h1>
-                        <p className="text-slate-400 text-xl font-bold leading-relaxed max-w-2xl">
-                            A decentralized node for student intelligence. Share interview protocols, solve logical bottlenecks, and build the{' '}
-                            <span className="text-white italic underline decoration-indigo-500 underline-offset-4">peer-to-peer knowledge graph</span>.
+                        <p className="text-slate-400 text-2xl font-bold leading-tight max-w-2xl italic">
+                            The collective <span className="text-white italic underline decoration-indigo-500 decoration-4 underline-offset-8">neurological uplink</span> for elite candidate intelligence.
                         </p>
                     </div>
 
-                    {/* Stats */}
-                    <div className="flex gap-6 shrink-0">
+                    {/* Elite Stats Hub */}
+                    <div className="grid grid-cols-2 gap-8 lg:flex lg:gap-10 shrink-0">
                         {[
-                            { label: 'Active Nodes', value: '1.2k+', icon: Users, color: 'text-indigo-400' },
-                            { label: 'Weekly Intel', value: '450', icon: Flame, color: 'text-orange-400' },
-                            { label: 'Protocols', value: '98%', icon: Shield, color: 'text-emerald-400' },
+                            { label: 'Network Sync', value: '4.8k', icon: Activity, color: 'text-cyan-400' },
+                            { label: 'Intel Velocity', value: '+142%', icon: TrendingUp, color: 'text-indigo-400' }
                         ].map((s, i) => (
                             <motion.div
                                 key={i}
-                                whileHover={{ y: -8 }}
-                                className="bg-white/5 border border-white/10 p-8 rounded-[40px] text-center min-w-[140px] backdrop-blur-md relative overflow-hidden"
+                                whileHover={{ y: -15, backgroundColor: "rgba(255,255,255,0.08)" }}
+                                className="bg-white/5 border border-white/10 p-10 rounded-[50px] text-center min-w-[200px] backdrop-blur-3xl shadow-3xl relative overflow-hidden group"
                             >
-                                <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                                <s.icon className={cn("h-5 w-5 mx-auto mb-3", s.color)} />
-                                <p className="text-4xl font-black tracking-tighter italic mb-1">{s.value}</p>
-                                <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500">{s.label}</p>
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                                <s.icon className={cn("h-8 w-8 mx-auto mb-6 transition-transform group-hover:scale-125", s.color)} />
+                                <p className="text-5xl font-black tracking-tighter italic mb-2 text-white drop-shadow-lg">{s.value}</p>
+                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 italic">{s.label}</p>
                             </motion.div>
                         ))}
                     </div>
@@ -303,7 +346,7 @@ export default function ArenaHub() {
                                     ) : (
                                         <>
                                             {displayedDiscussions.map((disc: any, idx: number) => (
-                                                <DiscussionCard key={disc._id} disc={disc} idx={idx} />
+                                                <DiscussionCard key={disc._id} disc={disc} idx={idx} onClick={() => setSelectedDiscussion(disc)} />
                                             ))}
                                             {hasMoreDisc && (
                                                 <button
@@ -328,39 +371,50 @@ export default function ArenaHub() {
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="bg-white dark:bg-[#0A0C1B] p-10 rounded-[50px] border border-slate-100 dark:border-white/5 shadow-xl relative overflow-hidden"
+                        className="glass-premium p-10 rounded-[60px] border border-white/5 shadow-2xl relative overflow-hidden group"
                     >
-                        <div className="absolute top-0 right-0 p-24 bg-amber-500/5 rounded-full blur-3xl -mr-12 -mt-12" />
-                        <div className="flex items-center gap-4 mb-10">
-                            <div className="h-12 w-12 rounded-[22px] bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-200">
-                                <Trophy className="h-6 w-6 text-white" />
+                        <div className="absolute top-0 right-0 p-32 bg-amber-500/10 rounded-full blur-[100px] -mr-16 -mt-16 pointer-events-none group-hover:bg-amber-500/20 transition-colors" />
+                        <div className="flex items-center gap-5 mb-12">
+                            <div className="h-14 w-14 rounded-[25px] bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-[0_10px_30px_rgba(245,158,11,0.3)] border border-white/20">
+                                <Trophy className="h-7 w-7 text-white" />
                             </div>
                             <div>
-                                <h3 className="text-xl font-black text-slate-900 dark:text-white italic uppercase tracking-tighter">Elite Contributors</h3>
-                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Top intelligence nodes</p>
+                                <h3 className="text-2xl font-black text-white italic uppercase tracking-tighter leading-none">Elite Nodes</h3>
+                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 mt-1">High-trust contributors</p>
                             </div>
                         </div>
-                        <div className="space-y-5">
-                            {[
-                                { name: 'Arjun Mehta', intel: 34, badge: '🥇', color: 'text-amber-500' },
-                                { name: 'Priya Sharma', intel: 28, badge: '🥈', color: 'text-slate-400' },
-                                { name: 'Rohan Verma', intel: 21, badge: '🥉', color: 'text-orange-400' },
-                            ].map((u, i) => (
-                                <motion.div
-                                    key={i}
-                                    whileHover={{ x: 6 }}
-                                    className="flex items-center justify-between p-4 bg-slate-50 dark:bg-white/5 rounded-[25px] border border-transparent hover:border-indigo-500/20 transition-all"
-                                >
-                                    <div className="flex items-center gap-4">
-                                        <span className="text-xl">{u.badge}</span>
-                                        <div>
-                                            <p className="text-[11px] font-black uppercase text-slate-900 dark:text-white tracking-tight">{u.name}</p>
-                                            <p className="text-[9px] font-black text-indigo-500 uppercase tracking-widest">{u.intel} Intel Shared</p>
+                        <div className="space-y-6">
+                            {leaderboard.length === 0 && (
+                                <div className="text-center py-6 text-slate-500 text-[10px] font-black uppercase tracking-widest">Loading ELO Rankings...</div>
+                            )}
+                            {leaderboard.slice(0, 5).map((u, i) => {
+                                const badge = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '🎖️';
+                                const color = i === 0 ? 'text-amber-500' : i === 1 ? 'text-slate-300' : i === 2 ? 'text-orange-400' : 'text-indigo-400';
+                                const rankName = i === 0 ? 'ARCHITECT' : i === 1 ? 'ELITE' : i <= 3 ? 'VOYAGER' : 'CHALLENGER';
+                                return (
+                                    <motion.div
+                                        key={u._id}
+                                        whileHover={{ x: 10, backgroundColor: "rgba(255,255,255,0.04)" }}
+                                        className="flex items-center justify-between p-5 bg-white/[0.02] rounded-[30px] border border-white/5 hover:border-indigo-500/30 transition-all cursor-crosshair group/item"
+                                    >
+                                        <div className="flex items-center gap-5">
+                                            <span className="text-2xl drop-shadow-[0_0_10px_rgba(0,0,0,0.5)] flex shrink-0 justify-center w-8">{badge}</span>
+                                            <div>
+                                                <p className="text-[12px] font-black uppercase text-white tracking-tight truncate max-w-[120px]">{u.name}</p>
+                                                <p className="text-[8px] font-black text-indigo-500 uppercase tracking-[0.3em]">{rankName} · ELO {u.totalScore}</p>
+                                                <div className="flex items-center gap-1 mt-1 text-[10px] grayscale-[0.2]">
+                                                    {(u.codingScore || 0) >= 80 && <span title="Code Ninja">💻</span>}
+                                                    {(u.aptitudeScore || 0) >= 80 && <span title="Logic Master">🧠</span>}
+                                                    {(u.interviewScore || 0) >= 80 && <span title="Silver Tongue">🎤</span>}
+                                                    {(u.resumeScore || 0) >= 80 && <span title="Profile Perfect">✨</span>}
+                                                    {(u.cgpa || 0) >= 9.0 && <span title="Scholar">🎓</span>}
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <Zap className={cn("h-4 w-4 fill-current", u.color)} />
-                                </motion.div>
-                            ))}
+                                        <Zap className={cn("h-4 w-4 fill-current transition-transform group-hover/item:scale-125 group-hover/item:rotate-12", color)} />
+                                    </motion.div>
+                                );
+                            })}
                         </div>
                     </motion.div>
 
@@ -475,6 +529,86 @@ export default function ArenaHub() {
                     </Modal>
                 )}
             </AnimatePresence>
+
+            {/* ── Discussion Detail Modal ── */}
+            <AnimatePresence>
+                {selectedDiscussion && (
+                    <Modal
+                        title={selectedDiscussion.title}
+                        sub={`Uplink from ${selectedDiscussion.studentId?.name || 'Anonymous'}`}
+                        onClose={() => setSelectedDiscussion(null)}
+                    >
+                        <div className="space-y-8">
+                            <div className="bg-slate-50 dark:bg-white/5 p-8 rounded-[40px] border border-slate-100 dark:border-white/10">
+                                <p className="text-slate-600 dark:text-slate-300 font-bold italic leading-relaxed whitespace-pre-wrap">{selectedDiscussion.content}</p>
+                                <div className="flex flex-wrap gap-2 mt-6">
+                                    {selectedDiscussion.tags?.map((tag: any, i: number) => (
+                                        <span key={i} className="px-3 py-1 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl text-[8px] font-black uppercase tracking-widest border border-indigo-100 dark:border-indigo-500/20">
+                                            #{tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="space-y-6">
+                                <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 italic flex items-center gap-3">
+                                    <MessageCircle className="h-3 w-3" /> Replies ({selectedDiscussion.replies?.length || 0})
+                                </h4>
+
+                                <div className="space-y-4 max-h-[300px] overflow-y-auto pr-4 custom-scrollbar">
+                                    {selectedDiscussion.replies?.length === 0 ? (
+                                        <div className="text-center py-10 bg-slate-50 dark:bg-white/5 rounded-[30px] border border-dashed border-slate-200 dark:border-white/10">
+                                            <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest italic">No replies in this node yet</p>
+                                        </div>
+                                    ) : (
+                                        selectedDiscussion.replies?.map((reply: any, i: number) => (
+                                            <motion.div
+                                                key={i}
+                                                initial={{ opacity: 0, x: -10 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                className="bg-white dark:bg-[#060813] p-6 rounded-[30px] border border-slate-100 dark:border-white/5 shadow-sm"
+                                            >
+                                                <div className="flex items-center gap-3 mb-3">
+                                                    <div className="h-8 w-8 rounded-2xl bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 flex items-center justify-center text-[10px] font-black text-white">
+                                                        {reply.studentId?.name?.charAt(0) || 'U'}
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-[9px] font-black uppercase tracking-tight text-slate-900 dark:text-slate-300">{reply.studentId?.name || 'Anonymous'}</p>
+                                                        <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest">{new Date(reply.createdAt).toLocaleDateString()}</p>
+                                                    </div>
+                                                </div>
+                                                <p className="text-slate-600 dark:text-slate-400 text-xs font-bold italic leading-relaxed">{reply.content}</p>
+                                            </motion.div>
+                                        ))
+                                    )}
+                                </div>
+
+                                <div className="pt-6 border-t border-slate-100 dark:border-white/5 space-y-4">
+                                    <textarea
+                                        value={replyContent}
+                                        onChange={(e) => setReplyContent(e.target.value)}
+                                        placeholder="Add your intelligence to this node..."
+                                        className="w-full px-6 py-4 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/10 focus:ring-2 focus:ring-indigo-500 transition-all font-bold text-xs text-slate-900 dark:text-white outline-none resize-none min-h-[100px] italic"
+                                    />
+                                    <button
+                                        disabled={submittingReply || !replyContent.trim()}
+                                        onClick={handlePostReply}
+                                        className="w-full py-4 bg-indigo-600 text-white rounded-[25px] font-black uppercase tracking-widest text-[10px] shadow-xl hover:bg-indigo-500 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {submittingReply ? (
+                                            <Activity className="h-4 w-4 animate-spin" />
+                                        ) : (
+                                            <Plus className="h-4 w-4" />
+                                        )}
+                                        Transmit Reply
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </Modal>
+                )}
+            </AnimatePresence>
+
         </div>
     );
 }
@@ -492,7 +626,7 @@ function ExperienceCard({ exp, idx }: { exp: any; idx: number }) {
 
     const handleLike = () => {
         setLiked(prev => !prev);
-        setLikeCount(c => (liked ? c - 1 : c + 1));
+        setLikeCount((c: number) => (liked ? c - 1 : c + 1));
         toast.success(liked ? 'Unliked' : 'Liked!');
     };
 
@@ -524,31 +658,37 @@ function ExperienceCard({ exp, idx }: { exp: any; idx: number }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.07 }}
-            whileHover={{ y: -4 }}
-            className="group bg-white dark:bg-[#0A0C1B] p-10 rounded-[50px] border border-slate-100 dark:border-white/5 shadow-sm hover:shadow-2xl hover:border-indigo-100 dark:hover:border-indigo-500/20 transition-all duration-500 relative overflow-hidden"
+            whileHover={{ y: -8, scale: 1.01 }}
+            className="group glass-premium p-10 rounded-[60px] border border-white/5 shadow-2xl hover:shadow-[0_20px_60px_rgba(99,102,241,0.1)] transition-all duration-500 relative overflow-hidden"
         >
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+
             <div className="absolute -top-20 -right-20 h-60 w-60 bg-indigo-500/3 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="flex items-start justify-between mb-8">
-                <div className="flex items-center gap-5">
-                    <div className="h-16 w-16 rounded-[28px] bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-black italic text-xl shadow-lg shadow-indigo-200 dark:shadow-none border-2 border-white/20">
-                        {exp.studentId?.name?.charAt(0) || 'U'}
+            <div className="flex items-start justify-between mb-10">
+                <div className="flex items-center gap-6">
+                    <div className="relative group/avatar">
+                        <div className="absolute inset-0 bg-indigo-500/20 rounded-[30px] blur-xl opacity-0 group-hover/avatar:opacity-100 transition-opacity" />
+                        <div className="h-16 w-16 rounded-[30px] bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-black italic text-2xl shadow-2xl relative z-10 border border-white/20">
+                            {exp.studentId?.name?.charAt(0) || 'U'}
+                        </div>
                     </div>
                     <div>
-                        <h3 className="font-black text-slate-900 dark:text-white italic uppercase tracking-tighter text-2xl leading-none">
-                            {exp.company} <span className="text-slate-400 text-base font-bold">/ {exp.role}</span>
+                        <h3 className="font-black text-slate-900 dark:text-white italic uppercase tracking-tighter text-3xl leading-none mb-3 group-hover:text-indigo-400 transition-colors">
+                            {exp.company} <span className="text-indigo-500/40 text-lg mx-2">/</span> <span className="text-slate-500 text-lg font-black">{exp.role}</span>
                         </h3>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2 mt-2">
-                            <span>{exp.studentId?.name}</span>
-                            <span className="h-1 w-1 rounded-full bg-slate-300" />
-                            <span>{exp.studentId?.branch}</span>
-                            <span className="h-1 w-1 rounded-full bg-slate-300" />
-                            <span>{new Date(exp.createdAt).toLocaleDateString()}</span>
+                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 flex items-center gap-3">
+                            <Users className="h-3 w-3 text-indigo-400" />
+                            <span className="text-slate-400">{exp.studentId?.name}</span>
+                            <div className="h-1 w-1 rounded-full bg-slate-700" />
+                            <span className="text-indigo-400/60">{exp.studentId?.branch}</span>
+                            <div className="h-1 w-1 rounded-full bg-slate-700" />
+                            <span className="flex items-center gap-1.5"><Clock className="h-2.5 w-2.5" /> {new Date(exp.createdAt).toLocaleDateString()}</span>
                         </p>
                     </div>
                 </div>
-                <span className={cn("px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest border italic", verdictColor)}>
+                <div className={cn("px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] border shadow-lg italic backdrop-blur-md", verdictColor)}>
                     {exp.verdict}
-                </span>
+                </div>
             </div>
 
             <p className="text-slate-600 dark:text-slate-400 font-bold italic mb-8 line-clamp-2 text-lg leading-relaxed">{exp.tips}</p>
@@ -594,9 +734,9 @@ function ExperienceCard({ exp, idx }: { exp: any; idx: number }) {
     );
 }
 
-function DiscussionCard({ disc, idx }: { disc: any; idx: number }) {
+function DiscussionCard({ disc, idx, onClick }: { disc: any; idx: number; onClick: () => void }) {
     const handleJoinNode = () => {
-        toast.success(`Joined discussion: ${disc.title}`);
+        onClick();
     };
 
     return (
@@ -604,46 +744,66 @@ function DiscussionCard({ disc, idx }: { disc: any; idx: number }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.07 }}
-            whileHover={{ y: -4 }}
-            className="group bg-white dark:bg-[#0A0C1B] p-10 rounded-[50px] border border-slate-100 dark:border-white/5 shadow-sm hover:shadow-2xl hover:border-purple-100 dark:hover:border-purple-500/20 transition-all duration-500"
+            whileHover={{ y: -10, scale: 1.01 }}
+            className="group glass-premium p-10 rounded-[60px] border border-white/5 shadow-2xl hover:shadow-[0_20px_60px_rgba(139,92,246,0.2)] transition-all duration-500 relative overflow-hidden"
         >
-            <div className="flex items-center gap-4 mb-6">
-                <div className="h-12 w-12 rounded-[22px] bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-[11px] font-black italic text-white shadow-md">
-                    {disc.studentId?.name?.charAt(0) || 'U'}
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+
+            <div className="absolute -top-20 -left-20 h-64 w-64 bg-purple-500/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
+
+            <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-5">
+                    <div className="h-14 w-14 rounded-[25px] bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xl font-black italic text-white shadow-xl border border-white/20">
+                        {disc.studentId?.name?.charAt(0) || 'U'}
+                    </div>
+                    <div>
+                        <p className="text-[11px] font-black uppercase tracking-[0.4em] text-purple-400 italic">Node Origin: {disc.studentId?.name}</p>
+                        <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Epoch: {new Date(disc.createdAt).toLocaleDateString()}</p>
+                    </div>
                 </div>
-                <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">{disc.studentId?.name} Node</p>
-                    <p className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">{new Date(disc.createdAt).toLocaleDateString()}</p>
+                <div className="flex items-center gap-2 px-4 py-1.5 bg-purple-500/10 rounded-full border border-purple-500/20 text-purple-400">
+                    <Activity className="h-3 w-3 animate-pulse" />
+                    <span className="text-[9px] font-black uppercase tracking-widest">Active Flux</span>
                 </div>
             </div>
 
-            <h3 className="text-2xl font-black text-slate-900 dark:text-white italic uppercase tracking-tighter mb-4 group-hover:text-indigo-600 transition-colors">{disc.title}</h3>
-            <p className="text-slate-600 dark:text-slate-400 font-bold italic mb-8 line-clamp-3 leading-relaxed">{disc.content}</p>
+            <h3 className="text-3xl font-black text-white italic uppercase tracking-tighter mb-6 group-hover:text-purple-400 transition-colors leading-tight">{disc.title}</h3>
+            <p className="text-slate-400 font-bold italic mb-10 line-clamp-3 leading-relaxed text-lg">{disc.content}</p>
 
-            <div className="flex flex-wrap gap-2 mb-8">
+            <div className="flex flex-wrap gap-2.5 mb-10">
                 {disc.tags?.map((tag: any, i: number) => (
-                    <span key={i} className="flex items-center gap-1.5 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-2xl text-[9px] font-black uppercase tracking-widest border border-indigo-100 dark:border-indigo-500/20">
-                        <Tag className="h-2.5 w-2.5" /> {tag}
+                    <span key={i} className="flex items-center gap-2 px-5 py-2 bg-white/5 text-slate-400 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-white/5 hover:border-purple-500/30 hover:text-purple-300 transition-all cursor-pointer">
+                        <Tag className="h-3 w-3" /> {tag}
                     </span>
                 ))}
             </div>
 
-            <div className="flex items-center justify-between">
-                <div className="flex -space-x-3">
-                    {[1, 2, 3].map(i => (
-                        <div key={i} className="h-9 w-9 rounded-full border-2 border-white dark:border-slate-900 bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600" />
-                    ))}
-                    <div className="h-9 w-9 rounded-full border-2 border-white dark:border-slate-900 bg-indigo-600 flex items-center justify-center text-[8px] font-black text-white">
-                        +{disc.replies?.length || 0}
+            <div className="flex items-center justify-between pt-8 border-t border-white/5">
+                <div className="flex items-center gap-4">
+                    <div className="flex -space-x-4">
+                        {[1, 2, 3].map(i => (
+                            <div key={i} className="h-11 w-11 rounded-full border-2 border-[#0A0D1E] bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center text-[10px] font-black text-white shadow-xl relative overflow-hidden group/avatar">
+                                <div className="absolute inset-0 bg-white/5 opacity-0 group-hover/avatar:opacity-100 transition-opacity" />
+                            </div>
+                        ))}
+                        <div className="h-11 w-11 rounded-full border-2 border-[#0A0D1E] bg-purple-600 flex items-center justify-center text-[10px] font-black text-white shadow-xl relative z-10">
+                            +{disc.replies?.length || 0}
+                        </div>
+                    </div>
+                    <div>
+                        <p className="text-[10px] font-black text-white italic uppercase tracking-widest">Active Peers</p>
+                        <p className="text-[8px] font-bold text-slate-500 uppercase tracking-widest">Current Node Occupancy</p>
                     </div>
                 </div>
-                <button
+                <motion.button
+                    whileHover={{ scale: 1.05, backgroundColor: "rgba(168,85,247,0.1)" }}
+                    whileTap={{ scale: 0.95 }}
                     type="button"
                     onClick={handleJoinNode}
-                    className="flex items-center gap-3 bg-slate-50 dark:bg-white/5 px-7 py-3.5 rounded-[25px] text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 hover:text-indigo-600 transition-all border border-transparent hover:border-indigo-500/20"
+                    className="flex items-center gap-4 bg-white/5 px-8 py-4 rounded-[30px] text-[11px] font-black uppercase tracking-[0.2em] text-slate-300 border border-white/10 hover:border-purple-500/40 hover:text-purple-400 transition-all shadow-lg"
                 >
-                    Join Node <Swords className="h-3.5 w-3.5" />
-                </button>
+                    ENTER NODE <ChevronRight className="h-4 w-4" />
+                </motion.button>
             </div>
         </motion.div>
     );

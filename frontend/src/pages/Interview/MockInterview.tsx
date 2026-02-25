@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import {
     Send, User, Bot, Mic, Volume2, StopCircle,
     CheckCircle, TrendingUp, RefreshCcw, X, Zap,
-    Brain, Activity, Star, ChevronRight, Sparkles
+    Brain, Activity, Star, ChevronRight, Sparkles, Paperclip
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../../services/api';
 import { toast } from 'react-hot-toast';
 import { cn } from '../../utils/cn';
+import { saveAssessment } from '../../services/assessment.service';
+
 
 interface Message {
     id: number;
@@ -34,6 +36,40 @@ export default function MockInterview() {
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const recognitionRef = useRef<any>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const toastId = toast.loading("Processing document...", { icon: "📄" });
+        const formData = new FormData();
+        formData.append("file", file);
+        setIsTyping(true);
+
+        try {
+            const res = await api.post<{ success: boolean, data: any }>("/resume/scan", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            if (res.data?.success && res.data.data) {
+                await api.post("/students/profile", {
+                    skills: res.data.data.resume?.skills || [],
+                    resumeScore: res.data.data.ranking?.score || 0,
+                });
+                toast.success("Profile Updated! Extracting topics...", { id: toastId, icon: "🧠" });
+
+                // Fetch new questions based on uploaded resume
+                startInterview();
+            } else {
+                toast.error("Unrecognized format.", { id: toastId });
+                setIsTyping(false);
+            }
+        } catch (error) {
+            toast.error("Upload failed.", { id: toastId });
+            setIsTyping(false);
+        }
+    };
 
     const startInterview = async () => {
         setIsTyping(true);
@@ -57,14 +93,43 @@ export default function MockInterview() {
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
             recognitionRef.current = new SR();
-            recognitionRef.current.continuous = false;
-            recognitionRef.current.interimResults = false;
+            recognitionRef.current.continuous = true;
+            recognitionRef.current.interimResults = true;
             recognitionRef.current.lang = 'en-US';
-            recognitionRef.current.onresult = (e: any) => { setInput(e.results[0][0].transcript); setIsListening(false); };
-            recognitionRef.current.onerror = () => setIsListening(false);
-            recognitionRef.current.onend = () => setIsListening(false);
+
+            recognitionRef.current.onresult = (e: any) => {
+                let finalTranscript = '';
+                let interimTranscript = '';
+                for (let i = e.resultIndex; i < e.results.length; ++i) {
+                    if (e.results[i].isFinal) {
+                        finalTranscript += e.results[i][0].transcript;
+                    } else {
+                        interimTranscript += e.results[i][0].transcript;
+                    }
+                }
+
+                // Set input to whatever is finalized + the current interim guess
+                setInput(prev => {
+                    const baseText = prev.replace(/ $/, ''); // Clean up trailing space
+                    if (finalTranscript) return baseText + ' ' + finalTranscript.trim() + ' ';
+                    return baseText + ' ' + interimTranscript.trim();
+                });
+            };
+
+            // Auto restart logic if user didn't explicitly pause
+            recognitionRef.current.onend = () => {
+                if (isListening) {
+                    recognitionRef.current.start();
+                }
+            };
+            recognitionRef.current.onerror = (e: any) => {
+                if (e.error !== 'no-speech') {
+                    setIsListening(false);
+                    toast.error("Microphone disconnected.");
+                }
+            };
         }
-    }, []);
+    }, [isListening]);
 
     const speak = (text: string) => {
         if ('speechSynthesis' in window) {
@@ -133,49 +198,78 @@ export default function MockInterview() {
             <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-[#080B1A] rounded-t-[40px] px-8 py-5 flex justify-between items-center border border-white/5 shadow-xl"
+                className="bg-[#080B1A] rounded-t-[40px] px-8 py-5 flex justify-between items-center border border-white/5 shadow-xl relative overflow-hidden"
             >
-                <div className="flex items-center gap-4">
-                    <motion.div
-                        animate={{ scale: isSpeaking ? [1, 1.15, 1] : 1 }}
-                        transition={{ repeat: isSpeaking ? Infinity : 0, duration: 0.8 }}
-                        className="h-12 w-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-[20px] flex items-center justify-center shadow-lg shadow-blue-500/30"
-                    >
-                        <Bot className="h-6 w-6 text-white" />
-                    </motion.div>
+                {/* Voice Active Background Pulsing */}
+                <AnimatePresence>
+                    {(isSpeaking || isListening) && (
+                        <motion.div
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                            className="absolute inset-0 bg-blue-500/10 mix-blend-overlay pointer-events-none"
+                        />
+                    )}
+                </AnimatePresence>
+
+                <div className="flex items-center gap-4 relative z-10">
+                    <div className="relative">
+                        {/* Audio Waveform Ring */}
+                        {(isSpeaking || isListening) && (
+                            <motion.div
+                                animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
+                                transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                                className={cn("absolute inset-0 rounded-[20px] blur-sm", isSpeaking ? "bg-blue-500" : "bg-rose-500")}
+                            />
+                        )}
+                        <motion.div
+                            animate={{ scale: isSpeaking ? [1, 1.05, 1] : 1 }}
+                            transition={{ repeat: isSpeaking ? Infinity : 0, duration: 0.8 }}
+                            className="relative h-12 w-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-[20px] flex items-center justify-center shadow-lg shadow-blue-500/30 ring-1 ring-white/10"
+                        >
+                            {isListening ? <Mic className="h-6 w-6 text-white animate-pulse" /> : <Bot className="h-6 w-6 text-white" />}
+                        </motion.div>
+                    </div>
                     <div>
                         <div className="flex items-center gap-3">
                             <h2 className="text-lg font-black tracking-tight text-white italic">AI Coach</h2>
-                            <span className="text-blue-400 text-[9px] font-black uppercase px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full">v2.4 Prime</span>
+                            <span className="text-blue-400 text-[9px] font-black uppercase px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full flex items-center gap-1.5">
+                                <Activity className="h-3 w-3" /> Voice Model Active
+                            </span>
                         </div>
-                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Real-time Skill Validation Engine</p>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Real-time Audio Intelligence</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-4">
-                    {isSpeaking && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full"
-                        >
-                            <Volume2 className="h-3 w-3 text-blue-400 animate-pulse" />
-                            <span className="text-[9px] font-black uppercase text-blue-400">Audio Active</span>
-                        </motion.div>
-                    )}
+                <div className="flex items-center gap-4 relative z-10">
+                    <AnimatePresence>
+                        {isSpeaking && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.8 }}
+                                className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full"
+                            >
+                                <Volume2 className="h-3 w-3 text-blue-400 animate-pulse" />
+                                <span className="text-[9px] font-black uppercase tracking-widest text-blue-400">Synthesizing Voice</span>
+                            </motion.div>
+                        )}
+                        {isListening && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.8 }}
+                                className="flex items-center gap-2 px-4 py-2 bg-rose-500/10 border border-rose-500/20 rounded-full"
+                            >
+                                <Mic className="h-3 w-3 text-rose-400 animate-pulse" />
+                                <span className="text-[9px] font-black uppercase tracking-widest text-rose-400">Listening to you ({input.length > 0 ? 'Hearing' : 'Silent'})</span>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                     {questions.length > 0 && (
                         <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full">
-                            <Activity className="h-3 w-3 text-emerald-400" />
                             <span className="text-[9px] font-black uppercase text-slate-400">
-                                {Math.min(currentIndex + 1, questions.length)}/{questions.length}
+                                Q: {Math.min(currentIndex + 1, questions.length)} / {questions.length}
                             </span>
                         </div>
                     )}
-                    <button
-                        onClick={() => setShowReport(true)}
-                        className="px-5 py-2.5 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all"
-                    >
-                        Review
-                    </button>
                     <button
                         onClick={() => navigate('/dashboard')}
                         className="h-10 w-10 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all"
@@ -264,40 +358,87 @@ export default function MockInterview() {
             <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-b-[40px] p-6 border border-slate-100 border-t-0 shadow-xl"
+                className="bg-white rounded-b-[40px] p-6 border border-slate-100 border-t-0 shadow-xl relative z-20"
             >
+                {/* Live Speech Waveform overlay inside input area */}
+                <AnimatePresence>
+                    {isListening && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="absolute -top-12 left-0 right-0 flex justify-center items-end h-10 gap-1 pointer-events-none"
+                        >
+                            {[...Array(20)].map((_, i) => (
+                                <motion.div
+                                    key={i}
+                                    animate={{ height: [Math.random() * 10 + 10, Math.random() * 30 + 20, Math.random() * 10 + 10] }}
+                                    transition={{ repeat: Infinity, duration: Math.random() * 0.5 + 0.3 }}
+                                    className="w-1.5 bg-rose-500 rounded-full opacity-60"
+                                />
+                            ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
                 <div className="flex gap-4 items-center">
-                    <motion.button
-                        whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
-                        onClick={toggleListening}
-                        className={cn(
-                            "h-14 w-14 rounded-[22px] flex items-center justify-center transition-all shadow-lg shrink-0",
-                            isListening
-                                ? "bg-rose-500 text-white shadow-rose-200 animate-pulse"
-                                : "bg-slate-50 text-slate-400 hover:bg-slate-100 border border-slate-100"
+                    <div className="relative">
+                        {isListening && (
+                            <motion.div
+                                animate={{ scale: [1, 1.5], opacity: [0.3, 0] }}
+                                transition={{ repeat: Infinity, duration: 1.5 }}
+                                className="absolute inset-0 bg-rose-500 rounded-[22px]"
+                            />
                         )}
-                    >
-                        {isListening ? <StopCircle className="h-6 w-6" /> : <Mic className="h-6 w-6" />}
-                    </motion.button>
+                        <motion.button
+                            whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                            onClick={toggleListening}
+                            className={cn(
+                                "relative z-10 h-14 w-14 rounded-[22px] flex items-center justify-center transition-all shadow-lg shrink-0",
+                                isListening
+                                    ? "bg-rose-500 text-white shadow-rose-200"
+                                    : "bg-slate-50 text-slate-400 hover:bg-slate-100 border border-slate-100 hover:text-rose-500"
+                            )}
+                        >
+                            {isListening ? <StopCircle className="h-6 w-6" /> : <Mic className="h-6 w-6" />}
+                        </motion.button>
+                    </div>
 
                     <div className="flex-1 relative">
+                        <input type="file" ref={fileInputRef} className="hidden" accept=".pdf,.doc,.docx" onChange={handleFileUpload} />
                         <input
                             type="text"
-                            className="w-full h-14 bg-slate-50 border-2 border-slate-100 rounded-[22px] px-6 pr-16 focus:outline-none focus:border-blue-400 focus:bg-white text-sm font-bold text-slate-700 transition-all placeholder:text-slate-300"
-                            placeholder={isListening ? "Listening to your response..." : "Type your answer or click Mic..."}
+                            className={cn(
+                                "w-full h-14 border-2 rounded-[22px] px-6 pr-[100px] focus:outline-none focus:bg-white text-sm font-bold transition-all placeholder:text-slate-300",
+                                isListening ? "bg-rose-50/50 border-rose-100 text-rose-900 focus:border-rose-400" : "bg-slate-50 border-slate-100 text-slate-700 focus:border-blue-400"
+                            )}
+                            placeholder={isListening ? "Listening... Speak your answer loudly." : "Type your answer or click the Mic..."}
                             value={input}
                             onChange={e => setInput(e.target.value)}
                             onKeyDown={e => e.key === 'Enter' && handleSend()}
                             disabled={isTyping}
                         />
-                        <motion.button
-                            whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
-                            onClick={handleSend}
-                            disabled={!input.trim() || isTyping}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 h-9 w-9 bg-blue-600 text-white rounded-xl flex items-center justify-center hover:bg-blue-500 transition-all disabled:opacity-40 shadow-md shadow-blue-200"
-                        >
-                            <Send className="h-4 w-4" />
-                        </motion.button>
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                            <button
+                                onClick={() => fileInputRef.current?.click()}
+                                disabled={isTyping}
+                                className="h-9 w-9 bg-slate-200 text-slate-500 rounded-xl flex items-center justify-center hover:bg-slate-300 transition-all disabled:opacity-40"
+                                title="Upload Resume Context"
+                            >
+                                <Paperclip className="h-4 w-4" />
+                            </button>
+                            <motion.button
+                                whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                                onClick={handleSend}
+                                disabled={!input.trim() || isTyping}
+                                className={cn(
+                                    "h-9 w-9 rounded-xl flex items-center justify-center transition-all disabled:opacity-40 shadow-md",
+                                    isListening ? "bg-rose-600 hover:bg-rose-500 shadow-rose-200 text-white" : "bg-blue-600 hover:bg-blue-500 shadow-blue-200 text-white"
+                                )}
+                            >
+                                <Send className="h-4 w-4" />
+                            </motion.button>
+                        </div>
                     </div>
 
                     <motion.button
@@ -387,7 +528,29 @@ export default function MockInterview() {
                                 <div className="grid grid-cols-2 gap-5">
                                     <motion.button
                                         whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                                        onClick={() => navigate('/dashboard')}
+                                        onClick={async () => {
+                                            try {
+                                                await saveAssessment({
+                                                    type: 'Interview',
+                                                    score: Math.round((avgScore / 100) * (questions.length || 1)),
+                                                    totalQuestions: questions.length || 1,
+                                                    timeTaken: 0, // Could be tracked
+                                                    results: messages.filter(m => m.sender === 'user').map((m, i) => ({
+                                                        question: questions[i] || "General Question",
+                                                        answer: m.text,
+                                                        score: m.score,
+                                                        feedback: m.feedback
+                                                    })),
+                                                    topicAnalysis: [{ topic: 'Mock Interview', score: avgScore, total: 100 }]
+                                                });
+                                                toast.success("Progress Synchronized!");
+                                                navigate('/dashboard');
+                                            } catch (err) {
+                                                toast.error("Failed to sync progress");
+                                                navigate('/dashboard');
+                                            }
+                                        }}
+
                                         className="py-5 bg-slate-900 text-white rounded-[28px] font-black text-[10px] uppercase tracking-widest shadow-xl flex items-center justify-center gap-3"
                                     >
                                         <Zap className="h-4 w-4" /> Seal Progress

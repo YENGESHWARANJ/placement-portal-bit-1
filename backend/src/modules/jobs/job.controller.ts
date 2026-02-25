@@ -3,7 +3,9 @@ import axios from "axios";
 import Job from "./job.model";
 import { AuthRequest } from "../../middleware/auth.middleware";
 import Student from "../students/student.model";
+import Notice from "../notices/notice.model";
 import { ENV } from "../../config/env.config";
+import { logActivity } from "../activity/activity.controller";
 
 // ================================
 // CREATE JOB
@@ -60,6 +62,27 @@ export const createJob = async (req: AuthRequest, res: Response) => {
             deadline: finalDeadline,
         });
 
+        await logActivity(userId!, "Posted Job", `Posted new job: ${title} at ${company}`);
+
+        // Broadcast System Notice to all Students
+        await Notice.create({
+            title: `New Opportunity: ${title}`,
+            content: `A new job opening at ${company} has just been posted. Log in to your dashboard to review the requirements and apply before the deadline.`,
+            type: "Student",
+            priority: "High",
+            createdBy: userId
+        });
+
+        // Fire Real-Time Socket Event
+        const io = req.app.get("io");
+        if (io) {
+            io.emit("global_notification", {
+                title: `New Job Posted!`,
+                message: `${title} at ${company}`,
+                type: "success"
+            });
+        }
+
         return res.status(201).json({
             message: "Job posted successfully",
             job,
@@ -73,14 +96,41 @@ export const createJob = async (req: AuthRequest, res: Response) => {
 };
 
 // ================================
-// GET JOBS
+// GET JOBS (WITH PAGINATION AND FILTERING)
 // ================================
 export const getJobs = async (req: Request, res: Response) => {
     try {
-        const jobs = await Job.find({ active: true }).sort({ createdAt: -1 });
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 20;
+        const skip = (page - 1) * limit;
+
+        const search = req.query.search as string;
+        const type = req.query.type as string;
+        const location = req.query.location as string;
+
+        const query: any = { active: true };
+
+        if (search) {
+            query.$or = [
+                { title: { $regex: search, $options: "i" } },
+                { company: { $regex: search, $options: "i" } }
+            ];
+        }
+        if (type && type !== "All") query.type = type;
+        if (location && location !== "All") query.location = { $regex: location, $options: "i" };
+
+        const jobs = await Job.find(query)
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        const totalItems = await Job.countDocuments(query);
 
         return res.status(200).json({
             jobs,
+            totalPages: Math.ceil(totalItems / limit),
+            currentPage: page,
+            totalItems
         });
     } catch (error) {
         console.error("GET JOBS ERROR:", error);
@@ -125,7 +175,7 @@ export const getCompanies = async (req: Request, res: Response) => {
 };
 
 // ================================
-// GET MY JOBS (Recruiter Only)
+// GET MY JOBS (WITH PAGINATION AND FILTERING)
 // ================================
 export const getMyJobs = async (req: AuthRequest, res: Response) => {
     try {
@@ -135,10 +185,26 @@ export const getMyJobs = async (req: AuthRequest, res: Response) => {
             return res.status(401).json({ message: "Unauthorized" });
         }
 
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 20;
+        const skip = (page - 1) * limit;
+
+        const search = req.query.search as string;
+        const matchStage: any = { recruiterId: userId };
+
+        if (search) {
+            matchStage.$or = [
+                { title: { $regex: search, $options: "i" } },
+                { company: { $regex: search, $options: "i" } }
+            ];
+        }
+
         // Fetch jobs with applicant counts
         const jobs = await Job.aggregate([
-            { $match: { recruiterId: userId } },
+            { $match: matchStage },
             { $sort: { createdAt: -1 } },
+            { $skip: skip },
+            { $limit: limit },
             {
                 $lookup: {
                     from: "applications",
@@ -159,8 +225,17 @@ export const getMyJobs = async (req: AuthRequest, res: Response) => {
             }
         ]);
 
+        const totalDocsAgg = await Job.aggregate([
+            { $match: matchStage },
+            { $count: "total" }
+        ]);
+        const totalItems = totalDocsAgg.length > 0 ? totalDocsAgg[0].total : 0;
+
         return res.status(200).json({
             jobs,
+            totalPages: Math.ceil(totalItems / limit),
+            currentPage: page,
+            totalItems
         });
     } catch (error) {
         console.error("GET MY JOBS ERROR:", error);
@@ -223,11 +298,15 @@ export const getRecommendedJobs = async (req: AuthRequest, res: Response) => {
             });
 
             // AI Service returns sorted list with matchScore
-            const topJobs = data.ranked_jobs.slice(0, 10);
+            const topJobs = data.ranked_jobs.slice(0, 10).map(job => ({
+                ...job,
+                skills: job.skills || job.requirements || []
+            }));
 
             return res.json({
                 jobs: topJobs
             });
+
 
         } catch (aiError) {
             console.error("AI Service Ranking Failed, falling back to basic logic", aiError);
@@ -256,10 +335,12 @@ export const getRecommendedJobs = async (req: AuthRequest, res: Response) => {
 
             const topJobs = rankedJobs.slice(0, 10).map(item => ({
                 ...item.job.toObject(),
-                matchScore: Math.round(item.score)
+                matchScore: Math.round(item.score),
+                skills: item.job.requirements || []
             }));
 
             return res.json({ jobs: topJobs });
+
         }
 
     } catch (error) {
@@ -313,7 +394,9 @@ export const deleteJob = async (req: AuthRequest, res: Response) => {
             return res.status(403).json({ message: "You can only delete your own jobs" });
         }
 
+        const title = job.title;
         await job.deleteOne();
+        await logActivity(userId!, "Deleted Job", `Deleted job: ${title}`);
 
         return res.status(200).json({ message: "Job deleted successfully" });
     } catch (error) {
@@ -344,6 +427,7 @@ export const updateJob = async (req: AuthRequest, res: Response) => {
         Object.assign(job, req.body);
 
         await job.save();
+        await logActivity(userId!, "Updated Job", `Updated details for job: ${job.title}`);
 
         return res.status(200).json({ message: "Job updated successfully", job });
     } catch (error) {

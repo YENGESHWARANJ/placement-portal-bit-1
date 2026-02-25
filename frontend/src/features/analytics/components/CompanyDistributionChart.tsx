@@ -15,7 +15,7 @@ export default function CompanyDistributionChart() {
         <div className="bg-card p-6 rounded-xl border border-border shadow-sm flex flex-col">
             <h3 className="text-lg font-semibold mb-6">Company Distribution</h3>
             <div className="h-[350px] w-full flex-1">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1} debounce={100}>
                     <PieChart>
                         <Pie
                             data={data}

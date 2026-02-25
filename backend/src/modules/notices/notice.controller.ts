@@ -4,7 +4,7 @@ import { AuthRequest } from "../../middleware/auth.middleware";
 
 export const createNotice = async (req: AuthRequest, res: Response) => {
     try {
-        const { title, content, type, priority } = req.body;
+        const { title, content, type, priority, targetUser } = req.body;
         const userId = req.user?.userId;
 
         if (!title || !content) {
@@ -16,7 +16,8 @@ export const createNotice = async (req: AuthRequest, res: Response) => {
             content,
             type: type || "All",
             priority: priority || "Low",
-            createdBy: userId
+            createdBy: userId,
+            targetUser: targetUser || undefined
         });
 
         return res.status(201).json({ message: "Notice posted successfully", notice });
@@ -26,15 +27,30 @@ export const createNotice = async (req: AuthRequest, res: Response) => {
     }
 };
 
-export const getNotices = async (req: Request, res: Response) => {
+export const getNotices = async (req: AuthRequest, res: Response) => {
     try {
+        const userId = req.user?.userId;
+        const role = req.user?.role;
         const { type } = req.query;
-        const filter: any = {};
-        if (type) filter.type = { $in: [type, "All"] };
+
+        const filter: any = {
+            $or: [
+                { type: "All" },
+                { targetUser: userId }
+            ]
+        };
+
+        if (role === "student") filter.$or.push({ type: "Student" });
+        if (role === "recruiter") filter.$or.push({ type: "Recruiter" });
+
+        if (type && type !== "All") {
+            filter.$or = filter.$or.filter((cond: any) => cond.type === type || cond.targetUser === userId);
+        }
 
         const notices = await Notice.find(filter)
             .sort({ createdAt: -1 })
-            .populate("createdBy", "name");
+            .populate("createdBy", "name")
+            .populate("targetUser", "name");
 
         return res.json({ notices });
     } catch (error) {

@@ -33,12 +33,7 @@ export default function JobRecommendations() {
                 const res = await api.get<{ jobs?: Job[], message?: string }>("/jobs/recommendations");
 
                 if (res.data.jobs) {
-                    // Enrich with mock match data for demo if not present
-                    const enrichedJobs = res.data.jobs.map(job => ({
-                        ...job,
-                        matchScore: job.matchScore || Math.floor(Math.random() * (98 - 70) + 70) // Mock score if missing
-                    }));
-                    setJobs(enrichedJobs);
+                    setJobs(res.data.jobs);
                 } else {
                     setError(res.data.message || "No jobs found");
                 }
@@ -225,8 +220,8 @@ export default function JobRecommendations() {
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    <div className="h-64 bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-                                        <ResponsiveContainer width="100%" height="100%">
+                                    <div className="h-64 w-full bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+                                        <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={100}>
                                             <RadarChart cx="50%" cy="50%" outerRadius="80%" data={getChartData(job)}>
                                                 <PolarGrid stroke="#e2e8f0" />
                                                 <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 12 }} />

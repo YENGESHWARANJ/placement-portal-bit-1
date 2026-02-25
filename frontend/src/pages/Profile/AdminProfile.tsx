@@ -3,7 +3,7 @@ import { useAuth } from '../../features/auth/AuthContext';
 import { toast } from 'react-hot-toast';
 import {
     ShieldCheck, Mail, Cpu, Settings, Database, Activity,
-    Lock, Terminal, Zap, Server, Globe, Key, Bell, Search
+    Lock, Terminal, Zap, Server, Globe, Key, Bell, Search, Users
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 

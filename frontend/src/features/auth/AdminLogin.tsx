@@ -1,172 +1,219 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import {
-    ShieldAlert, Lock, Terminal, Activity,
-    ChevronRight, Cpu, Eye, EyeOff, AlertCircle
+    ShieldAlert, Lock, Mail, Eye, EyeOff, ArrowRight,
+    GraduationCap, Briefcase, AlertCircle, Activity, Zap
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useAuth } from "./AuthContext";
 import api from "../../services/api";
+import { motion, AnimatePresence } from "framer-motion";
+
+/* ─── Scanning line animation ──────────────────────────────────── */
+function ScanLine() {
+    return (
+        <motion.div
+            className="absolute left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500/60 to-transparent pointer-events-none z-20"
+            animate={{ top: ["0%", "100%"] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+        />
+    );
+}
+
+/* ─── Blinking cursor ───────────────────────────────────────────── */
+function Cursor() {
+    const [visible, setVisible] = useState(true);
+    useEffect(() => {
+        const t = setInterval(() => setVisible(v => !v), 500);
+        return () => clearInterval(t);
+    }, []);
+    return <span className={`inline-block w-2 h-4 bg-blue-500 ml-0.5 ${visible ? "opacity-100" : "opacity-0"}`} />;
+}
+
+/* ─── Log entry ─────────────────────────────────────────────────── */
+function LogEntry({ text, type = "info", delay }: { text: string; type?: "ok" | "info" | "warn"; delay: number }) {
+    const colors = { ok: "text-emerald-400", info: "text-blue-400", warn: "text-amber-400" };
+    const tags = { ok: "[OK]", info: "[INFO]", warn: "[WARN]" };
+    return (
+        <motion.p
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay, duration: 0.3 }}
+            className="text-[10px] font-mono flex items-center gap-2"
+        >
+            <span className={`${colors[type]} font-bold shrink-0`}>{tags[type]}</span>
+            <span className="text-slate-500">{text}</span>
+        </motion.p>
+    );
+}
 
 export default function AdminLogin() {
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, isAuthenticated, user } = useAuth();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
+    const [showPass, setShowPass] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [accessKey, setAccessKey] = useState(""); // Extra layer for "Seperate Portal" feel
+    const [focusField, setFocusField] = useState<"email" | "pass" | null>(null);
+    const emailRef = useRef<HTMLInputElement>(null);
 
-    const handleAdminLogin = async () => {
-        if (!email || !password) {
-            toast.error("Credentials Required for Root Access");
+    useEffect(() => {
+        if (isAuthenticated && user) {
+            if (user.role === "admin" || user.role === "officer") navigate("/admin/dashboard", { replace: true });
+            else navigate("/", { replace: true });
+        }
+    }, [isAuthenticated, user, navigate]);
+
+    useEffect(() => { emailRef.current?.focus(); }, []);
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!email.trim() || !password) {
+            toast.error("Authentication credentials required.");
             return;
         }
-
         setLoading(true);
-        const adminToast = toast.loading("Initialising Secure Session...");
-
         try {
-            const { data } = await api.post<{ token: string; user: any }>("/auth/login", { email, password });
+            const { data } = await api.post<{ token: string; user: any; redirectTo?: string; requiresVerification?: boolean; email?: string; message?: string }>("/auth/login", {
+                email: email.toLowerCase().trim(),
+                password,
+            });
 
-            if (data.user.role !== 'admin' && data.user.role !== 'officer') {
-                toast.error("Unauthorised Access Detected. This incident will be reported.", { id: adminToast });
+
+            if (data.user.role !== "admin" && data.user.role !== "officer") {
+                toast.error("⛔ Unauthorized access detected. This incident has been logged.");
                 return;
             }
 
             login(data.token, data.user);
-            toast.success("Command Center Access Granted", { id: adminToast });
-            navigate("/admin/dashboard");
+            toast.success("✅ Command Center access granted.");
+            navigate("/admin/dashboard", { replace: true });
         } catch (err: any) {
-            const message = err?.response?.data?.message || "Authentication Failed. Access Denied.";
-            toast.error(message, { id: adminToast });
+            const d = err?.response?.data;
+            toast.error(d?.message || "Authentication failed. Access denied.");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-[#060813] flex items-center justify-center p-6 relative overflow-hidden font-mono">
-            {/* Background Tech Elements */}
-            <div className="absolute inset-0 opacity-20">
-                <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[150px]"></div>
+        <div className="min-h-screen flex items-center justify-center p-6 bg-background">
+            {/* Background elements for depth */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-apple-blue/5 blur-3xl" />
+                <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] rounded-full bg-apple-blue/5 blur-3xl" />
             </div>
 
-            <div className="w-full max-w-lg relative z-10 transition-all duration-1000">
-                {/* Security Badge */}
-                <div className="flex flex-col items-center mb-12">
-                    <div className="h-24 w-24 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[35px] flex items-center justify-center shadow-2xl shadow-blue-500/40 mb-6 border border-white/10 rotate-3 animate-pulse">
-                        <ShieldAlert className="h-12 w-12 text-white" />
-                    </div>
-                    <h1 className="text-4xl font-black text-white tracking-tighter uppercase italic text-center">
-                        Root <span className="text-blue-500">Access</span>
-                    </h1>
-                    <p className="text-slate-500 text-[9px] font-black uppercase tracking-[0.5em] mt-2 flex items-center gap-2">
-                        <Terminal className="h-3 w-3 text-blue-500" /> Authorized Nodes Only
-                    </p>
-                </div>
-
-                {/* Login Terminal */}
-                <div className="bg-[#0A0C1B] border border-white/5 rounded-[45px] p-10 shadow-3xl backdrop-blur-3xl">
-                    <div className="space-y-8">
-                        {/* Terminal Header */}
-                        <div className="flex items-center justify-between border-b border-white/5 pb-6">
-                            <div className="flex gap-2">
-                                <div className="h-2 w-2 rounded-full bg-rose-500"></div>
-                                <div className="h-2 w-2 rounded-full bg-amber-500"></div>
-                                <div className="h-2 w-2 rounded-full bg-emerald-500"></div>
-                            </div>
-                            <span className="text-[8px] font-black text-slate-700 uppercase tracking-widest">Sys_Login.exe</span>
-                        </div>
-
-                        <div className="space-y-6">
-                            <div className="group">
-                                <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 ml-2 italic">Admin Identifier</label>
-                                <div className="relative">
-                                    <Cpu className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-700 group-focus-within:text-blue-500 transition-colors" />
-                                    <input
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        placeholder="admin@internal.system"
-                                        className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 pl-14 pr-6 text-white text-sm focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="group">
-                                <div className="flex justify-between mb-3 ml-2 italic">
-                                    <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">Pass-Key Protocol</label>
-                                </div>
-                                <div className="relative">
-                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-700 group-focus-within:text-blue-500 transition-colors" />
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="••••••••••••"
-                                        className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 pl-14 pr-12 text-white text-sm focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-700 hover:text-white"
-                                    >
-                                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="p-4 bg-blue-500/5 border border-blue-500/10 rounded-2xl flex items-start gap-4">
-                                <AlertCircle className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" />
-                                <p className="text-[9px] font-bold text-slate-400 italic leading-relaxed">
-                                    SECURITY WARNING: Any unauthorised access to this terminal will be traced back to the source IP and logged in the master audit file.
-                                </p>
-                            </div>
-
-                            <button
-                                onClick={handleAdminLogin}
-                                disabled={loading}
-                                className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-[25px] font-black uppercase tracking-widest italic text-[11px] flex items-center justify-center gap-3 shadow-2xl shadow-blue-900/40 transition-all active:scale-95 disabled:opacity-50"
-                            >
-                                {loading ? (
-                                    <>
-                                        <Activity className="h-4 w-4 animate-spin" />
-                                        Bypassing Firewall...
-                                    </>
-                                ) : (
-                                    <>
-                                        Initiate Terminal Session
-                                        <ChevronRight className="h-4 w-4" />
-                                    </>
-                                )}
-                            </button>
-
-                            <button
-                                onClick={() => {
-                                    login("mock-admin-token", { _id: "65cf0e1d5a2d6a001b8e8b03", name: "Super Admin", email: "admin@system.ia", role: "admin" });
-                                    toast.success("DEBUG: Mock Admin Access Granted");
-                                    navigate("/admin/dashboard");
-                                }}
-                                className="w-full py-4 border border-blue-500/20 text-blue-500/60 hover:text-blue-400 rounded-2xl font-black uppercase tracking-widest text-[9px] transition-all"
-                            >
-                                Initiate Debug Session (Bypass Auth)
-                            </button>
+            <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+                className="w-full max-w-[440px] z-10"
+            >
+                <div className="apple-card p-10">
+                    {/* Security Header */}
+                    <div className="flex flex-col items-center mb-10">
+                        <motion.div
+                            initial={{ scale: 0.9 }}
+                            animate={{ scale: 1 }}
+                            className="w-16 h-16 bg-apple-gray-900 rounded-[1.25rem] flex items-center justify-center shadow-lg shadow-apple-gray-900/10 mb-6"
+                        >
+                            <ShieldAlert className="h-8 w-8 text-white" />
+                        </motion.div>
+                        <h1 className="text-2xl font-bold text-apple-gray-900 tracking-tight mb-2 uppercase">Root Access</h1>
+                        <div className="flex items-center gap-2">
+                            <span className="h-1.5 w-1.5 rounded-full bg-apple-blue animate-pulse" />
+                            <p className="text-[11px] font-bold text-apple-gray-400 uppercase tracking-widest">Command Center Authorization</p>
                         </div>
                     </div>
-                </div>
 
-                {/* Footer Telemetry */}
-                <div className="mt-12 flex justify-between px-10 text-[8px] font-black text-slate-700 uppercase tracking-widest italic">
-                    <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-emerald-500" /> Server Global_Node_01</span>
-                    <div className="flex gap-10">
-                        <span className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate("/admin-portal/register")}>Provision New Node</span>
-                        <span className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate("/login")}>Standard Entry</span>
+                    {/* Admin Form */}
+                    <form onSubmit={handleLogin} className="space-y-6">
+                        <div className="space-y-2">
+                            <label className="text-[13px] font-semibold text-apple-gray-400 ml-1">Admin Identifier</label>
+                            <div className="relative">
+                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-apple-gray-300 pointer-events-none" />
+                                <input
+                                    ref={emailRef}
+                                    type="email"
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)}
+                                    placeholder="admin@system.internal"
+                                    className="apple-input pl-11"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-[13px] font-semibold text-apple-gray-400 ml-1">Passkey Protocol</label>
+                            <div className="relative">
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-apple-gray-300 pointer-events-none" />
+                                <input
+                                    type={showPass ? "text" : "password"}
+                                    value={password}
+                                    onChange={e => setPassword(e.target.value)}
+                                    placeholder="••••••••••••"
+                                    className="apple-input pl-11 pr-12"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPass(v => !v)}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-apple-gray-300 hover:text-apple-gray-900 transition-colors"
+                                >
+                                    {showPass ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Security Warning */}
+                        <div className="flex items-start gap-3 p-4 bg-apple-gray-50 border border-apple-gray-100 rounded-2xl">
+                            <AlertCircle className="h-4 w-4 text-apple-gray-400 shrink-0 mt-0.5" />
+                            <p className="text-[11px] text-apple-gray-400 italic leading-relaxed">
+                                Unauthorized access attempts are traced, logged, and reported to the system security team automatically.
+                            </p>
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="apple-btn-primary w-full py-4 text-[14px] font-bold uppercase tracking-widest flex items-center justify-center gap-3"
+                        >
+                            {loading ? (
+                                <Activity className="h-5 w-5 animate-spin" />
+                            ) : (
+                                <>
+                                    <Zap className="h-4 w-4" />
+                                    <span>Initiate Session</span>
+                                    <ArrowRight className="h-4 w-4" />
+                                </>
+                            )}
+                        </button>
+                    </form>
+
+                    {/* Footer */}
+                    <div className="mt-10 pt-8 border-t border-apple-gray-100 text-center">
+                        <p className="text-[11px] text-apple-gray-300 uppercase tracking-[0.2em] font-bold mb-6">Provisioning</p>
+                        <Link to="/admin-portal/register" className="text-apple-blue font-semibold hover:underline text-sm">
+                            Request Admin Credentials →
+                        </Link>
                     </div>
                 </div>
-            </div>
+
+                {/* Role Switcher Links */}
+                <div className="mt-8 flex justify-center gap-6">
+                    <Link to="/login" className="text-xs font-medium text-apple-gray-300 hover:text-apple-blue transition-colors flex items-center gap-1.5">
+                        <GraduationCap className="h-3.5 w-3.5" />
+                        Student
+                    </Link>
+                    <Link to="/recruiter-portal" className="text-xs font-medium text-apple-gray-300 hover:text-apple-blue transition-colors flex items-center gap-1.5">
+                        <Briefcase className="h-3.5 w-3.5" />
+                        Recruiter
+                    </Link>
+                </div>
+            </motion.div>
         </div>
     );
 }

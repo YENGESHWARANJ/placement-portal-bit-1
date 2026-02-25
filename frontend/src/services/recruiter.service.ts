@@ -10,9 +10,9 @@ export const getRecruiterStats = async () => {
     return res.data;
 };
 
-export const getRecruiterJobs = async () => {
-    const res: any = await api.get("/jobs/my");
-    return res.data.jobs;
+export const getRecruiterJobs = async (page = 1, limit = 10, search = "") => {
+    const res: any = await api.get(`/jobs/my?page=${page}&limit=${limit}&search=${search}`);
+    return res.data;
 };
 
 export const getJobApplicants = async (jobId: string) => {

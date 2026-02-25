@@ -4,7 +4,7 @@ import { authMiddleware } from "../../middleware/auth.middleware";
 
 const router = Router();
 
-router.get("/", getNotices);
+router.get("/", authMiddleware, getNotices);
 router.post("/", authMiddleware, createNotice);
 router.delete("/:id", authMiddleware, deleteNotice);
 

@@ -24,26 +24,26 @@ export default function SuperAdminDashboard() {
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-1000 pb-20">
             {/* Super Admin Header */}
             <div className="bg-slate-950 p-10 rounded-[50px] border border-white/10 shadow-3xl relative overflow-hidden group">
-                <div className="absolute top-0 right-0 h-64 w-64 bg-blue-600/10 rounded-full blur-3xl -mr-20 -mt-20 group-hover:bg-blue-600/20 transition-all duration-1000" />
+                <div className="absolute top-0 right-0 h-64 w-64 bg-emerald-600/10 rounded-full blur-3xl -mr-20 -mt-20 group-hover:bg-emerald-600/20 transition-all duration-1000" />
                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
                     <div className="flex items-center gap-8">
-                        <div className="h-20 w-20 bg-blue-600 rounded-[30px] flex items-center justify-center shadow-2xl shadow-blue-500/40 rotate-3 group-hover:rotate-0 transition-transform">
+                        <div className="h-20 w-20 bg-emerald-600 rounded-[30px] flex items-center justify-center shadow-2xl shadow-emerald-500/40 rotate-3 group-hover:rotate-0 transition-transform">
                             <Shield className="h-10 w-10 text-white" />
                         </div>
                         <div>
                             <h1 className="text-4xl font-black text-white tracking-tighter italic uppercase">Root Command Center</h1>
                             <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em] mt-1 flex items-center gap-2">
-                                <Terminal className="h-3 w-3 text-blue-500" /> Authorized Access Only • Session ID: {Math.random().toString(36).substring(7).toUpperCase()}
+                                <Terminal className="h-3 w-3 text-emerald-500" /> Authorized Access Only • Session ID: {Math.random().toString(36).substring(7).toUpperCase()}
                             </p>
                         </div>
                     </div>
                     <div className="flex items-center gap-4 bg-white/5 p-2 rounded-[30px] border border-white/5 backdrop-blur-md">
-                        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-950 flex items-center justify-center text-blue-400 font-black text-xl border border-white/10 shadow-inner">
+                        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-950 flex items-center justify-center text-emerald-400 font-black text-xl border border-white/10 shadow-inner">
                             {user?.name?.charAt(0)}
                         </div>
                         <div className="pr-6">
                             <p className="text-[10px] font-black text-white uppercase tracking-widest">{user?.name}</p>
-                            <p className="text-[8px] font-bold text-blue-500 uppercase tracking-widest italic">System Architect</p>
+                            <p className="text-[8px] font-bold text-emerald-500 uppercase tracking-widest italic">System Architect</p>
                         </div>
                     </div>
                 </div>
@@ -52,8 +52,8 @@ export default function SuperAdminDashboard() {
             {/* Critical Metrics Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatusCard icon={Cpu} label="CPU Core Load" value={`${systemStats.cpu}%`} color="text-emerald-500" trend="Nominal" />
-                <StatusCard icon={HardDrive} label="Memory Usage" value={`${systemStats.memory}%`} color="text-blue-500" trend="Standard" />
-                <StatusCard icon={Database} label="FluxDB Health" value={systemStats.dbHealth} color="text-purple-500" trend="99.9% Sync" />
+                <StatusCard icon={HardDrive} label="Memory Usage" value={`${systemStats.memory}%`} color="text-teal-500" trend="Standard" />
+                <StatusCard icon={Database} label="FluxDB Health" value={systemStats.dbHealth} color="text-cyan-500" trend="99.9% Sync" />
                 <StatusCard icon={Users} label="Pending Vetting" value={systemStats.pendingApprovals} color="text-amber-500" trend="High Priority" />
             </div>
 
@@ -63,7 +63,7 @@ export default function SuperAdminDashboard() {
                     <div className="flex items-center justify-between mb-10">
                         <div>
                             <h3 className="text-2xl font-black text-white tracking-tighter italic uppercase flex items-center gap-4">
-                                <Activity className="h-6 w-6 text-blue-500" />
+                                <Activity className="h-6 w-6 text-emerald-500" />
                                 Audit Trail
                             </h3>
                             <p className="text-slate-500 text-[9px] font-black uppercase tracking-[0.4em] mt-1">Real-time Authorization Logs</p>
@@ -101,7 +101,7 @@ export default function SuperAdminDashboard() {
 
                 {/* System Control Panel */}
                 <div className="space-y-10">
-                    <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-10 rounded-[50px] text-white shadow-2xl relative overflow-hidden group">
+                    <div className="bg-gradient-to-br from-emerald-600 to-teal-700 p-10 rounded-[50px] text-white shadow-2xl relative overflow-hidden group">
                         <div className="absolute top-0 right-0 h-40 w-40 bg-white/10 rounded-full blur-3xl -mr-10 -mt-10" />
                         <h3 className="text-2xl font-black mb-8 tracking-tighter italic uppercase">Admin Tools</h3>
                         <div className="space-y-4">
@@ -139,9 +139,9 @@ export default function SuperAdminDashboard() {
 
 function StatusCard({ icon: Icon, label, value, color, trend }: any) {
     return (
-        <div className="bg-[#0F1121] p-8 rounded-[40px] border border-white/5 hover:border-blue-500/30 transition-all group active:scale-95 cursor-pointer shadow-xl">
+        <div className="bg-[#0F1121] p-8 rounded-[40px] border border-white/5 hover:border-emerald-500/30 transition-all group active:scale-95 cursor-pointer shadow-xl">
             <div className="flex items-center justify-between mb-6">
-                <div className="h-12 w-12 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-blue-600/10 transition-all">
+                <div className="h-12 w-12 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-emerald-600/10 transition-all">
                     <Icon className={cn("h-6 w-6", color)} />
                 </div>
                 <span className="px-3 py-1 bg-white/5 text-slate-500 text-[8px] font-black rounded-lg uppercase tracking-widest border border-white/5">{trend}</span>

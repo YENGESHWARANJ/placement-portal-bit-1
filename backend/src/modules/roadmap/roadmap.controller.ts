@@ -6,6 +6,7 @@ import User from "../users/user.model";
 export const getRoadmap = async (req: AuthRequest, res: Response) => {
     try {
         const userId = req.user?.userId;
+        if (!userId) return res.status(401).json({ message: "Unauthorized" });
         let student = await Student.findOne({ userId });
         const user = await User.findById(userId);
 
@@ -13,7 +14,7 @@ export const getRoadmap = async (req: AuthRequest, res: Response) => {
             student = await Student.create({
                 userId: userId,
                 name: user?.name || "Mock Student",
-                usn: `MOCK_${userId.toString().slice(-6).toUpperCase()}`,
+                usn: `MOCK_${userId.slice(-6).toUpperCase()}`,
                 branch: "Engineering",
                 year: 3,
                 status: "Unplaced"

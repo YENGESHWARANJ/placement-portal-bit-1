@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import DropZone from "../../features/resume/components/DropZone";
 import AnalysisMock from "../../features/resume/components/AnalysisMock";
 import ResumeAnalysis from "../../features/resume/components/ResumeAnalysis";
 import api from "../../services/api";
 import { toast } from "react-hot-toast";
-import { FileText, CheckCircle, ArrowRight, ShieldCheck, Sparkles, Zap, Binary } from "lucide-react";
+import { FileText, CheckCircle, ArrowRight, ShieldCheck, Sparkles, Zap, Binary, ChevronRight, Activity, Cpu } from "lucide-react";
+import { cn } from "../../utils/cn";
 
 export default function ResumeUpload() {
     const [file, setFile] = useState<File | null>(null);
@@ -54,43 +56,80 @@ export default function ResumeUpload() {
     return (
         <div className="max-w-6xl mx-auto space-y-12 animate-in fade-in zoom-in duration-700 pb-20">
 
-            {/* Elite Header */}
-            <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-[40px] blur opacity-5 group-hover:opacity-10 transition duration-1000"></div>
-                <div className="relative bg-white dark:bg-slate-900 p-12 rounded-[40px] shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-10">
-                    <div className="text-center md:text-left">
-                        <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
-                            <Binary className="h-4 w-4 text-blue-500 animate-pulse" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600/60 dark:text-blue-400/60">Neural Scanning Node</span>
+            {/* Elite Header - Neural Scanning Node UPGRADE */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="relative overflow-hidden bg-[#0A0C1B] rounded-[60px] p-16 text-white shadow-[0_40px_100px_rgba(0,0,0,0.4)] group border border-white/5"
+            >
+                <div className="absolute top-0 right-0 p-80 bg-blue-600/10 rounded-full blur-[150px] -mr-40 -mt-40 group-hover:bg-blue-600/20 transition-all duration-[3000ms]"></div>
+                <div className="absolute bottom-0 left-0 p-60 bg-indigo-600/10 rounded-full blur-[120px] -ml-40 -mb-40"></div>
+
+                {/* Visual Scanner Overlay */}
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
+
+                <div className="relative z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-16">
+                    <div className="max-w-3xl">
+                        <div className="flex items-center gap-5 mb-10">
+                            <motion.div
+                                whileHover={{ rotate: 15, scale: 1.1, boxShadow: "0 0 40px rgba(59,130,246,0.5)" }}
+                                className="h-20 w-20 rounded-[35px] bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-2xl border border-white/20 relative overflow-hidden"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent pointer-events-none" />
+                                <Binary className="h-10 w-10 text-white relative z-10" />
+                            </motion.div>
+                            <div>
+                                <p className="text-[12px] font-black uppercase tracking-[0.6em] text-blue-400 italic">Neural Scanning Node</p>
+                                <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1">Status: SYNCHRONIZED_STABLE</p>
+                            </div>
                         </div>
-                        <h1 className="text-5xl font-black text-slate-900 dark:text-white mb-4 tracking-tighter">
-                            Resume Intelligence
+
+                        <h1 className="text-8xl font-black tracking-[-0.08em] leading-[0.85] mb-12 uppercase italic">
+                            RESUME{' '}
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 drop-shadow-[0_0_50px_rgba(59,130,246,0.6)]">
+                                INTELLIGENCE
+                            </span>
                         </h1>
-                        <p className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest text-[10px] max-w-md">Distill your professional trajectory into actionable AI insights.</p>
+                        <p className="text-slate-400 text-2xl font-bold leading-tight max-w-2xl italic">
+                            Distill your professional trajectory into <span className="text-white italic underline decoration-blue-500 decoration-4 underline-offset-8">actionable AI insights</span>.
+                        </p>
                     </div>
 
-                    <div className="flex flex-wrap justify-center gap-4">
-                        <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 px-6 py-4 rounded-[20px] border border-slate-100 dark:border-slate-700 shadow-inner">
-                            <CheckCircle className="h-4 w-4 text-emerald-500" />
-                            ATS Optimized
-                        </div>
-                        <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 px-6 py-4 rounded-[20px] border border-slate-100 dark:border-slate-700 shadow-inner">
-                            <ShieldCheck className="h-4 w-4 text-blue-500" />
-                            Secure Core
-                        </div>
+                    <div className="hidden lg:flex gap-10 shrink-0">
+                        {[
+                            { label: 'ATS_SYNC', value: '100%', icon: ShieldCheck, color: 'text-emerald-400' },
+                            { label: 'CORE_CACHE', value: 'SECURE', icon: Binary, color: 'text-blue-400' }
+                        ].map((s, i) => (
+                            <motion.div
+                                key={i}
+                                whileHover={{ y: -15, backgroundColor: "rgba(255,255,255,0.08)" }}
+                                className="bg-white/5 border border-white/10 p-12 rounded-[50px] text-center min-w-[200px] backdrop-blur-3xl shadow-3xl relative overflow-hidden group/stat"
+                            >
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
+                                <s.icon className={cn("h-8 w-8 mx-auto mb-6 transition-transform group-hover/stat:scale-125", s.color)} />
+                                <p className="text-5xl font-black tracking-tighter italic mb-2 text-white drop-shadow-lg">{s.value}</p>
+                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 italic">{s.label}</p>
+                            </motion.div>
+                        ))}
                     </div>
                 </div>
-            </div>
+            </motion.div>
 
             <div className="grid gap-12">
                 {/* Upload Area */}
                 {!result && !loading && (
-                    <div className="bg-white dark:bg-slate-900 p-4 rounded-[45px] shadow-2xl shadow-blue-500/5 border border-slate-100 dark:border-slate-800 overflow-hidden relative">
-                        <div className="absolute top-0 right-0 p-40 bg-blue-500/5 rounded-full blur-3xl -mr-20 -mt-20"></div>
-                        <div className="relative z-10 border-4 border-dashed border-slate-50 dark:border-slate-800 rounded-[40px] hover:border-blue-500/20 transition-all duration-500">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="glass-premium p-10 rounded-[60px] shadow-[0_40px_100px_rgba(59,130,246,0.1)] border border-white/5 overflow-hidden relative group"
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="absolute -top-40 -right-40 p-80 bg-blue-500/5 rounded-full blur-[120px] pointer-events-none group-hover:bg-blue-500/10 transition-colors" />
+
+                        <div className="relative z-10 border-4 border-dashed border-white/5 rounded-[50px] hover:border-blue-500/30 transition-all duration-700 bg-black/20 backdrop-blur-3xl p-4">
                             <DropZone onFileSelect={handleFileSelect} />
                         </div>
-                    </div>
+                    </motion.div>
                 )}
 
                 {/* Loading Protocol */}

@@ -29,15 +29,15 @@ export default function PortalSettings() {
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-4xl font-black text-white tracking-tighter italic uppercase flex items-center gap-4">
-                        <Settings className="h-8 w-8 text-purple-500" />
-                        Portal <span className="text-purple-600">Executive</span> Config
+                        <Settings className="h-8 w-8 text-emerald-500" />
+                        Portal <span className="text-emerald-600">Executive</span> Config
                     </h1>
                     <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em] mt-2">Adjust Global Placement Protocols</p>
                 </div>
                 <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="px-10 py-4 bg-purple-600 text-white rounded-[25px] text-[10px] font-black uppercase tracking-widest shadow-2xl shadow-purple-900/40 flex items-center gap-3 hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
+                    className="px-10 py-4 bg-emerald-600 text-white rounded-[25px] text-[10px] font-black uppercase tracking-widest shadow-2xl shadow-emerald-900/40 flex items-center gap-3 hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
                 >
                     {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                     {saving ? "Encrypting..." : "Sync Parameters"}
@@ -48,7 +48,7 @@ export default function PortalSettings() {
                 {/* Placement Rules */}
                 <div className="bg-[#0F1121] p-10 rounded-[50px] border border-white/5 space-y-10">
                     <div className="flex items-center gap-4 mb-4">
-                        <div className="h-12 w-12 bg-purple-600/10 rounded-2xl flex items-center justify-center text-purple-500">
+                        <div className="h-12 w-12 bg-emerald-600/10 rounded-2xl flex items-center justify-center text-emerald-500">
                             <Shield className="h-6 w-6" />
                         </div>
                         <div>
@@ -85,7 +85,7 @@ export default function PortalSettings() {
                 {/* System Control */}
                 <div className="bg-[#0F1121] p-10 rounded-[50px] border border-white/5 space-y-10">
                     <div className="flex items-center gap-4 mb-4">
-                        <div className="h-12 w-12 bg-blue-600/10 rounded-2xl flex items-center justify-center text-blue-500">
+                        <div className="h-12 w-12 bg-teal-600/10 rounded-2xl flex items-center justify-center text-teal-500">
                             <Cpu className="h-6 w-6" />
                         </div>
                         <div>
@@ -144,7 +144,7 @@ function ConfigRow({ label, desc, value, onChange, type }: any) {
                 type={type}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                className="bg-white/5 border border-white/10 px-6 py-2.5 rounded-xl text-xs font-black text-purple-400 w-24 text-center focus:bg-white/10 outline-none transition-all"
+                className="bg-white/5 border border-white/10 px-6 py-2.5 rounded-xl text-xs font-black text-emerald-400 w-24 text-center focus:bg-white/10 outline-none transition-all"
             />
         </div>
     );
@@ -159,7 +159,7 @@ function ToggleRow({ label, desc, checked, onChange }: any) {
             </div>
             <button
                 onClick={() => onChange(!checked)}
-                className={`w-14 h-8 rounded-full p-1 transition-all duration-300 ${checked ? 'bg-purple-600' : 'bg-slate-800'}`}
+                className={`w-14 h-8 rounded-full p-1 transition-all duration-300 ${checked ? 'bg-emerald-600' : 'bg-slate-800'}`}
             >
                 <div className={`h-6 w-6 bg-white rounded-full shadow-lg transition-transform duration-300 ${checked ? 'translate-x-6' : 'translate-x-0'}`} />
             </button>

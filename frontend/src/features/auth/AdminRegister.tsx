@@ -43,10 +43,16 @@ export default function AdminRegister() {
                 role: "admin"
             });
 
-            toast.success("Administrative Node Successfully Provisioned", { id: provisionToast });
-            navigate("/admin/dashboard");
+            toast.success("✅ Administrative Node Provisioned! Verify Email.", { id: provisionToast });
+            navigate("/verify-otp", { state: { email: formData.email } });
         } catch (err: any) {
-            const message = err?.response?.data?.message || "Provisioning Protocol Failed.";
+            const data = err?.response?.data;
+            if (data?.requiresVerification) {
+                toast.error(data.message, { id: provisionToast });
+                navigate("/verify-otp", { state: { email: data.email || formData.email } });
+                return;
+            }
+            const message = data?.message || "Provisioning Protocol Failed.";
             toast.error(message, { id: provisionToast });
         } finally {
             setLoading(false);

@@ -1,32 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../features/auth/AuthContext';
 import { toast } from 'react-hot-toast';
+import { motion } from 'framer-motion';
+import { cn } from '../../utils/cn';
 import {
-    Plus,
-    X,
-    Eye,
-    Briefcase,
-    Users,
-    TrendingUp,
-    BarChart3,
-    ChevronRight,
-    Search,
-    Rocket,
-    Brain,
-    Target,
-    Activity,
-    FileText,
-    Zap,
-    Expand,
-    Download
+    Plus, X, Eye, Briefcase, Users, TrendingUp, BarChart3,
+    ChevronRight, Rocket, Target, Activity, FileText, Zap,
+    Download, CheckCircle2, Calendar, ArrowRight, Star, Clock
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell
 } from 'recharts';
 import { getRecruiterStats } from '../../services/recruiter.service';
-import { cn } from '../../utils/cn';
+
+const stagger = {
+    container: { initial: { opacity: 0 }, animate: { opacity: 1, transition: { staggerChildren: 0.07 } } },
+    item: { initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0, transition: { duration: 0.35 } } },
+};
 
 export default function RecruiterDashboard() {
     const navigate = useNavigate();
@@ -36,266 +27,337 @@ export default function RecruiterDashboard() {
     const [showReports, setShowReports] = useState(false);
     const [compiling, setCompiling] = useState(false);
 
-    const handleCompileDossier = async () => {
+    const handleExportReport = async () => {
         setCompiling(true);
         try {
             await new Promise(r => setTimeout(r, 1500));
             const blob = new Blob(
-                ['Recruiter Dossier\n\nApplicants,Jobs,Shortlisted\n' + [data?.stats?.totalApplicants ?? 0, data?.stats?.totalJobs ?? 0, data?.stats?.shortlistedCount ?? 0].join(',')],
+                [`Recruiter Analytics Report\n\nApplicants: ${data?.stats?.totalApplicants ?? 0}\nJobs: ${data?.stats?.totalJobs ?? 0}\nShortlisted: ${data?.stats?.shortlistedCount ?? 0}`],
                 { type: 'text/plain' }
             );
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `recruiter-dossier-${new Date().toISOString().slice(0, 10)}.txt`;
+            a.download = `recruiter-report-${new Date().toISOString().slice(0, 10)}.txt`;
             a.click();
             URL.revokeObjectURL(url);
-            toast.success('Dossier compiled and downloaded');
+            toast.success('Report downloaded');
             setShowReports(false);
         } catch {
-            toast.error('Compilation failed');
+            toast.error('Export failed');
         } finally {
             setCompiling(false);
         }
     };
 
     useEffect(() => {
-        const fetchStats = async () => {
-            try {
-                const statsData = await getRecruiterStats();
-                setData(statsData);
-            } catch (err) {
-                console.error("Failed to fetch recruiter stats", err);
-                toast.error("Unable to sync recruitment data");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchStats();
+        getRecruiterStats()
+            .then(d => setData(d))
+            .catch(() => toast.error("Unable to load recruitment data"))
+            .finally(() => setLoading(false));
     }, []);
 
-    if (loading) return <div className="h-full flex items-center justify-center animate-pulse font-black text-slate-300 italic tracking-[0.3em] uppercase text-xl text-center">Synchronizing Talent Matrix...</div>;
+    if (loading) return (
+        <div className="space-y-6 pb-10">
+            {[...Array(3)].map((_, i) => <div key={i} className="skeleton h-32 rounded-[30px]" />)}
+        </div>
+    );
 
     const pipelineData = data?.pipeline || [];
+    const stats = data?.stats || {};
+
+    const metrics = [
+        { label: "Total Applicants", value: stats.totalApplicants || 0, icon: Users, color: "text-apple-blue", bg: "bg-apple-blue/5", trend: "+12% this week" },
+        { label: "Active Listings", value: stats.totalJobs || 0, icon: Briefcase, color: "text-purple-500", bg: "bg-purple-50", trend: "across all roles" },
+        { label: "Shortlisted", value: stats.shortlistedCount || 0, icon: CheckCircle2, color: "text-emerald-500", bg: "bg-emerald-50", trend: "+5 today" },
+        { label: "Interviews", value: stats.interviewCount || 0, icon: Calendar, color: "text-orange-500", bg: "bg-orange-50", trend: "scheduled" },
+    ];
+
+    const quickActions = [
+        { label: "Post New Job", icon: Plus, to: "/jobs/create", color: "bg-apple-gray-900 text-white hover:bg-black" },
+        { label: "Browse Talent", icon: Users, to: "/talent-discovery", color: "bg-apple-blue text-white hover:bg-apple-blue-dark shadow-apple-hover" },
+        { label: "Interviews", icon: Calendar, to: "/interviews/ledger", color: "bg-white text-apple-gray-900 border border-apple-gray-100 hover:bg-apple-gray-50" },
+        { label: "Analytics", icon: BarChart3, to: "/hiring-intel", color: "bg-white text-apple-gray-900 border border-apple-gray-100 hover:bg-apple-gray-50" },
+    ];
 
     return (
-        <div className="flex flex-col xl:flex-row gap-10 h-full animate-in fade-in slide-in-from-bottom-4 duration-1000 pb-10">
+        <motion.div variants={stagger.container} initial="initial" animate="animate" className="space-y-10 pb-10 bg-apple-gray-50/50 min-h-screen p-8 rounded-[40px]">
 
-            {/* 1. CORE OPERATIONAL HUD (LEFT GRID) */}
-            <div className="flex-1 space-y-10">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div>
-                        <h2 className="text-3xl font-black italic text-slate-800 uppercase tracking-tighter">Acquisition Console</h2>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-1 italic">Real-time Hiring Node Monitoring</p>
-                    </div>
+            {/* ── HEADER ────────────────────────────────────────────── */}
+            <motion.div variants={stagger.item} className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                <div>
+                    <h1 className="text-4xl font-black text-apple-gray-900 tracking-tight leading-none mb-3">
+                        Welcome, {user?.name?.split(" ")[0]}
+                    </h1>
+                    <p className="text-apple-gray-400 font-bold uppercase tracking-[0.3em] text-[10px]">Recruitment Command Center // Operational</p>
                 </div>
+                <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => navigate("/jobs/create")}
+                    className="px-8 py-4 bg-apple-blue text-white rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-apple-hover flex items-center justify-center gap-3 w-full md:w-auto"
+                >
+                    <Plus className="h-4 w-4" />
+                    New Listing
+                </motion.button>
+            </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Funnel Chart Card */}
-                    <div className="bg-white p-8 rounded-[45px] shadow-sm hover:shadow-xl transition-all duration-500 relative group overflow-hidden">
-                        <div className="flex justify-between items-center mb-10">
-                            <div>
-                                <h3 className="text-lg font-black italic text-slate-800 uppercase tracking-tight">Recruitment Funnel</h3>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Candidate Acquisition Stages</p>
+            {/* ── KPI METRICS ───────────────────────────────────────── */}
+            <motion.div variants={stagger.item} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {metrics.map((m, i) => (
+                    <div key={i} className="apple-card p-8 bg-white relative overflow-hidden group">
+                        <div className={`absolute top-0 right-0 w-24 h-24 ${m.bg} rounded-full blur-[40px] -mr-12 -mt-12 pointer-events-none transition-all group-hover:blur-[60px]`} />
+                        <div className="relative z-10">
+                            <div className={cn("h-12 w-12 rounded-[18px] flex items-center justify-center mb-6 shadow-sm border border-apple-gray-50", m.bg)}>
+                                <m.icon className={cn("h-6 w-6", m.color)} />
                             </div>
-                            <div className="h-10 w-10 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 border border-indigo-100">
-                                <Activity className="h-5 w-5" />
+                            <p className="text-4xl font-black text-apple-gray-900 tracking-tighter mb-1">{m.value}</p>
+                            <p className="text-apple-gray-500 text-[11px] font-bold uppercase tracking-wider">{m.label}</p>
+                            <div className="mt-4 pt-4 border-t border-apple-gray-50">
+                                <p className="text-apple-gray-300 text-[10px] font-bold uppercase tracking-widest">{m.trend}</p>
                             </div>
-                        </div>
-                        <div className="h-80">
-                            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-                                <BarChart data={pipelineData}>
-                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94A3B8', fontSize: 8, fontWeight: 900 }} />
-                                    <YAxis hide />
-                                    <Tooltip cursor={{ fill: 'rgba(30, 35, 66, 0.02)' }} contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: 'none' }} />
-                                    <Bar dataKey="value" radius={[15, 15, 0, 0]} barSize={40}>
-                                        {pipelineData.map((entry: any, index: number) => (
-                                            <Cell key={`cell-${index}`} fill={entry.color} />
-                                        ))}
-                                    </Bar>
-                                </BarChart>
-                            </ResponsiveContainer>
                         </div>
                     </div>
+                ))}
+            </motion.div>
 
-                    {/* Operational Metrics HUD */}
-                    <div className="bg-white p-8 rounded-[45px] shadow-sm relative overflow-hidden group">
-                        <div className="absolute -bottom-10 -right-10 opacity-5 group-hover:rotate-12 transition-transform">
-                            <Rocket className="h-48 w-48 text-indigo-900" />
-                        </div>
-                        <div className="flex justify-between items-center mb-8">
-                            <div>
-                                <h3 className="text-lg font-black italic text-slate-800 uppercase tracking-tight">System Matrix</h3>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Operational Throughput</p>
-                            </div>
-                            <div className="h-10 w-10 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 border border-orange-100">
-                                <Zap className="h-5 w-5" />
-                            </div>
-                        </div>
-                        <div className="space-y-6">
-                            <MetricProgress label="Active Talent Node" value={data?.stats?.totalApplicants || 0} max={1000} color="bg-[#1E2342]" />
-                            <MetricProgress label="Market Listings" value={data?.stats?.totalJobs || 0} max={50} color="bg-[#FF7D54]" />
-                            <MetricProgress label="Shortlisted Pipeline" value={data?.stats?.shortlistedCount || 0} max={200} color="bg-[#4F46E5]" />
-                            <MetricProgress label="Interview Bandwidth" value={data?.stats?.interviewCount || 0} max={100} color="bg-emerald-500" />
-                        </div>
-                    </div>
+            {/* ── QUICK ACTIONS ─────────────────────────────────────── */}
+            <motion.div variants={stagger.item} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {quickActions.map((a, i) => (
+                    <Link
+                        key={i}
+                        to={a.to}
+                        className={cn(
+                            "flex items-center justify-center gap-3 px-6 py-5 rounded-[24px] font-black text-[10px] uppercase tracking-[0.2em] transition-all hover:scale-[1.02] shadow-sm",
+                            a.color
+                        )}
+                    >
+                        <a.icon className="h-4 w-4 shrink-0" />
+                        {a.label}
+                    </Link>
+                ))}
+            </motion.div>
 
-                    {/* Active Talent Ledger */}
-                    <div className="bg-white p-8 rounded-[45px] shadow-sm">
-                        <div className="flex justify-between items-center mb-8">
-                            <div>
-                                <h3 className="text-lg font-black italic text-slate-800 uppercase tracking-tight">Talent Ledger</h3>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Recent Inflow Vectors</p>
-                            </div>
-                            <button
-                                type="button"
-                                onClick={() => navigate('/recruiter/applicants')}
-                                className="p-2 bg-slate-50 rounded-xl text-slate-400 hover:text-indigo-600 transition-all"
-                                aria-label="View full talent ledger"
-                            >
-                                <Expand className="h-4 w-4" />
-                            </button>
-                        </div>
-                        <div className="space-y-4">
-                            {data?.recentApplications?.length > 0 ? data.recentApplications.slice(0, 4).map((app: any, i: number) => (
-                                <div key={i} className="p-4 bg-slate-50/50 rounded-3xl border border-slate-50 flex items-center justify-between group transition-all hover:bg-white hover:shadow-md cursor-pointer">
-                                    <div className="flex items-center gap-4">
-                                        <div className="h-10 w-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-[10px] font-black italic text-slate-400">
-                                            {app.studentId?.name?.charAt(0)}
-                                        </div>
-                                        <div>
-                                            <p className="font-black italic text-slate-900 uppercase tracking-tighter text-xs truncate max-w-[140px] leading-tight">{app.studentId?.name}</p>
-                                            <p className="text-[9px] font-bold text-blue-500 uppercase tracking-widest truncate max-w-[140px] mt-0.5">{app.jobId?.title}</p>
-                                        </div>
-                                    </div>
-                                    <ChevronRight className="h-4 w-4 text-slate-200 group-hover:text-slate-900 transition-all font-bold" />
-                                </div>
-                            )) : (
-                                <div className="p-10 border-2 border-dashed border-slate-100 rounded-[35px] text-center">
-                                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest italic">Monitoring Flux...</p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
+            {/* ── MAIN GRID ─────────────────────────────────────────── */}
+            <div className="grid lg:grid-cols-3 gap-8">
 
-                    {/* Hiring Intelligence Promo Card */}
-                    <div className="bg-[#1E2342] p-8 rounded-[45px] text-white flex flex-col justify-between group cursor-pointer hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500">
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] mb-1 italic">Intelligence Protocol</p>
-                                <h3 className="text-xl font-black italic uppercase tracking-tighter">Market Intel</h3>
-                            </div>
-                            <div className="h-10 w-10 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/5">
-                                <BarChart3 className="h-5 w-5 text-indigo-400" />
-                            </div>
+                {/* Recruitment Funnel Chart */}
+                <motion.div variants={stagger.item} className="apple-card p-10 lg:col-span-2 bg-white">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-12">
+                        <div>
+                            <h3 className="text-2xl font-black text-apple-gray-900 tracking-tight">Recruitment Funnel</h3>
+                            <p className="text-apple-gray-400 text-[10px] font-black uppercase tracking-[0.3em] mt-1">Cross-Stage Talent Distribution</p>
                         </div>
-                        <div className="mt-8 mb-4">
-                            <p className="text-[11px] font-bold text-white/50 italic leading-relaxed mb-6">Analyze institutional trends, student performance clusters, and departmental hiring velocity.</p>
-                            <div className="h-1 bg-white/5 rounded-full overflow-hidden">
-                                <div className="h-full bg-indigo-500 rounded-full transition-all duration-1000 w-[65%]" />
-                            </div>
-                        </div>
-                        <Link to="/hiring-intel" className="flex items-center justify-between text-[9px] font-black uppercase tracking-widest text-[#FF7D54] group-hover:text-white transition-colors">
-                            Access Strategic Ledger <ChevronRight className="h-3 w-3 ml-2" />
+                        <Link to="/hiring-intel" className="p-4 bg-apple-gray-50 rounded-2xl text-apple-gray-400 hover:text-apple-blue transition-all w-fit group">
+                            <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </div>
-                </div>
-            </div>
+                    <div className="h-72 w-full">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={100}>
+                            <BarChart data={pipelineData} barSize={48}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f2f2f7" />
+                                <XAxis dataKey="name" axisLine={false} tickLine={false}
+                                    tick={{ fill: '#8e8e93', fontSize: 10, fontWeight: 700 }} />
+                                <YAxis hide />
+                                <Tooltip
+                                    cursor={{ fill: 'rgba(0,113,227,0.02)' }}
+                                    contentStyle={{
+                                        borderRadius: '20px',
+                                        border: 'none',
+                                        boxShadow: '0 20px 40px rgba(0,0,0,0.08)',
+                                        padding: '12px 16px'
+                                    }}
+                                />
+                                <Bar dataKey="value" radius={[12, 12, 0, 0]}>
+                                    {pipelineData.map((entry: any, index: number) => (
+                                        <Cell key={`cell-${index}`} fill={entry.color === '#3b82f6' ? '#0071e3' : (entry.color || "#0071e3")} />
+                                    ))}
+                                </Bar>
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </motion.div>
 
-            {/* 2. OPERATIVE PROFILE (RIGHT PANEL) */}
-            <div className="w-full xl:w-[380px] space-y-10 animate-in slide-in-from-right duration-700">
-                <div className="bg-white p-10 rounded-[60px] shadow-sm border border-slate-50 text-center relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-80 bg-blue-50 rounded-full blur-[120px] -mr-40 -mt-40 opacity-30 group-hover:bg-blue-200 transition-all duration-1000" />
-
-                    <div className="relative z-10 flex flex-col items-center">
-                        <div className="h-44 w-44 rounded-[55px] bg-gradient-to-br from-indigo-100 to-purple-50 p-2 mb-8 shadow-2xl shadow-indigo-100/30 -rotate-3 transition-transform hover:rotate-0 duration-500">
-                            <div className="h-full w-full rounded-[45px] bg-slate-900 flex items-center justify-center text-white text-6xl font-black italic p-2 border-4 border-white shadow-inner">
-                                {user?.name?.charAt(0)}
-                            </div>
-                        </div>
-                        <h2 className="text-3xl font-black italic text-slate-900 uppercase tracking-tighter mb-1 leading-none">{user?.name}</h2>
-                        <p className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-8 italic">@{user?.name?.toLowerCase().replace(' ', '')}</p>
-
-                        <div className="space-y-6 w-full text-left mb-10">
-                            <InfoTag icon={Briefcase} label={user?.company || 'Corporate Group'} />
-                            <InfoTag icon={Target} label="Recruitment Executive" />
-                        </div>
-
-                        <div className="bg-[#1E2342] p-8 rounded-[45px] text-white w-full text-left relative group cursor-pointer shadow-xl shadow-indigo-900/10">
-                            <div className="flex justify-between items-center mb-4">
-                                <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] italic leading-none">Ops Summary</p>
-                                <div className="h-8 w-8 bg-white/5 rounded-xl flex items-center justify-center transition-all group-hover:bg-white/10"><TrendingUp className="h-4 w-4 text-emerald-400 transition-transform group-hover:scale-110" /></div>
-                            </div>
-                            <p className="text-[11px] font-bold italic leading-relaxed text-slate-300">
-                                Overseeing high-velocity talent acquisition protocols. Interfacing with departmental leads to synchronize institutional skill clusters with corporate requirement vectors.
-                            </p>
+                {/* Progress Metrics */}
+                <motion.div variants={stagger.item} className="apple-card p-10 bg-white">
+                    <div className="flex items-center justify-between mb-10">
+                        <h3 className="text-[11px] font-bold uppercase tracking-[0.3em] text-apple-gray-400">Pipeline Velocity</h3>
+                        <div className="h-10 w-10 rounded-xl bg-purple-50 flex items-center justify-center">
+                            <Zap className="h-5 w-5 text-purple-600" />
                         </div>
                     </div>
-                </div>
+                    <div className="space-y-8">
+                        {[
+                            { label: "Applicants", value: stats.totalApplicants || 0, max: 1000, color: "bg-apple-blue" },
+                            { label: "Listings", value: stats.totalJobs || 0, max: 50, color: "bg-purple-500" },
+                            { label: "Shortlisted", value: stats.shortlistedCount || 0, max: 200, color: "bg-emerald-500" },
+                            { label: "Interviews", value: stats.interviewCount || 0, max: 100, color: "bg-orange-500" },
+                        ].map((m, i) => {
+                            const pct = Math.min(Math.round((m.value / m.max) * 100), 100);
+                            return (
+                                <div key={i}>
+                                    <div className="flex items-center justify-between mb-3">
+                                        <span className="text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest">{m.label}</span>
+                                        <span className="text-xl font-black text-apple-gray-900 tracking-tighter">{m.value}</span>
+                                    </div>
+                                    <div className="h-2 w-full bg-apple-gray-50 rounded-full overflow-hidden">
+                                        <motion.div
+                                            initial={{ width: 0 }}
+                                            animate={{ width: `${pct}%` }}
+                                            transition={{ duration: 1.5, ease: "easeOut" }}
+                                            className={cn("h-full rounded-full shadow-sm", m.color)}
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </motion.div>
+            </div>
 
-                {/* Generate Reports Mini-HUD */}
-                <div className="bg-white p-8 rounded-[45px] shadow-sm border border-slate-50">
-                    <h3 className="text-[11px] font-black italic text-slate-800 uppercase tracking-[0.3em] mb-6 border-b-2 border-orange-500 pb-1 inline-block">Intel Export</h3>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed mb-8 italic">Compile and export the latest funnel state to standardized institutional formats (PDF/XLS).</p>
-                    <button onClick={() => setShowReports(true)} className="w-full py-5 bg-slate-50 rounded-[28px] border border-slate-100 font-black italic uppercase tracking-widest text-[10px] text-slate-400 hover:bg-[#1E2342] hover:text-white transition-all shadow-sm">
-                        Generate Ledger
-                    </button>
+            {/* ── BOTTOM GRID ───────────────────────────────────────── */}
+            <div className="grid lg:grid-cols-3 gap-8">
+
+                {/* Recent Applicants */}
+                <motion.div variants={stagger.item} className="apple-card p-10 lg:col-span-2 bg-white">
+                    <div className="flex items-center justify-between mb-8">
+                        <h3 className="text-2xl font-black text-apple-gray-900 tracking-tight">Recent Talent Hub</h3>
+                        <Link to="/talent-discovery" className="px-5 py-2 bg-apple-gray-50 rounded-full text-[10px] font-bold text-apple-gray-500 uppercase tracking-widest hover:bg-apple-gray-100 transition-all">
+                            View Discovery
+                        </Link>
+                    </div>
+                    <div className="space-y-4">
+                        {data?.recentApplications?.length > 0
+                            ? data.recentApplications.slice(0, 5).map((app: any, i: number) => (
+                                <motion.div
+                                    key={i}
+                                    whileHover={{ x: 6 }}
+                                    className="flex items-center gap-6 p-5 rounded-[24px] bg-apple-gray-50/50 hover:bg-apple-gray-50 transition-all cursor-pointer group"
+                                    onClick={() => navigate("/talent-discovery")}
+                                >
+                                    <div className="h-12 w-12 rounded-[16px] bg-apple-gray-900 flex items-center justify-center text-white text-base font-black shrink-0 shadow-lg">
+                                        {app.studentId?.name?.charAt(0) || "?"}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="font-bold text-apple-gray-900 text-[15px] truncate leading-none mb-1.5">{app.studentId?.name || "Student"}</p>
+                                        <p className="text-apple-gray-400 text-[11px] font-bold uppercase tracking-wide truncate">{app.jobId?.title}</p>
+                                    </div>
+                                    <span className="px-4 py-1.5 bg-apple-blue/10 text-apple-blue rounded-full text-[9px] font-black uppercase tracking-widest border border-apple-blue/10">Applied</span>
+                                    <ChevronRight className="h-5 w-5 text-apple-gray-200 group-hover:text-apple-blue transition-colors shrink-0" />
+                                </motion.div>
+                            ))
+                            : (
+                                <div className="py-16 text-center">
+                                    <Users className="h-12 w-12 text-apple-gray-100 mx-auto mb-4" />
+                                    <p className="text-apple-gray-400 text-[11px] font-bold uppercase tracking-widest">No Active Applicants</p>
+                                </div>
+                            )
+                        }
+                    </div>
+                </motion.div>
+
+                {/* Sidebar cards */}
+                <div className="space-y-8">
+                    {/* Profile card */}
+                    <motion.div variants={stagger.item} className="apple-card p-8 bg-apple-gray-900 text-white relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-apple-blue/20 rounded-full blur-[60px] -mr-16 -mt-16 pointer-events-none" />
+                        <div className="relative z-10">
+                            <div className="flex items-center gap-5 mb-8">
+                                <div className="h-14 w-14 rounded-[20px] bg-white text-apple-gray-900 flex items-center justify-center text-xl font-black shadow-2xl">
+                                    {user?.name?.charAt(0)}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <p className="font-black text-xl tracking-tight leading-none mb-1.5">{user?.name}</p>
+                                    <p className="text-apple-gray-400 text-[10px] font-bold uppercase tracking-widest">Verified Recruiter</p>
+                                </div>
+                            </div>
+                            <div className="space-y-4 pt-6 border-t border-white/5">
+                                <InfoRow icon={Briefcase} label={user?.company || "Strategic Partner"} />
+                                <InfoRow icon={Target} label="Talent Acquisition Hub" />
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    {/* Export report */}
+                    <motion.div variants={stagger.item} className="apple-card p-8 bg-white border border-apple-gray-100">
+                        <div className="flex items-center gap-4 mb-6">
+                            <div className="h-10 w-10 rounded-xl bg-apple-blue/5 flex items-center justify-center">
+                                <Download className="h-5 w-5 text-apple-blue" />
+                            </div>
+                            <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-apple-gray-400">Intelligence Export</h3>
+                        </div>
+                        <p className="text-apple-gray-500 text-[13px] font-medium mb-8 leading-relaxed">
+                            Generate a comprehensive strategic brief of your recruitment funnel and metrics.
+                        </p>
+                        <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => setShowReports(true)}
+                            className="w-full py-4 bg-apple-gray-50 text-apple-gray-900 rounded-[18px] text-[11px] font-black uppercase tracking-widest hover:bg-apple-gray-100 transition-all flex items-center justify-center gap-3"
+                        >
+                            <FileText className="h-4 w-4" />
+                            Assemble Brief
+                        </motion.button>
+                    </motion.div>
                 </div>
             </div>
 
-            {/* Reports Modal */}
+            {/* Report Export Modal */}
             {showReports && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-md" onClick={() => setShowReports(false)}></div>
-                    <div className="relative bg-white w-full max-w-lg rounded-[50px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-slate-100 p-12">
-                        <div className="flex justify-between items-center mb-10 text-slate-900">
-                            <h3 className="text-2xl font-black italic uppercase tracking-tighter">Gen Intel</h3>
-                            <button onClick={() => setShowReports(false)} className="h-10 w-10 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 hover:text-slate-900 transition-all font-black">
-                                <X className="h-6 w-6" />
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="absolute inset-0 bg-apple-gray-900/40 backdrop-blur-md"
+                        onClick={() => setShowReports(false)}
+                    />
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        className="relative bg-white w-full max-w-md rounded-[40px] shadow-2xl p-10 overflow-hidden"
+                    >
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-apple-blue/5 rounded-full blur-[60px] -mr-16 -mt-16 pointer-events-none" />
+                        <div className="flex items-center justify-between mb-8">
+                            <h3 className="text-2xl font-black text-apple-gray-900 tracking-tight">Intelligence Export</h3>
+                            <button onClick={() => setShowReports(false)} className="h-10 w-10 rounded-full bg-apple-gray-50 text-apple-gray-400 hover:text-apple-gray-900 flex items-center justify-center transition-all">
+                                <X className="h-5 w-5" />
                             </button>
                         </div>
-                        <div className="text-center space-y-6">
-                            <p className="text-slate-500 font-bold italic text-sm">Targeting current acquisition nodes. Do you wish to proceed with full institutional data compilation?</p>
+                        <p className="text-apple-gray-500 text-[14px] font-medium mb-10 leading-relaxed">
+                            You are about to export a secure summary of your current recruitment operational data for external review.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <button onClick={() => setShowReports(false)} className="py-4 px-8 bg-apple-gray-50 text-apple-gray-900 rounded-[20px] text-[11px] font-black uppercase tracking-widest hover:bg-apple-gray-100 transition-all">Cancel</button>
                             <button
-                                type="button"
-                                onClick={handleCompileDossier}
+                                onClick={handleExportReport}
                                 disabled={compiling}
-                                className="w-full py-5 bg-[#1E2342] text-white rounded-[25px] font-black italic uppercase tracking-widest shadow-xl shadow-indigo-100 hover:bg-[#2D345B] transition-all disabled:opacity-60"
+                                className="flex-1 py-4 bg-apple-blue text-white rounded-[20px] text-[11px] font-black uppercase tracking-widest shadow-apple-hover disabled:opacity-50 transition-all flex items-center justify-center gap-3"
                             >
-                                {compiling ? 'Compiling...' : 'Compile Dossier'}
+                                {compiling ? (
+                                    <>
+                                        <div className="h-3.5 w-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                        Processing...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Download className="h-4 w-4" />
+                                        Initialize Download
+                                    </>
+                                )}
                             </button>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             )}
-        </div>
+        </motion.div>
     );
 }
 
-// HELPERS
-function MetricProgress({ label, value, max, color }: any) {
-    const percentage = Math.min((value / max) * 100, 100);
+function InfoRow({ icon: Icon, label }: { icon: React.ComponentType<any>; label: string }) {
     return (
-        <div className="space-y-2">
-            <div className="flex justify-between items-center text-[10px] font-black text-slate-800 uppercase tracking-widest italic">
-                <span>{label}</span>
-                <span className="text-slate-400">{value} / {max}</span>
-            </div>
-            <div className="h-1.5 w-full bg-slate-50 rounded-full overflow-hidden">
-                <div className={cn("h-full rounded-full transition-all duration-1000", color)} style={{ width: `${percentage}%` }} />
-            </div>
-        </div>
-    );
-}
-
-function InfoTag({ icon: Icon, label }: any) {
-    return (
-        <div className="flex items-center gap-4 bg-slate-50 p-2 pr-4 rounded-2xl border border-slate-100 transition-all hover:bg-white hover:shadow-sm group">
-            <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center text-slate-400 shadow-sm border border-slate-100 group-hover:text-blue-600 transition-colors shrink-0">
-                <Icon className="h-4 w-4" />
-            </div>
-            <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest italic truncate">{label}</span>
+        <div className="flex items-center gap-3 text-[12px] font-bold text-apple-gray-400 uppercase tracking-wide">
+            <Icon className="h-4 w-4 text-apple-blue shrink-0" />
+            <span className="truncate">{label}</span>
         </div>
     );
 }

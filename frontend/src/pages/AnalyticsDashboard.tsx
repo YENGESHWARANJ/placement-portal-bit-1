@@ -3,10 +3,12 @@ import {
     TrendingUp, TrendingDown, Eye, MousePointerClick, Users,
     Briefcase, Target, Award, Calendar, BarChart3, PieChart,
     Activity, Zap, ArrowUpRight, ArrowDownRight, Download,
-    Filter, RefreshCw, Share2
+    Filter, RefreshCw, Share2, Sparkles
 } from "lucide-react";
-import { getAdminStats } from "../services/analytics.service";
+import { getAdminStats, getStudentAnalytics } from "../services/analytics.service";
 import { toast } from "react-hot-toast";
+import { cn } from "../utils/cn";
+import { motion } from "framer-motion";
 
 interface Metric {
     label: string;
@@ -29,7 +31,7 @@ export default function AnalyticsDashboard() {
     const fetchAnalytics = async () => {
         try {
             setLoading(true);
-            const data = await getAdminStats();
+            const data = await getStudentAnalytics();
             setStats(data);
         } catch (error) {
             console.error("Failed to fetch analytics", error);
@@ -41,11 +43,15 @@ export default function AnalyticsDashboard() {
 
     if (loading) {
         return (
-            <div className="max-w-7xl mx-auto space-y-8 pb-20">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {[1, 2, 3, 4].map(i => (
-                        <div key={i} className="h-40 bg-slate-100 dark:bg-slate-900 rounded-[35px] animate-pulse" />
-                    ))}
+            <div className="max-w-7xl mx-auto space-y-8 pb-20 p-6 min-h-[60vh] flex items-center justify-center italic">
+                <div className="flex flex-col items-center gap-6">
+                    <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    >
+                        <RefreshCw className="h-16 w-16 text-blue-500 opacity-20" />
+                    </motion.div>
+                    <p className="animate-pulse text-slate-400 font-black tracking-[0.5em] uppercase text-[10px]">Synchronizing Neural Metrics...</p>
                 </div>
             </div>
         );
@@ -53,33 +59,33 @@ export default function AnalyticsDashboard() {
 
     const metrics: Metric[] = [
         {
-            label: "Total Students",
-            value: stats?.stats?.totalStudents?.toString() || "0",
-            change: 12.5,
+            label: "Total Applications",
+            value: stats?.appStats?.total?.toString() || "0",
+            change: 8.4,
             trend: "up",
-            icon: Users,
+            icon: Briefcase,
             color: "blue"
         },
         {
-            label: "Students Placed",
-            value: stats?.stats?.placedStudents?.toString() || "0",
-            change: 8.3,
+            label: "Shortlisted",
+            value: stats?.appStats?.shortlisted?.toString() || "0",
+            change: 12.1,
             trend: "up",
-            icon: Briefcase,
+            icon: Award,
             color: "emerald"
         },
         {
-            label: "Active Jobs",
-            value: stats?.stats?.totalJobs?.toString() || "0",
+            label: "Interviews",
+            value: stats?.appStats?.interviews?.toString() || "0",
             change: 5.7,
             trend: "up",
-            icon: Target,
+            icon: Calendar,
             color: "purple"
         },
         {
-            label: "Placement Rate",
-            value: `${stats?.stats?.placementRate || 0}%`,
-            change: 3.2,
+            label: "Success Rate",
+            value: stats?.appStats?.total > 0 ? `${Math.round((stats.appStats.hired / stats.appStats.total) * 100)}%` : "0%",
+            change: 2.1,
             trend: "up",
             icon: TrendingUp,
             color: "orange"
@@ -87,58 +93,84 @@ export default function AnalyticsDashboard() {
     ];
 
     const applicationStats = [
-        { status: "Pending", count: 8, color: "bg-yellow-500", percentage: 33 },
-        { status: "Shortlisted", count: 6, color: "bg-blue-500", percentage: 25 },
-        { status: "Interview", count: 4, color: "bg-purple-500", percentage: 17 },
-        { status: "Rejected", count: 4, color: "bg-red-500", percentage: 17 },
-        { status: "Accepted", count: 2, color: "bg-emerald-500", percentage: 8 }
+        {
+            status: "Pending",
+            count: stats?.appStats?.pending || 0,
+            color: "bg-yellow-500",
+            percentage: stats?.appStats?.total > 0 ? Math.round((stats.appStats.pending / stats.appStats.total) * 100) : 0
+        },
+        {
+            status: "Shortlisted",
+            count: stats?.appStats?.shortlisted || 0,
+            color: "bg-blue-500",
+            percentage: stats?.appStats?.total > 0 ? Math.round((stats.appStats.shortlisted / stats.appStats.total) * 100) : 0
+        },
+        {
+            status: "Interview",
+            count: stats?.appStats?.interviews || 0,
+            color: "bg-purple-500",
+            percentage: stats?.appStats?.total > 0 ? Math.round((stats.appStats.interviews / stats.appStats.total) * 100) : 0
+        },
+        {
+            status: "Rejected",
+            count: stats?.appStats?.rejected || 0,
+            color: "bg-red-500",
+            percentage: stats?.appStats?.total > 0 ? Math.round((stats.appStats.rejected / stats.appStats.total) * 100) : 0
+        },
+        {
+            status: "Selected",
+            count: stats?.appStats?.hired || 0,
+            color: "bg-emerald-500",
+            percentage: stats?.appStats?.total > 0 ? Math.round((stats.appStats.hired / stats.appStats.total) * 100) : 0
+        }
     ];
 
-    const topSkills = [
-        { name: "React.js", demand: 95, proficiency: 90 },
-        { name: "TypeScript", demand: 88, proficiency: 85 },
-        { name: "Node.js", demand: 82, proficiency: 80 },
-        { name: "Python", demand: 78, proficiency: 75 },
-        { name: "AWS", demand: 85, proficiency: 70 }
-    ];
+    const topSkills = stats?.cognitiveProfile?.map((s: any) => ({
+        name: s.subject,
+        demand: Math.floor(Math.random() * 20) + 75, // Simulated demand
+        proficiency: Math.round(s.A)
+    })) || [];
 
-    const recentActivity = [
-        { action: "Profile viewed by Google", time: "2 hours ago", type: "view" },
-        { action: "Application submitted to Microsoft", time: "5 hours ago", type: "application" },
-        { action: "Interview scheduled with Amazon", time: "1 day ago", type: "interview" },
-        { action: "Skill assessment completed", time: "2 days ago", type: "achievement" }
-    ];
+    const recentActivity = stats?.recentActivity?.map((a: any) => ({
+        action: `${a.type} updated to ${a.status}`,
+        time: new Date(a.date).toLocaleDateString(),
+        type: a.type.toLowerCase()
+    })) || [];
 
     return (
-        <div className="max-w-7xl mx-auto space-y-8 pb-20">
+        <div className="max-w-7xl mx-auto space-y-12 pb-20">
 
             {/* Elite Header */}
             <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-[40px] blur opacity-5 group-hover:opacity-10 transition duration-1000"></div>
-                <div className="relative bg-white dark:bg-slate-900 p-12 rounded-[40px] shadow-sm border border-slate-100 dark:border-slate-800">
-                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                        <div className="flex items-center gap-6">
-                            <div className="h-20 w-20 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-[28px] flex items-center justify-center shadow-2xl">
-                                <BarChart3 className="h-10 w-10 text-white" />
-                            </div>
+                <div className="absolute -inset-1 bg-gradient-to-r from-cyan-600/20 to-blue-600/20 rounded-[60px] blur-2xl opacity-50 group-hover:opacity-75 transition duration-1000"></div>
+                <div className="relative glass-premium p-14 rounded-[60px] border border-white/5 overflow-hidden">
+                    <div className="absolute top-0 right-0 p-40 bg-cyan-500/5 rounded-full blur-[100px] -mr-20 -mt-20"></div>
+                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-10 relative z-10">
+                        <div className="flex items-center gap-8">
+                            <motion.div
+                                whileHover={{ rotate: 10, scale: 1.1 }}
+                                className="h-24 w-24 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-[35px] flex items-center justify-center shadow-[0_20px_60px_rgba(6,182,212,0.4)] border border-white/10"
+                            >
+                                <BarChart3 className="h-12 w-12 text-white" />
+                            </motion.div>
                             <div>
-                                <h1 className="text-5xl font-black text-slate-900 dark:text-white mb-2 tracking-tighter">
-                                    Analytics Hub
+                                <h1 className="text-6xl font-black text-slate-900 dark:text-white mb-3 tracking-tighter italic">
+                                    NEURAL <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">ANALYTICS</span>
                                 </h1>
-                                <p className="text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-[0.3em]">
-                                    Data-Driven Career Insights
+                                <p className="text-slate-400 font-black uppercase tracking-[0.4em] text-[10px]">
+                                    Cognitive Displacement · Market Resonance · Sync Verification
                                 </p>
                             </div>
                         </div>
 
-                        <div className="flex gap-3">
-                            <button className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
-                                <Download className="h-4 w-4" />
-                                Export
+                        <div className="flex gap-4">
+                            <button className="bg-white/5 hover:bg-white/10 text-slate-400 px-8 py-5 rounded-[28px] text-[10px] font-black uppercase tracking-widest border border-white/5 transition-all hover:scale-105 active:scale-95 flex items-center gap-3">
+                                <Download className="h-5 w-5" />
+                                Export Intel
                             </button>
-                            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
-                                <RefreshCw className="h-4 w-4" />
-                                Refresh
+                            <button onClick={fetchAnalytics} className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-8 py-5 rounded-[28px] text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 flex items-center gap-3 shadow-[0_10px_30px_rgba(6,182,212,0.3)]">
+                                <RefreshCw className="h-5 w-5" />
+                                Recalibrate
                             </button>
                         </div>
                     </div>
@@ -146,135 +178,147 @@ export default function AnalyticsDashboard() {
             </div>
 
             {/* Time Range Selector */}
-            <div className="flex gap-3">
+            <div className="flex gap-4 px-2">
                 {(["7d", "30d", "90d", "1y"] as const).map((range) => (
                     <button
                         key={range}
                         onClick={() => setTimeRange(range)}
-                        className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${timeRange === range
-                            ? "bg-blue-600 text-white shadow-lg"
-                            : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
+                        className={`px-8 py-4 rounded-full text-[10px] font-black uppercase tracking-widest transition-all italic border ${timeRange === range
+                            ? "bg-white text-slate-900 border-white shadow-[0_10px_40px_rgba(255,255,255,0.1)]"
+                            : "bg-white/5 border-white/5 text-slate-500 hover:text-slate-300 hover:bg-white/10"
                             }`}
                     >
-                        {range === "7d" ? "7 Days" : range === "30d" ? "30 Days" : range === "90d" ? "90 Days" : "1 Year"}
+                        {range === "7d" ? "07 DAYS" : range === "30d" ? "30 DAYS" : range === "90d" ? "90 DAYS" : "01 YEAR"}
                     </button>
                 ))}
             </div>
 
             {/* Key Metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {metrics.map((metric, index) => {
                     const Icon = metric.icon;
                     return (
                         <div
                             key={index}
-                            className="bg-white dark:bg-slate-900 p-8 rounded-[35px] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group"
+                            className="glass-premium p-10 rounded-[50px] border border-white/5 shadow-2xl relative overflow-hidden group hover:bg-white/[0.04] transition-all"
                         >
-                            <div className="flex items-start justify-between mb-6">
-                                <div className={`h-14 w-14 bg-${metric.color}-100 dark:bg-${metric.color}-900/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                                    <Icon className={`h-7 w-7 text-${metric.color}-600 dark:text-${metric.color}-400`} />
+                            <div className="absolute top-0 right-0 p-24 bg-white/5 rounded-full blur-3xl -mr-12 -mt-12 group-hover:bg-white/10 transition-colors" />
+                            <div className="flex items-start justify-between mb-8 relative z-10">
+                                <div className={cn("h-16 w-16 rounded-[25px] flex items-center justify-center transition-transform group-hover:rotate-12",
+                                    metric.color === 'blue' ? "bg-cyan-500/10" :
+                                        metric.color === 'emerald' ? "bg-emerald-500/10" :
+                                            metric.color === 'purple' ? "bg-purple-500/10" : "bg-orange-500/10")}>
+                                    <Icon className={cn("h-8 w-8",
+                                        metric.color === 'blue' ? "text-cyan-400" :
+                                            metric.color === 'emerald' ? "text-emerald-400" :
+                                                metric.color === 'purple' ? "text-purple-400" : "text-orange-400")} />
                                 </div>
-                                <div className={`flex items-center gap-1 px-3 py-1 rounded-full ${metric.trend === "up"
-                                    ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400"
-                                    : "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"
-                                    }`}>
-                                    {metric.trend === "up" ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
-                                    <span className="text-[9px] font-black">{Math.abs(metric.change)}%</span>
+                                <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${metric.trend === "up"
+                                    ? "bg-emerald-500/10 text-emerald-400"
+                                    : "bg-rose-500/10 text-rose-400"
+                                    } border border-white/5`}>
+                                    {metric.trend === "up" ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
+                                    <span className="text-[10px] font-black">{Math.abs(metric.change)}%</span>
                                 </div>
                             </div>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{metric.label}</p>
-                            <p className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">{metric.value}</p>
+                            <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.3em] mb-3 relative z-10 italic">{metric.label}</p>
+                            <p className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter relative z-10 italic">{metric.value}</p>
                         </div>
                     );
                 })}
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-8">
+            <div className="grid lg:grid-cols-2 gap-12">
 
                 {/* Application Status Distribution */}
-                <div className="bg-white dark:bg-slate-900 p-10 rounded-[40px] border border-slate-100 dark:border-slate-800 shadow-sm">
-                    <div className="flex items-center gap-4 mb-8">
-                        <div className="h-14 w-14 bg-purple-100 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center">
-                            <PieChart className="h-7 w-7 text-purple-600 dark:text-purple-400" />
+                <div className="glass-premium p-12 rounded-[60px] border border-white/5 shadow-2xl relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-40 bg-purple-500/5 rounded-full blur-[100px] -mr-20 -mt-20"></div>
+                    <div className="flex items-center gap-6 mb-12 relative z-10">
+                        <div className="h-16 w-16 bg-purple-500/10 rounded-[25px] flex items-center justify-center border border-purple-500/20 shadow-lg">
+                            <PieChart className="h-8 w-8 text-purple-400" />
                         </div>
                         <div>
-                            <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Application Status</h3>
-                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Distribution Overview</p>
+                            <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight italic uppercase">Status Matrix</h3>
+                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">Resource Allocation Flow</p>
                         </div>
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-8 relative z-10">
                         {applicationStats.map((stat, index) => (
-                            <div key={index}>
-                                <div className="flex items-center justify-between mb-3">
-                                    <div className="flex items-center gap-3">
-                                        <div className={`h-3 w-3 rounded-full ${stat.color}`}></div>
-                                        <span className="text-sm font-bold text-slate-700 dark:text-slate-300">{stat.status}</span>
-                                    </div>
+                            <div key={index} className="group/stat">
+                                <div className="flex items-center justify-between mb-4">
                                     <div className="flex items-center gap-4">
-                                        <span className="text-sm font-black text-slate-900 dark:text-white">{stat.count}</span>
-                                        <span className="text-xs font-bold text-slate-400">{stat.percentage}%</span>
+                                        <div className={`h-3 w-3 rounded-full ${stat.color} shadow-[0_0_10px_rgba(0,0,0,0.2)]`} />
+                                        <span className="text-sm font-black text-slate-700 dark:text-slate-300 italic uppercase tracking-wider group-hover/stat:text-white transition-colors">{stat.status}</span>
+                                    </div>
+                                    <div className="flex items-center gap-6">
+                                        <span className="text-lg font-black text-slate-900 dark:text-white italic">{stat.count}</span>
+                                        <span className="text-[11px] font-black text-slate-500 uppercase">{stat.percentage}%</span>
                                     </div>
                                 </div>
-                                <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                    <div
-                                        className={`h-full ${stat.color} transition-all duration-1000`}
-                                        style={{ width: `${stat.percentage}%` }}
-                                    ></div>
+                                <div className="h-2 bg-white/5 rounded-full overflow-hidden p-0.5 border border-white/5">
+                                    <motion.div
+                                        initial={{ width: 0 }}
+                                        animate={{ width: `${stat.percentage}%` }}
+                                        transition={{ duration: 1.5, ease: "easeOut", delay: index * 0.1 }}
+                                        className={cn("h-full rounded-full shadow-lg", stat.color)}
+                                    ></motion.div>
                                 </div>
                             </div>
                         ))}
                     </div>
 
-                    <div className="mt-8 p-6 bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-950/20 dark:to-blue-950/20 rounded-2xl border border-purple-100 dark:border-purple-900/30">
-                        <p className="text-xs font-bold text-purple-700 dark:text-purple-300 flex items-center gap-2">
-                            <Zap className="h-4 w-4" />
-                            Your acceptance rate is 8% - Keep applying to increase your chances!
+                    <div className="mt-12 p-8 bg-purple-500/5 rounded-[35px] border border-purple-500/10 relative z-10 group overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-[2000ms]" />
+                        <p className="text-xs font-black text-purple-400 flex items-center gap-4 italic tracking-wide">
+                            <Zap className="h-5 w-5 text-amber-500 animate-pulse" />
+                            NEURAL ALIGNMENT: POSITIVE SYNC DETECTED IN TOP RECRUITER ORBITS.
                         </p>
                     </div>
                 </div>
 
                 {/* Top Skills Analysis */}
-                <div className="bg-white dark:bg-slate-900 p-10 rounded-[40px] border border-slate-100 dark:border-slate-800 shadow-sm">
-                    <div className="flex items-center gap-4 mb-8">
-                        <div className="h-14 w-14 bg-orange-100 dark:bg-orange-900/30 rounded-2xl flex items-center justify-center">
-                            <Target className="h-7 w-7 text-orange-600 dark:text-orange-400" />
+                <div className="glass-premium p-12 rounded-[60px] border border-white/5 shadow-2xl relative overflow-hidden">
+                    <div className="absolute top-0 left-0 p-40 bg-orange-500/5 rounded-full blur-[100px] -ml-20 -mt-20"></div>
+                    <div className="flex items-center gap-6 mb-12 relative z-10">
+                        <div className="h-16 w-16 bg-orange-500/10 rounded-[25px] flex items-center justify-center border border-orange-500/20 shadow-lg">
+                            <Target className="h-8 w-8 text-orange-400" />
                         </div>
                         <div>
-                            <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Skills Analysis</h3>
-                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Market Demand vs Your Proficiency</p>
+                            <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight italic uppercase">Cognitive Radar</h3>
+                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">Requirement vs Resonance</p>
                         </div>
                     </div>
 
-                    <div className="space-y-8">
-                        {topSkills.map((skill, index) => (
-                            <div key={index}>
-                                <div className="flex items-center justify-between mb-3">
-                                    <span className="text-sm font-black text-slate-900 dark:text-white">{skill.name}</span>
-                                    <div className="flex items-center gap-4">
-                                        <span className="text-[9px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest">
-                                            Demand: {skill.demand}%
-                                        </span>
-                                        <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
-                                            You: {skill.proficiency}%
-                                        </span>
+                    <div className="space-y-10 relative z-10">
+                        {topSkills.map((skill: any, index: number) => (
+                            <div key={index} className="group/skill">
+                                <div className="flex items-center justify-between mb-4">
+                                    <span className="text-sm font-black text-slate-900 dark:text-white italic uppercase tracking-tighter group-hover/skill:text-orange-400 transition-colors">{skill.name}</span>
+                                    <div className="flex items-center gap-6">
+                                        <div className="flex flex-col items-end">
+                                            <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Market Feed</span>
+                                            <span className="text-xs font-black text-blue-400 italic">{skill.demand}%</span>
+                                        </div>
+                                        <div className="h-8 w-px bg-white/5" />
+                                        <div className="flex flex-col items-end">
+                                            <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Your Sync</span>
+                                            <span className="text-xs font-black text-emerald-400 italic">{skill.proficiency}%</span>
+                                        </div>
                                     </div>
                                 </div>
 
-                                {/* Demand Bar */}
-                                <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mb-2">
+                                <div className="h-2.5 bg-white/5 rounded-full overflow-hidden relative p-0.5 border border-white/5">
                                     <div
-                                        className="h-full bg-blue-500 transition-all duration-1000"
+                                        className="absolute inset-y-0 left-0 bg-blue-500/10 animate-pulse"
                                         style={{ width: `${skill.demand}%` }}
                                     ></div>
-                                </div>
-
-                                {/* Proficiency Bar */}
-                                <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                    <div
-                                        className="h-full bg-emerald-500 transition-all duration-1000"
-                                        style={{ width: `${skill.proficiency}%` }}
-                                    ></div>
+                                    <motion.div
+                                        initial={{ width: 0 }}
+                                        animate={{ width: `${skill.proficiency}%` }}
+                                        transition={{ duration: 2, ease: "easeOut", delay: index * 0.1 }}
+                                        className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.4)] relative z-10"
+                                    ></motion.div>
                                 </div>
                             </div>
                         ))}
@@ -283,69 +327,80 @@ export default function AnalyticsDashboard() {
             </div>
 
             {/* Recent Activity Timeline */}
-            <div className="bg-white dark:bg-slate-900 p-10 rounded-[40px] border border-slate-100 dark:border-slate-800 shadow-sm">
-                <div className="flex items-center gap-4 mb-8">
-                    <div className="h-14 w-14 bg-cyan-100 dark:bg-cyan-900/30 rounded-2xl flex items-center justify-center">
-                        <Activity className="h-7 w-7 text-cyan-600 dark:text-cyan-400" />
+            <div className="glass-premium p-12 rounded-[60px] border border-white/5 shadow-2xl relative overflow-hidden">
+                <div className="flex items-center gap-6 mb-12">
+                    <div className="h-16 w-16 bg-cyan-500/10 rounded-[25px] flex items-center justify-center border border-cyan-500/20 shadow-lg">
+                        <Activity className="h-8 w-8 text-cyan-400" />
                     </div>
                     <div>
-                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Recent Activity</h3>
-                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Your career journey timeline</p>
+                        <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight italic uppercase">Operational Log</h3>
+                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">System Events & Action Streams</p>
                     </div>
                 </div>
 
-                <div className="space-y-6">
-                    {recentActivity.map((activity, index) => (
-                        <div key={index} className="flex items-start gap-6 group">
-                            <div className="relative">
-                                <div className={`h-12 w-12 rounded-2xl flex items-center justify-center ${activity.type === "view" ? "bg-blue-100 dark:bg-blue-900/30" :
-                                    activity.type === "application" ? "bg-purple-100 dark:bg-purple-900/30" :
-                                        activity.type === "interview" ? "bg-emerald-100 dark:bg-emerald-900/30" :
-                                            "bg-yellow-100 dark:bg-yellow-900/30"
-                                    }`}>
-                                    {activity.type === "view" ? <Eye className="h-5 w-5 text-blue-600 dark:text-blue-400" /> :
-                                        activity.type === "application" ? <Briefcase className="h-5 w-5 text-purple-600 dark:text-purple-400" /> :
-                                            activity.type === "interview" ? <Calendar className="h-5 w-5 text-emerald-600 dark:text-emerald-400" /> :
-                                                <Award className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />}
-                                </div>
-                                {index < recentActivity.length - 1 && (
-                                    <div className="absolute top-14 left-1/2 -translate-x-1/2 w-0.5 h-12 bg-slate-200 dark:bg-slate-800"></div>
-                                )}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {recentActivity.map((activity: any, index: number) => (
+                        <motion.div
+                            key={index}
+                            whileHover={{ y: -8, backgroundColor: "rgba(255,255,255,0.06)" }}
+                            className="p-8 bg-white/[0.03] border border-white/5 rounded-[40px] flex items-center gap-6 group transition-all"
+                        >
+                            <div className={`h-14 w-14 rounded-[22px] flex items-center justify-center shrink-0 shadow-lg border border-white/5 ${activity.type === "view" ? "bg-cyan-500/10" :
+                                activity.type === "application" ? "bg-purple-500/10" :
+                                    activity.type === "interview" ? "bg-emerald-500/10" :
+                                        "bg-orange-500/10"
+                                }`}>
+                                {activity.type === "view" ? <Eye className="h-6 w-6 text-cyan-400" /> :
+                                    activity.type === "application" ? <Briefcase className="h-6 w-6 text-purple-400" /> :
+                                        activity.type === "interview" ? <Calendar className="h-6 w-6 text-emerald-400" /> :
+                                            <Award className="h-6 w-6 text-orange-400" />}
                             </div>
-                            <div className="flex-1 pt-2">
-                                <p className="font-bold text-slate-900 dark:text-white text-sm mb-1">{activity.action}</p>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{activity.time}</p>
+                            <div className="flex-1 min-w-0">
+                                <p className="font-black text-slate-900 dark:text-white text-[15px] truncate italic group-hover:text-cyan-400 transition-colors tracking-tight leading-none mb-2 uppercase">{activity.action}</p>
+                                <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{activity.time}</p>
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
             </div>
 
             {/* Performance Score Card */}
-            <div className="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-10 rounded-[40px] shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+            <div className="neural-map bg-[#080B1A] p-20 rounded-[70px] shadow-2xl relative overflow-hidden group border border-white/5">
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-pink-500/10 animate-pulse"></div>
+                <div className="absolute top-0 right-0 p-80 bg-blue-500/5 rounded-full blur-[150px] -mr-40 -mt-40"></div>
+
                 <div className="relative z-10">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-                        <div>
-                            <p className="text-white/80 text-[10px] font-black uppercase tracking-[0.3em] mb-3">Overall Performance Score</p>
-                            <div className="flex items-baseline gap-4 mb-4">
-                                <span className="text-7xl font-black text-white tracking-tighter">8.7</span>
-                                <span className="text-3xl text-white/60 font-bold">/10</span>
+                    <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
+                        <div className="text-center lg:text-left">
+                            <p className="text-cyan-400 text-[11px] font-black uppercase tracking-[0.6em] mb-6 italic">Neural Resonance Factor</p>
+                            <div className="flex items-baseline justify-center lg:justify-start gap-4 mb-10">
+                                <span className="text-[11rem] font-black text-white tracking-tighter italic leading-none drop-shadow-[0_0_40px_rgba(59,130,246,0.3)]">8.7</span>
+                                <span className="text-5xl text-white/20 font-black italic tracking-tighter">/10</span>
                             </div>
-                            <p className="text-white/90 text-sm font-bold">You're in the top 15% of candidates!</p>
+                            <div className="inline-flex items-center gap-4 px-8 py-4 bg-emerald-500/10 border border-emerald-500/20 rounded-full backdrop-blur-md">
+                                <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 2 }}>
+                                    <Sparkles className="h-5 w-5 text-emerald-400" />
+                                </motion.div>
+                                <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.4em] italic">Elite Candidate Orbit Verified</span>
+                            </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-white/20 backdrop-blur-md p-6 rounded-2xl border border-white/30">
-                                <TrendingUp className="h-8 w-8 text-white mb-2" />
-                                <p className="text-2xl font-black text-white mb-1">+24%</p>
-                                <p className="text-[9px] font-black text-white/80 uppercase tracking-widest">Growth</p>
-                            </div>
-                            <div className="bg-white/20 backdrop-blur-md p-6 rounded-2xl border border-white/30">
-                                <Users className="h-8 w-8 text-white mb-2" />
-                                <p className="text-2xl font-black text-white mb-1">Top 15%</p>
-                                <p className="text-[9px] font-black text-white/80 uppercase tracking-widest">Ranking</p>
-                            </div>
+                        <div className="grid grid-cols-2 gap-8 w-full lg:w-auto">
+                            {[
+                                { icon: TrendingUp, value: "+24%", label: "SYNC VELOCITY", color: "text-cyan-400" },
+                                { icon: Users, value: "ELITE", label: "MARKET RANKING", color: "text-indigo-400" }
+                            ].map((s, i) => (
+                                <motion.div
+                                    key={i}
+                                    whileHover={{ y: -15, scale: 1.05 }}
+                                    className="bg-white/5 backdrop-blur-3xl border border-white/10 p-12 rounded-[50px] text-center min-w-[240px] shadow-3xl flex flex-col items-center justify-center relative overflow-hidden group"
+                                >
+                                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                                    <s.icon className={`h-10 w-10 ${s.color} mb-6 filter drop-shadow-[0_0_10px_rgba(0,0,0,0.5)]`} />
+                                    <p className="text-5xl font-black text-white mb-3 italic tracking-tighter drop-shadow-lg">{s.value}</p>
+                                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] italic">{s.label}</p>
+                                </motion.div>
+                            ))}
                         </div>
                     </div>
                 </div>

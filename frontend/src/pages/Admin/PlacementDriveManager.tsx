@@ -49,16 +49,16 @@ export default function PlacementDriveManager() {
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-3xl font-black text-white tracking-tighter uppercase italic">Placement Drives</h1>
-                    <p className="text-purple-400 font-bold uppercase tracking-[0.3em] text-[10px] mt-1">Schedule • Manage • Execute</p>
+                    <p className="text-emerald-400 font-bold uppercase tracking-[0.3em] text-[10px] mt-1">Schedule • Manage • Execute</p>
                 </div>
-                <button className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-purple-600/20">
+                <button className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-emerald-600/20">
                     <Plus className="h-4 w-4" /> Schedule Drive
                 </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {drives.map(drive => (
-                    <div key={drive._id} className="bg-[#0F1121] p-6 rounded-[30px] border border-white/5 relative group hover:border-purple-500/30 transition-all">
+                    <div key={drive._id} className="bg-[#0F1121] p-6 rounded-[30px] border border-white/5 relative group hover:border-emerald-500/30 transition-all">
                         <div className="flex justify-between items-start mb-4">
                             <h3 className="text-xl font-black text-white italic">{drive.company}</h3>
                             <span className="px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded-lg text-[10px] font-black uppercase tracking-widest border border-emerald-500/20">{drive.status}</span>
@@ -66,7 +66,7 @@ export default function PlacementDriveManager() {
 
                         <div className="space-y-3 mb-6">
                             <div className="flex items-center gap-3 text-slate-400 text-xs font-bold">
-                                <Calendar className="h-4 w-4 text-purple-500" />
+                                <Calendar className="h-4 w-4 text-emerald-500" />
                                 {new Date(drive.date).toLocaleDateString()}
                             </div>
                             <div className="flex items-center gap-3 text-slate-400 text-xs font-bold">

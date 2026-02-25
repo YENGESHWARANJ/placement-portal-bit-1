@@ -5,6 +5,7 @@ import {
     TrendingUp, Target, Award, Activity, Star,
     BookOpen, Zap, CheckCircle2, Search, ArrowUpRight
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../../utils/cn';
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -25,67 +26,79 @@ export default function StudentAnalytics() {
     const { user } = useAuth();
 
     return (
-        <div className="animate-in fade-in zoom-in duration-500 pb-10">
-            <div className="mb-10">
-                <h1 className="text-4xl font-black text-slate-900 tracking-tight">Growth Intelligence</h1>
-                <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] mt-2 italic">Tracking your placement readiness & skill velocity</p>
+        <div className="pb-10 animate-in fade-in zoom-in duration-500 bg-apple-gray-50/50 min-h-screen p-8">
+            <div className="mb-12">
+                <h1 className="text-4xl font-black text-apple-gray-900 tracking-tight">Growth Intelligence</h1>
+                <p className="text-apple-gray-400 font-bold uppercase tracking-widest text-[10px] mt-2">Neural assessment of placement readiness & velocity</p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                <div className="lg:col-span-2 space-y-10">
                     {/* Performance Score Card */}
-                    <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[45px] p-10 text-white relative overflow-hidden shadow-2xl">
-                        <div className="absolute top-0 right-0 h-64 w-64 bg-white/10 rounded-full blur-[80px] -mr-20 -mt-20"></div>
-                        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
-                            <div className="text-center md:text-left">
-                                <span className="px-4 py-1.5 bg-white/20 backdrop-blur-xl rounded-full text-[10px] font-black uppercase tracking-widest mb-6 inline-block">Current Readiness Score</span>
-                                <h2 className="text-7xl font-black tracking-tighter mb-2">92<span className="text-3xl opacity-50">/100</span></h2>
-                                <p className="text-blue-100 font-bold flex items-center gap-2 justify-center md:justify-start">
-                                    <TrendingUp className="h-5 w-5" /> Top 6% in Class of 2025
+                    <div className="apple-card p-12 bg-white relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-96 h-96 bg-apple-blue/5 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none" />
+                        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+                            <div className="text-center md:text-left space-y-6">
+                                <span className="px-5 py-2 bg-apple-blue/10 text-apple-blue rounded-full text-[10px] font-bold uppercase tracking-widest inline-block border border-apple-blue/10">Readiness Score</span>
+                                <h2 className="text-8xl font-black text-apple-gray-900 tracking-tighter mb-2">92<span className="text-3xl text-apple-gray-300 ml-1">/ 100</span></h2>
+                                <p className="text-apple-gray-500 font-bold flex items-center gap-2 justify-center md:justify-start text-sm">
+                                    <TrendingUp className="h-5 w-5 text-emerald-500" /> Currently Top 6% in Class of 2025
                                 </p>
                             </div>
-                            <div className="h-44 w-44 bg-white/10 backdrop-blur-md rounded-[40px] border border-white/20 p-8 flex flex-col items-center justify-center text-center">
-                                <Star className="h-10 w-10 text-yellow-400 mb-4 fill-yellow-400" />
-                                <p className="text-[10px] font-black uppercase tracking-widest leading-tight">Dream Offer Eligible</p>
+                            <div className="h-48 w-48 bg-apple-gray-900 rounded-[40px] p-10 flex flex-col items-center justify-center text-center shadow-2xl">
+                                <Star className="h-10 w-10 text-orange-500 mb-4 fill-orange-500 drop-shadow-[0_0_15px_rgba(255,165,0,0.5)]" />
+                                <p className="text-[10px] font-bold text-white uppercase tracking-widest leading-tight">Tier-1 Rank Verified</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Skill Matrix */}
-                    <div className="bg-white rounded-[45px] border border-slate-100 p-10 shadow-sm shadow-slate-100">
-                        <h3 className="text-2xl font-black text-slate-900 mb-10 tracking-tight">Technical Portfolio DNA</h3>
-                        <div className="h-[400px]">
-                            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+                    <div className="apple-card p-12 bg-white">
+                        <div className="flex items-center gap-3 mb-10">
+                            <div className="h-10 w-10 bg-apple-blue/5 rounded-xl flex items-center justify-center">
+                                <Activity className="h-5 w-5 text-apple-blue" />
+                            </div>
+                            <h3 className="text-2xl font-black text-apple-gray-900 tracking-tight">Technical Portfolio DNA</h3>
+                        </div>
+                        <div className="h-[400px] w-full">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1} debounce={100}>
                                 <RadarChart cx="50%" cy="50%" outerRadius="80%" data={skillData}>
-                                    <PolarGrid stroke="#f1f5f9" />
-                                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 12, fontWeight: 900 }} />
-                                    <Radar name="Student" dataKey="A" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.5} />
+                                    <PolarGrid stroke="#f2f2f7" />
+                                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#8e8e93', fontSize: 11, fontWeight: 700 }} />
+                                    <Radar name="Student" dataKey="A" stroke="#0071e3" fill="#0071e3" fillOpacity={0.4} />
                                 </RadarChart>
                             </ResponsiveContainer>
                         </div>
                     </div>
                 </div>
 
-                <div className="space-y-8">
+                <div className="space-y-10">
                     {/* Active Metrics */}
-                    <div className="bg-white p-8 rounded-[40px] border border-slate-100 shadow-sm">
-                        <h3 className="font-black text-slate-900 mb-8 uppercase tracking-[0.2em] text-[10px]">Active Trajectories</h3>
-                        <div className="space-y-6">
+                    <div className="apple-card p-10 bg-white">
+                        <div className="flex items-center gap-3 mb-10">
+                            <h3 className="font-bold text-apple-gray-400 uppercase tracking-[0.2em] text-[10px]">Active Trajectories</h3>
+                        </div>
+                        <div className="space-y-8">
                             {[
-                                { label: 'Interview Accuracy', val: '78%', sub: '+12% this week', color: 'bg-emerald-500' },
-                                { label: 'Resume ATS Score', val: '84/100', sub: 'Highly Optimized', color: 'bg-blue-500' },
-                                { label: 'Problem Solving', val: 'Level 4', sub: 'Consistent Streak', color: 'bg-indigo-500' },
+                                { label: 'Interview Accuracy', val: '78%', sub: '+12% weekly', color: 'bg-emerald-500' },
+                                { label: 'Resume ATS Score', val: '84/100', sub: 'Optimized', color: 'bg-apple-blue' },
+                                { label: 'Problem Solving', val: 'Level 4', sub: 'Consistent', color: 'bg-orange-500' },
                             ].map((met, i) => (
                                 <div key={i} className="group">
                                     <div className="flex justify-between items-end mb-3">
                                         <div>
-                                            <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">{met.label}</p>
-                                            <p className="text-xl font-black text-slate-900 group-hover:text-blue-600 transition-colors">{met.val}</p>
+                                            <p className="text-[10px] font-bold uppercase text-apple-gray-400 tracking-widest leading-none mb-2">{met.label}</p>
+                                            <p className="text-2xl font-black text-apple-gray-900 group-hover:text-apple-blue transition-colors leading-none">{met.val}</p>
                                         </div>
-                                        <p className="text-[9px] font-bold text-slate-400 italic">{met.sub}</p>
+                                        <p className="text-[9px] font-bold text-apple-gray-300 uppercase tracking-widest">{met.sub}</p>
                                     </div>
-                                    <div className="h-1.5 w-full bg-slate-50 rounded-full overflow-hidden">
-                                        <div className={cn("h-full", met.color)} style={{ width: i === 0 ? '78%' : i === 1 ? '84%' : '60%' }}></div>
+                                    <div className="h-1.5 w-full bg-apple-gray-50 rounded-full overflow-hidden">
+                                        <motion.div
+                                            initial={{ width: 0 }}
+                                            animate={{ width: i === 0 ? '78%' : i === 1 ? '84%' : '60%' }}
+                                            transition={{ duration: 1.5, ease: "easeOut" }}
+                                            className={cn("h-full rounded-full", met.color)}
+                                        />
                                     </div>
                                 </div>
                             ))}
@@ -93,30 +106,31 @@ export default function StudentAnalytics() {
                     </div>
 
                     {/* Improvement Suggestions */}
-                    <div className="bg-slate-900 rounded-[40px] p-8 text-white relative overflow-hidden shadow-2xl">
-                        <div className="absolute bottom-0 left-0 h-40 w-40 bg-blue-500/10 rounded-full blur-3xl -ml-20 -mb-20"></div>
-                        <h3 className="text-xl font-black mb-6 tracking-tight flex items-center gap-2">
-                            <Zap className="h-5 w-5 text-yellow-400 fill-yellow-400" /> Improvement Path
+                    <div className="p-10 rounded-[40px] bg-apple-gray-900 text-white relative overflow-hidden shadow-2xl group">
+                        <div className="absolute bottom-0 left-0 w-48 h-48 bg-apple-blue/10 rounded-full blur-[80px] -ml-24 -mb-24 pointer-events-none" />
+                        <h3 className="text-xl font-black mb-8 tracking-tight flex items-center gap-3">
+                            <Zap className="h-5 w-5 text-orange-500 fill-orange-500" /> Improvement Path
                         </h3>
-                        <div className="space-y-4">
+                        <div className="space-y-4 relative z-10">
                             {[
-                                "Improve 'System Design' for Tier-1 companies.",
-                                "Participate in 2 more mock arenas.",
-                                "Complete Portfolio project 'E-commerce API'."
+                                "Refine High-Level Design concepts",
+                                "Participate in AI-Mock Arena sessions",
+                                "Optimize performance of project nodes"
                             ].map((hint, i) => (
-                                <div key={i} className="flex gap-4 p-4 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/10 transition-all cursor-pointer">
-                                    <CheckCircle2 className="h-4 w-4 text-blue-400 shrink-0 mt-1" />
-                                    <p className="text-xs font-medium text-slate-300">{hint}</p>
+                                <div key={i} className="flex gap-4 p-5 bg-white/5 rounded-[20px] border border-white/5 hover:bg-white/10 transition-all cursor-pointer">
+                                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
+                                    <p className="text-[13px] font-bold text-apple-gray-300 uppercase tracking-tight">{hint}</p>
                                 </div>
                             ))}
                         </div>
-                        <button
-                        type="button"
-                        onClick={() => navigate('/aptitude-test')}
-                        className="w-full mt-8 py-4 bg-white text-slate-900 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:scale-[1.02] transition-all active:scale-[0.98]"
-                    >
-                        Start Sprint
-                    </button>
+                        <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => navigate('/aptitude-test')}
+                            className="w-full mt-10 py-6 bg-apple-blue text-white rounded-[24px] font-bold uppercase tracking-widest text-xs shadow-apple-hover transition-all"
+                        >
+                            Start Cognitive Sprint
+                        </motion.button>
                     </div>
                 </div>
             </div>

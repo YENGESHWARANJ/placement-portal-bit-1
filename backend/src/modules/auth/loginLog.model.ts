@@ -6,6 +6,7 @@ export interface ILoginLog extends Document {
     timestamp: Date;
     location: string;
     device: string;
+    ip?: string;
     status: "success" | "warning" | "danger";
 }
 
@@ -13,8 +14,9 @@ const LoginLogSchema = new Schema<ILoginLog>({
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     action: { type: String, required: true },
     timestamp: { type: Date, default: Date.now },
-    location: { type: String, default: "MUMBAI, INDIA [GEO_NODE]" },
-    device: { type: String, default: "CHROME ON WINDOWS [IDENT_01]" },
+    location: { type: String, default: "Unknown" },
+    device: { type: String, default: "Unknown" },
+    ip: { type: String, default: null },
     status: { type: String, enum: ["success", "warning", "danger"], default: "success" }
 }, { timestamps: true });
 

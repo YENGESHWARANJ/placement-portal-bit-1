@@ -4,7 +4,8 @@ import Job from "../jobs/job.model";
 import Student from "../students/student.model";
 import User from "../users/user.model";
 import { AuthRequest } from "../../middleware/auth.middleware";
-import { sendNotification } from "../../config/socket.config";
+import { sendNotification, broadcastGlobalEvent } from "../../config/socket.config";
+import Notice from "../notices/notice.model";
 
 // ================================
 // APPLY FOR JOB (Student)
@@ -49,6 +50,22 @@ export const applyForJob = async (req: AuthRequest, res: Response) => {
             type: "success"
         });
 
+        // GLOBAL NOTIFICATION
+        broadcastGlobalEvent("global_notification", {
+            message: `🚀 Someone just applied for: ${job.title} at ${job.company}`,
+            type: "info"
+        });
+
+
+        await Notice.create({
+            title: "New Job Applicant",
+            content: `${student.name} applied for your job: ${job.title}`,
+            type: "Recruiter",
+            priority: "Medium",
+            targetUser: job.recruiterId,
+            createdBy: userId
+        });
+
         return res.status(201).json({
             message: "Application submitted successfully",
             application
@@ -69,6 +86,7 @@ export const applyForJob = async (req: AuthRequest, res: Response) => {
 export const getMyApplications = async (req: AuthRequest, res: Response) => {
     try {
         const userId = req.user?.userId;
+        if (!userId) return res.status(401).json({ message: "Unauthorized" });
         let student = await Student.findOne({ userId });
         const user = await User.findById(userId);
 
@@ -76,7 +94,7 @@ export const getMyApplications = async (req: AuthRequest, res: Response) => {
             student = await Student.create({
                 userId: userId,
                 name: user?.name || "Mock Student",
-                usn: `MOCK_${userId.toString().slice(-6).toUpperCase()}`,
+                usn: `MOCK_${userId.slice(-6).toUpperCase()}`,
                 branch: "Engineering",
                 year: 3,
                 status: "Unplaced"
@@ -192,6 +210,15 @@ export const fastTrackApplicant = async (req: AuthRequest, res: Response) => {
             type: "success"
         });
 
+        await Notice.create({
+            title: "Application Fast-Tracked!",
+            content: `You have been shortlisted for ${jobTitle}. Prepare for the final rounds!`,
+            type: "Student",
+            priority: "High",
+            createdBy: userId,
+            targetUser: studentUserId
+        });
+
         return res.json({ message: "Applicant fast-tracked", application });
     } catch (error) {
         console.error("FAST TRACK ERROR:", error);
@@ -229,6 +256,15 @@ export const updateApplicationStatus = async (req: AuthRequest, res: Response) =
         sendNotification(studentUserId, {
             message: `Application Status Updated: ${jobTitle} -> ${status}`,
             type: status === "Selected" || status === "Shortlisted" ? "success" : "info"
+        });
+
+        await Notice.create({
+            title: "Application Status Update",
+            content: `Your application status for ${jobTitle} has been updated to: ${status}`,
+            type: "Student",
+            priority: status === "Selected" || status === "Shortlisted" ? "High" : "Medium",
+            createdBy: userId,
+            targetUser: studentUserId
         });
 
         return res.json({ message: "Status updated", application });

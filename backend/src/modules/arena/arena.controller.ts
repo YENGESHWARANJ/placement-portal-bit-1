@@ -58,6 +58,7 @@ export const getDiscussions = async (req: AuthRequest, res: Response) => {
     try {
         const discussions = await Discussion.find()
             .populate("studentId", "name branch profilePicture")
+            .populate("replies.studentId", "name profilePicture")
             .sort({ createdAt: -1 });
         return res.json({ discussions });
     } catch (error) {

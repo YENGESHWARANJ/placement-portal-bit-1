@@ -251,5 +251,100 @@ async def generate_job(payload: dict):
         "salary": salary
     }
 
+@app.post("/generate-questions")
+async def generate_questions(payload: dict):
+    q_type = payload.get("type", "Aptitude")
+    topic = payload.get("topic", "General")
+    difficulty = payload.get("difficulty", "medium").lower()
+    count = int(payload.get("count", 5))
+
+    questions = []
+    
+    if q_type == "Aptitude":
+        for i in range(count):
+            questions.append({
+                "id": i + 1,
+                "question": f"In {topic}, if a system processes {100 + i*10} requests per second with {10 + i}% overhead, what is the net throughput?",
+                "options": [f"{90 + i*5} req/s", f"{80 + i*5} req/s", f"{110 + i*5} req/s", f"{95 + i*5} req/s"],
+                "correct": 0 if i % 2 == 0 else 1,
+                "topic": topic,
+                "difficulty": difficulty,
+                "explanation": f"Net throughput is calculated by subtracting the {10+i}% overhead from the raw capacity."
+            })
+    elif q_type == "Coding":
+        for i in range(count):
+            questions.append({
+                "id": i + 1,
+                "title": f"{topic} Optimization: Part {i+1}",
+                "description": f"Write an efficient algorithm to traverse a {topic} structure and find the kth largest element with O(log n) complexity.",
+                "difficulty": difficulty.capitalize(),
+                "topic": topic,
+                "template": "function solve(k, arr) {\n  // Write your code here\n  \n}",
+                "examples": [
+                    {"input": "k=5, arr=[1, 2, 3, 4, 5]", "output": "5", "explanation": "The 5th largest element in this sorted array is the last one."},
+                    {"input": "k=2, arr=[10, 20, 30]", "output": "20", "explanation": "30 is 1st, 20 is 2nd."}
+                ],
+                "hints": ["Consider using a binary search approach", f"Think about the properties of a {topic} data structure"],
+                "constraints": ["1 <= n <= 10^5", "1 <= k <= n", "Time Complexity: O(log n)"]
+            })
+    else: # Interview
+       for i in range(count):
+            questions.append({
+                "id": i + 1,
+                "question": f"Explain the internal working of {topic} and how its architecture handles high concurrency in a {difficulty} scale environment.",
+                "category": topic,
+                "difficulty": difficulty,
+                "keyPoints": [
+                    f"Explain the {topic} lifecycle",
+                    "Mention thread pooling mechanisms",
+                    "Discuss locking and mutex strategies",
+                    "Address horizontal vs vertical scaling"
+                ],
+                "sampleAnswer": f"The model answer focus on the {topic} lifecycle, the thread pooling mechanism, and the locking strategies used during peak loads. In a {difficulty} environment, we also consider distributed state management."
+            })
+
+    return {
+        "success": True,
+        "type": q_type,
+        "topic": topic,
+        "difficulty": difficulty,
+        "questions": questions
+    }
+
+@app.post("/evaluate-interview")
+async def evaluate_interview(payload: dict):
+    question = payload.get("question", "")
+    answer = payload.get("answer", "")
+    
+    # Mock evaluation logic
+    score = 7
+    feedback = "Your answer covers the basics but needs more technical depth. Mentioning specific protocols would improve the score."
+    
+    if len(answer.split()) > 50:
+        score = 9
+        feedback = "Excellent depth and technical clarity. You clearly understand the underlying architecture."
+    
+    return {
+        "score": score,
+        "feedback": feedback
+    }
+
+@app.post("/evaluate-coding")
+async def evaluate_coding(payload: dict):
+    code = payload.get("code", "")
+    
+    # Mock evaluation
+    passed = True
+    feedback = "All test cases passed. Complexity is optimal."
+    
+    if "for" in code and "for" in code.split("for")[1]: # Nested loop
+        feedback = "Solution works but consider optimizing the O(N^2) complexity."
+        
+    return {
+        "passed": passed,
+        "score": 10 if passed else 0,
+        "feedback": feedback
+    }
+
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)

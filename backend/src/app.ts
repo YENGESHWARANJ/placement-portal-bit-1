@@ -4,8 +4,15 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import hpp from "hpp";
 import mongoose from "mongoose";
+import morgan from "morgan";
+import { stream } from "./utils/logger";
 
 import routes from "./routes";
+
+import analyticsRoutes from "./modules/analytics/analytics.routes";
+import noticeRoutes from "./modules/notices/notice.routes";
+import activityRoutes from "./modules/activity/activity.routes";
+import alumniRoutes from "./modules/alumni/alumni.routes";
 import { apiRateLimiter } from "./middleware/rateLimit.middleware";
 import { errorHandler } from "./middleware/error.middleware";
 
@@ -13,6 +20,9 @@ const app = express();
 
 // ✅ Security Headers
 app.use(helmet());
+
+// ✅ HTTP Logging
+app.use(morgan("combined", { stream }));
 
 // ✅ Prevent XSS attacks
 const xss = require("xss-clean");
@@ -34,7 +44,7 @@ const isDev = process.env.NODE_ENV !== "production";
 // ✅ Proper CORS config for frontend
 app.use(
   cors({
-    origin: (origin, callback) => {
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
       // Allow no-origin (e.g. Postman), dev, or whitelist (including CORS_ORIGIN)
       if (!origin || isDev || allowedOrigins.includes(origin)) {
         callback(null, true);
@@ -55,6 +65,12 @@ app.use(cookieParser());
 
 // ✅ Rate Limiting
 app.use("/api", apiRateLimiter);
+
+// API routes
+app.use("/api/analytics", analyticsRoutes);
+app.use("/api/notices", noticeRoutes);
+app.use("/api/activity", activityRoutes);
+app.use("/api/alumni", alumniRoutes);
 
 // ✅ Favicon fix
 app.get("/favicon.ico", (req, res) => res.status(204).end());

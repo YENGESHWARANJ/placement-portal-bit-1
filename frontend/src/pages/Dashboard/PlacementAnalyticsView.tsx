@@ -137,8 +137,8 @@ export default function PlacementAnalyticsView() {
                         <h3 className="text-lg font-bold text-slate-900 mb-8 flex items-center gap-2">
                             <BarChart2 className="h-5 w-5 text-blue-500" /> Performance Trends
                         </h3>
-                        <div className="h-80">
-                            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+                        <div className="h-80 w-full">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={100}>
                                 <AreaChart data={placementData}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                     <XAxis dataKey="name" axisLine={false} tickLine={false} />

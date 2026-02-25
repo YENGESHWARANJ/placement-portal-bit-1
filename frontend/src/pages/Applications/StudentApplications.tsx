@@ -31,7 +31,7 @@ export default function StudentApplications() {
         const fetchApplications = async () => {
             try {
                 const response = await api.get("/applications/my");
-                setApplications(response.data.applications || []);
+                setApplications((response.data as any).applications || []);
             } catch (err) {
                 console.error("Failed to fetch applications", err);
             } finally {

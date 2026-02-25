@@ -52,7 +52,20 @@ export const updateRecruiterStatus = async (req: Request, res: Response) => {
 
 export const getAllJobsAdmin = async (req: Request, res: Response) => {
     try {
-        const jobs = await Job.find().sort({ createdAt: -1 });
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 20;
+        const skip = (page - 1) * limit;
+        const search = req.query.search as string;
+
+        const query: any = {};
+        if (search) {
+            query.$or = [
+                { title: { $regex: search, $options: "i" } },
+                { company: { $regex: search, $options: "i" } }
+            ];
+        }
+
+        const jobs = await Job.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit);
 
         // Enrich with applicant counts
         const enrichedJobs = await Promise.all(jobs.map(async (job) => {
@@ -63,7 +76,14 @@ export const getAllJobsAdmin = async (req: Request, res: Response) => {
             };
         }));
 
-        return res.json({ jobs: enrichedJobs });
+        const totalItems = await Job.countDocuments(query);
+
+        return res.json({
+            jobs: enrichedJobs,
+            totalPages: Math.ceil(totalItems / limit),
+            currentPage: page,
+            totalItems
+        });
     } catch (error) {
         console.error("GET ALL JOBS ADMIN ERROR:", error);
         return res.status(500).json({ message: "Failed to fetch jobs" });

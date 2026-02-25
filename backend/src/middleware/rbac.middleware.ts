@@ -8,6 +8,7 @@ export const rbacMiddleware = (allowedRoles: string[]) => {
         }
 
         if (!allowedRoles.includes(req.user.role)) {
+            console.warn(`[RBAC] Access denied for user ${req.user.userId} with role ${req.user.role}. Allowed: ${allowedRoles.join(",")}`);
             return res.status(403).json({
                 message: "Forbidden: You do not have permission to access this resource",
             });

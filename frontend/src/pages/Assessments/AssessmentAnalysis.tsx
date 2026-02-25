@@ -70,8 +70,8 @@ export default function AssessmentAnalysis() {
                             Growth Velocity
                         </h3>
                     </div>
-                    <div className="h-[350px]">
-                        <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+                    <div className="h-[350px] w-full">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={100}>
                             <AreaChart data={recentScores}>
                                 <defs>
                                     <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
@@ -92,8 +92,8 @@ export default function AssessmentAnalysis() {
                 {/* Radar Chart */}
                 <div className="bg-white dark:bg-slate-900 p-10 rounded-[50px] border border-slate-100 dark:border-slate-800 shadow-sm">
                     <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tighter mb-8 italic uppercase text-center">Skill Mapping</h3>
-                    <div className="h-[350px]">
-                        <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+                    <div className="h-[350px] w-full">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={100}>
                             <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
                                 <PolarGrid stroke="#e2e8f0" />
                                 <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 900 }} />

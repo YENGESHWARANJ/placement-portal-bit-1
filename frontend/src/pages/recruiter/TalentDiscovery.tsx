@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
     Search, Filter, SlidersHorizontal, Users, GraduationCap,
-    ChevronRight, ArrowUpRight, Target, Brain, Download
+    ChevronRight, ArrowUpRight, Target, Brain, Download,
+    Zap, Sparkles, Cpu, Activity, ShieldCheck, Database
 } from "lucide-react";
 import api from "../../services/api";
 import { Link } from "react-router-dom";
@@ -34,7 +36,7 @@ export default function TalentDiscovery() {
             const { data } = await api.get<{ students: Student[] }>('/students');
             setStudents(data.students || []);
         } catch (error) {
-            toast.error("Failed to sync with talent pool");
+            toast.error("Unable to sync talent pool");
         } finally {
             setLoading(false);
         }
@@ -47,48 +49,54 @@ export default function TalentDiscovery() {
     );
 
     return (
-        <div className="space-y-10 animate-in fade-in zoom-in duration-700 pb-20">
-            {/* Intel Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+        <div className="space-y-12 pb-20">
+            {/* Header Section */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-4">
                 <div>
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase italic">Talent Discovery</h1>
-                    <p className="text-indigo-600 font-black uppercase tracking-[0.4em] text-[10px] mt-2 italic flex items-center gap-2">
-                        <Target className="h-3.5 w-3.5" /> High-Resolution Candidate Mapping
-                    </p>
+                    <h1 className="text-4xl font-black text-apple-gray-900 tracking-tight">Talent Discovery</h1>
+                    <p className="text-apple-gray-400 font-bold uppercase tracking-[0.2em] text-[10px] mt-2">Elite candidate search & neural resonance mapping</p>
                 </div>
                 <div className="flex gap-4">
-                    <button className="flex items-center gap-2 bg-white px-6 py-4 rounded-[25px] border border-slate-100 shadow-sm font-black text-[10px] uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all">
-                        <Download className="h-4 w-4" /> Export Leads
-                    </button>
-                    <button className="flex items-center gap-2 bg-[#1E2342] text-white px-8 py-4 rounded-[25px] font-black text-[10px] uppercase tracking-widest shadow-2xl shadow-indigo-200 hover:bg-slate-900 transition-all">
-                        <Brain className="h-4 w-4" /> AI Match Analysis
-                    </button>
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="flex items-center gap-3 bg-white px-6 py-3.5 rounded-[20px] text-[11px] font-black uppercase tracking-widest text-apple-gray-900 border border-apple-gray-100 shadow-sm hover:bg-apple-gray-50 transition-all"
+                    >
+                        <Download className="h-4 w-4" /> Export Talent Pool
+                    </motion.button>
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="flex items-center gap-3 bg-apple-blue text-white px-6 py-3.5 rounded-[20px] text-[11px] font-black uppercase tracking-widest shadow-apple-hover border border-white/10"
+                    >
+                        <Target className="h-4 w-4" /> AI Analysis
+                    </motion.button>
                 </div>
             </div>
 
             {/* Filter Terminal */}
-            <div className="bg-white p-8 rounded-[45px] shadow-sm border border-slate-50 flex flex-col lg:flex-row gap-6">
-                <div className="flex-1 relative group">
-                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-indigo-500 transition-colors" />
+            <div className="apple-card p-4 bg-white shadow-sm border border-apple-gray-100 flex flex-col md:flex-row gap-4 items-center">
+                <div className="w-full md:flex-1 relative group">
+                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-apple-gray-300 group-focus-within:text-apple-blue transition-colors" />
                     <input
-                        placeholder="Search by name, skills, or USN..."
-                        className="w-full pl-16 pr-8 py-5 bg-slate-50 rounded-[30px] border-none focus:ring-4 focus:ring-indigo-500/10 focus:bg-white transition-all font-bold text-sm tracking-tight"
+                        placeholder="Search talent..."
+                        className="w-full pl-14 pr-6 py-4 bg-apple-gray-50/50 rounded-[18px] border border-transparent focus:bg-white focus:border-apple-blue/20 focus:ring-4 focus:ring-apple-blue/5 transition-all text-[13px] font-bold text-apple-gray-900 placeholder:text-apple-gray-300"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
-                <div className="flex gap-4">
+                <div className="flex gap-4 w-full md:w-auto">
                     <select
-                        className="px-8 py-5 bg-slate-50 rounded-[30px] border-none font-black uppercase text-[10px] tracking-widest focus:ring-4 focus:ring-indigo-500/10 transition-all cursor-pointer"
+                        className="flex-1 md:flex-none px-6 py-4 bg-apple-gray-50/50 rounded-[18px] border border-transparent font-bold text-[11px] uppercase tracking-widest text-apple-gray-500 focus:bg-white focus:border-apple-blue/20 transition-all cursor-pointer appearance-none md:min-w-[180px]"
                         value={branchFilter}
                         onChange={(e) => setBranchFilter(e.target.value)}
                     >
                         <option value="All">All Disciplines</option>
-                        <option value="CSE">Computer Science</option>
-                        <option value="ISE">Info Science</option>
-                        <option value="ECE">Electronics</option>
+                        <option value="CSE">CSE</option>
+                        <option value="ISE">ISE</option>
+                        <option value="ECE">ECE</option>
                     </select>
-                    <button className="p-5 bg-slate-50 rounded-[25px] text-slate-400 hover:text-indigo-600 transition-all">
+                    <button className="p-4 bg-apple-gray-50 text-apple-gray-400 rounded-[18px] hover:bg-apple-gray-100 transition-all border border-transparent shrink-0">
                         <SlidersHorizontal className="h-5 w-5" />
                     </button>
                 </div>
@@ -96,53 +104,83 @@ export default function TalentDiscovery() {
 
             {/* Grid of Results */}
             {loading ? (
-                <div className="py-20 text-center animate-pulse italic font-black text-slate-300 uppercase tracking-widest">Inverting Talent Matrix...</div>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredStudents.map((student) => (
-                        <Link
-                            to={`/students/${student._id}`}
-                            key={student._id}
-                            className="bg-white p-10 rounded-[50px] border border-slate-100 shadow-sm hover:shadow-2xl hover:border-indigo-500/20 transition-all group relative overflow-hidden"
-                        >
-                            {/* Readiness Badge */}
-                            <div className="absolute top-8 right-8 flex flex-col items-end">
-                                <p className="text-[10px] font-black italic text-indigo-600 uppercase tracking-widest leading-none mb-1">{student.readinessScore}%</p>
-                                <p className="text-[7px] font-bold text-slate-400 uppercase tracking-[0.3em] leading-none italic">Readiness</p>
-                            </div>
-
-                            <div className="mb-8">
-                                <div className="h-20 w-20 rounded-[30px] bg-slate-50 p-1 mb-6 border border-slate-100 group-hover:rotate-2 transition-transform">
-                                    <div className="h-full w-full rounded-[24px] bg-slate-900 flex items-center justify-center text-white text-3xl font-black italic shadow-inner">
-                                        {student.name.charAt(0)}
-                                    </div>
-                                </div>
-                                <h3 className="text-xl font-black italic text-slate-900 uppercase tracking-tighter leading-none mb-1">{student.name}</h3>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">{student.branch} • {student.usn}</p>
-                            </div>
-
-                            <div className="space-y-6 mb-10">
-                                <div className="flex flex-wrap gap-2">
-                                    {student.skills.slice(0, 3).map((skill, i) => (
-                                        <span key={i} className="px-3 py-1 bg-indigo-50 text-indigo-600 text-[8px] font-black uppercase tracking-widest rounded-lg border border-indigo-100">
-                                            {skill}
-                                        </span>
-                                    ))}
-                                    {student.skills.length > 3 && <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest mt-1">+{student.skills.length - 3} More</span>}
-                                </div>
-                                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest border-t border-slate-50 pt-4">
-                                    <span className="text-slate-400">CGPA Protocol</span>
-                                    <span className="text-emerald-500 font-mono italic">{student.cgpa.toFixed(2)} / 10.0</span>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center justify-between text-[#FF7D54] group-hover:text-indigo-600 transition-colors">
-                                <span className="text-[9px] font-black uppercase tracking-widest italic">Analyze Profile</span>
-                                <ArrowUpRight className="h-4 w-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                            </div>
-                        </Link>
-                    ))}
+                <div className="py-20 flex flex-col items-center justify-center space-y-4">
+                    <div className="h-10 w-10 border-4 border-apple-blue/20 border-t-apple-blue rounded-full animate-spin" />
+                    <p className="text-apple-gray-400 font-black uppercase tracking-widest text-[10px]">Decoding Talent Matrix...</p>
                 </div>
+            ) : (
+                <motion.div
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                        hidden: { opacity: 0 },
+                        visible: {
+                            opacity: 1,
+                            transition: {
+                                staggerChildren: 0.1
+                            }
+                        }
+                    }}
+                >
+                    <AnimatePresence mode="popLayout">
+                        {filteredStudents.map((student) => (
+                            <motion.div
+                                key={student._id}
+                                layout
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.4, type: "spring", bounce: 0.3 }}
+                            >
+                                <Link
+                                    to={`/students/${student._id}`}
+                                    className="block apple-card p-10 bg-white hover:translate-y-[-6px] transition-all duration-300 relative group border border-apple-gray-50"
+                                >
+                                    {/* Readiness Badge */}
+                                    <div className="absolute top-8 right-8 text-right">
+                                        <div className="flex items-center gap-2 justify-end mb-1">
+                                            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                            <p className="text-xl font-black text-apple-gray-900 tracking-tighter">{student.readinessScore}%</p>
+                                        </div>
+                                        <p className="text-[8px] font-black text-apple-gray-300 uppercase tracking-widest">Readiness</p>
+                                    </div>
+
+                                    <div className="mb-8 text-center">
+                                        <div className="mx-auto h-24 w-24 rounded-[30px] bg-apple-gray-900 flex items-center justify-center text-white text-3xl font-black mb-6 shadow-lg group-hover:scale-105 transition-transform">
+                                            {student.name.charAt(0)}
+                                        </div>
+                                        <h3 className="text-2xl font-black text-apple-gray-900 tracking-tight leading-none mb-2">{student.name}</h3>
+                                        <p className="text-[10px] font-black text-apple-blue uppercase tracking-widest mb-1">{student.branch}</p>
+                                        <p className="text-[9px] font-bold text-apple-gray-300 uppercase tracking-widest">{student.usn}</p>
+                                    </div>
+
+                                    <div className="space-y-6 mb-10">
+                                        <div className="flex flex-wrap justify-center gap-2">
+                                            {student.skills.slice(0, 3).map((skill, i) => (
+                                                <span key={i} className="px-4 py-1.5 bg-apple-gray-50 text-apple-gray-500 text-[9px] font-bold uppercase tracking-widest rounded-xl border border-apple-gray-100 group-hover:border-apple-blue/20 group-hover:text-apple-blue transition-all">
+                                                    {skill}
+                                                </span>
+                                            ))}
+                                        </div>
+                                        <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest pt-6 border-t border-apple-gray-50">
+                                            <span className="text-apple-gray-300">GPA Protocol</span>
+                                            <span className="text-apple-gray-900">{student.cgpa.toFixed(2)} / 10.0</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-between text-apple-gray-300 group-hover:text-apple-blue transition-all">
+                                        <div className="flex items-center gap-3">
+                                            <Activity className="h-4 w-4" />
+                                            <span className="text-[9px] font-black uppercase tracking-widest">Profile Insights</span>
+                                        </div>
+                                        <ArrowUpRight className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1 group-hover:-translate-y-1" />
+                                    </div>
+                                </Link>
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </motion.div>
             )}
         </div>
     );

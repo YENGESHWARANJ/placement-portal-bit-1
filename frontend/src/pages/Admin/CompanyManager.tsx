@@ -60,8 +60,8 @@ export default function CompanyManager() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
                 <div>
                     <h1 className="text-4xl font-black text-white tracking-tighter italic uppercase flex items-center gap-4">
-                        <Globe className="h-8 w-8 text-blue-500 animate-spin-slow" />
-                        Partner <span className="text-blue-600">Ecosystem</span>
+                        <Globe className="h-8 w-8 text-emerald-500 animate-spin-slow" />
+                        Partner <span className="text-emerald-600">Ecosystem</span>
                     </h1>
                     <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em] mt-2 flex items-center gap-2">
                         <ShieldCheck className="h-3 w-3 text-emerald-500" /> Authorized Institutional Partners Registry
@@ -69,7 +69,7 @@ export default function CompanyManager() {
                 </div>
                 <div className="flex items-center gap-4">
                     <div className="relative group">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within:text-blue-500 transition-colors" />
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within:text-emerald-500 transition-colors" />
                         <input
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -77,7 +77,7 @@ export default function CompanyManager() {
                             className="bg-white/5 border border-white/5 px-12 py-3.5 rounded-2xl text-[11px] font-black text-white placeholder:text-slate-600 w-[300px] focus:bg-white/10 outline-none transition-all"
                         />
                     </div>
-                    <button className="px-8 py-4 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-blue-500/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3">
+                    <button className="px-8 py-4 bg-emerald-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3">
                         <Plus className="h-4 w-4" /> Add Partner
                     </button>
                 </div>
@@ -85,13 +85,13 @@ export default function CompanyManager() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                 {filtered.map((company) => (
-                    <div key={company._id} className="bg-[#0F1121] border border-white/5 p-8 rounded-[45px] relative group hover:border-blue-500/30 transition-all overflow-hidden flex flex-col">
+                    <div key={company._id} className="bg-[#0F1121] border border-white/5 p-8 rounded-[45px] relative group hover:border-emerald-500/30 transition-all overflow-hidden flex flex-col">
                         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
                             <Globe className="h-32 w-32" />
                         </div>
 
                         <div className="flex justify-between items-start mb-6">
-                            <div className="h-16 w-16 bg-blue-500/10 rounded-3xl flex items-center justify-center text-blue-500 border border-blue-500/10">
+                            <div className="h-16 w-16 bg-emerald-500/10 rounded-3xl flex items-center justify-center text-emerald-500 border border-emerald-500/10">
                                 <Briefcase className="h-8 w-8" />
                             </div>
                             <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ${company.status === 'active' ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-rose-500/10 text-rose-500 border-rose-500/20"
@@ -100,7 +100,7 @@ export default function CompanyManager() {
                             </span>
                         </div>
 
-                        <h3 className="text-2xl font-black text-white italic tracking-tighter mb-2 group-hover:text-blue-400 transition-colors">{company.name}</h3>
+                        <h3 className="text-2xl font-black text-white italic tracking-tighter mb-2 group-hover:text-emerald-400 transition-colors">{company.name}</h3>
                         <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] mb-6">{company.industry}</p>
 
                         <p className="text-slate-400 text-xs font-medium leading-relaxed mb-8 flex-1">
@@ -113,8 +113,8 @@ export default function CompanyManager() {
                                 {company.location}
                             </div>
                             {company.website && (
-                                <a href={company.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-blue-500 font-bold text-[10px] uppercase tracking-widest hover:underline">
-                                    <Globe className="h-4 w-4 text-blue-500" />
+                                <a href={company.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-emerald-500 font-bold text-[10px] uppercase tracking-widest hover:underline">
+                                    <Globe className="h-4 w-4 text-emerald-500" />
                                     Corporate Domain <ExternalLink className="h-3 w-3" />
                                 </a>
                             )}

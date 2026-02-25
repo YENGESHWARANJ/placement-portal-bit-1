@@ -4,7 +4,6 @@ import StudentLayout from "./StudentLayout";
 import RecruiterLayout from "./RecruiterLayout";
 import AdminLayout from "./AdminLayout";
 import useNotifications from "../hooks/useNotifications";
-import { RoleSwitcher } from "../components/RoleSwitcher";
 
 export default function DashboardLayout() {
     const { user } = useAuth();
@@ -19,10 +18,5 @@ export default function DashboardLayout() {
         return <RecruiterLayout />;
     };
 
-    return (
-        <>
-            {renderLayout()}
-            <RoleSwitcher />
-        </>
-    );
+    return renderLayout();
 }

@@ -1,60 +1,65 @@
 import axios from "axios";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const API_BASE = (import.meta.env.VITE_API_URL || "http://localhost:5000/api").replace(/\/$/, "");
 
 /**
- * Premium API Client
- * Optimized for secure JWT dual-token authentication.
+ * Secure API Client
+ * - Attaches JWT access token from localStorage on every request
+ * - Auto-refreshes token on 401 via HttpOnly refresh cookie
+ * - Redirects to /login?session=expired if refresh fails
  */
 const api = axios.create({
   baseURL: API_BASE,
-  withCredentials: true, // Crucial for HttpOnly cookies (refresh token)
+  withCredentials: true, // Required for HttpOnly cookie (refresh token)
+  timeout: 15000,
 });
 
-// Request Interceptor: Attach Access Token
+// ── Request Interceptor: Attach Access Token ──────────────────────────────────
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("auth_token");
   if (token) {
+    config.headers = config.headers ?? {};
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
-// Response Interceptor: Handle Token Refresh
+// ── Response Interceptor: Auto Token Refresh ─────────────────────────────────
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // If 401 (Unauthorized) and we haven't tried to refresh yet
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Only retry once, only on 401, and not on the refresh/auth endpoints
+    const isAuthRoute = originalRequest.url?.includes("/auth/refresh") ||
+      originalRequest.url?.includes("/auth/login") ||
+      originalRequest.url?.includes("/auth/google");
+
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthRoute) {
       originalRequest._retry = true;
 
       try {
-        // Attempt to call the refresh endpoint
-        // Backend should receive 'refreshToken' cookie automatically with withCredentials: true
-        const response = await axios.post(
-          `${API_BASE.replace(/\/$/, "")}/auth/refresh`,
+        const { data } = await axios.post<{ token: string }>(
+          `${API_BASE}/auth/refresh`,
           {},
           { withCredentials: true }
         );
 
-        const { token } = response.data;
+        const newToken: string = data.token;
+        localStorage.setItem("auth_token", newToken);
+        api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
+        originalRequest.headers = originalRequest.headers ?? {};
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
 
-        // Store new access token
-        localStorage.setItem("token", token);
-
-        // Update authorization header & retry original request
-        originalRequest.headers.Authorization = `Bearer ${token}`;
         return api(originalRequest);
-      } catch (refreshError) {
-        // If refresh fails, logout user
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+      } catch {
+        // Refresh failed → force logout
+        localStorage.removeItem("auth_token");
+        localStorage.removeItem("auth_user");
+        delete api.defaults.headers.common["Authorization"];
         if (typeof window !== "undefined") {
           window.location.href = "/login?session=expired";
         }
-        return Promise.reject(refreshError);
       }
     }
 

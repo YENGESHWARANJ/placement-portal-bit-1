@@ -2,7 +2,7 @@ import { Schema, model, Document, Types, models } from "mongoose";
 
 export interface IAssessment extends Document {
     studentId: Types.ObjectId;
-    type: "Aptitude" | "Coding";
+    type: "Aptitude" | "Coding" | "Interview";
     title: string;
     score: number;
     totalQuestions: number;
@@ -19,7 +19,7 @@ export interface IAssessment extends Document {
 
 const AssessmentSchema = new Schema<IAssessment>({
     studentId: { type: Schema.Types.ObjectId, ref: "Student", required: true },
-    type: { type: String, enum: ["Aptitude", "Coding"], required: true },
+    type: { type: String, enum: ["Aptitude", "Coding", "Interview"], required: true },
     title: { type: String, required: true },
     score: { type: Number, default: 0 },
     totalQuestions: { type: Number, default: 0 },
