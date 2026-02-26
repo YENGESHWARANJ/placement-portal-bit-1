@@ -7,6 +7,9 @@
     "build": "tsc",
     "start": "node dist/server.js"
   },
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
     "@google/genai": "^1.42.0",
     "@types/nodemailer": "^7.0.11",
