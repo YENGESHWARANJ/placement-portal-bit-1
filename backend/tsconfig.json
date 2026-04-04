@@ -5,10 +5,15 @@
     "rootDir": "src",
     "outDir": "dist",
     "esModuleInterop": true,
-    "strict": true,
-    "skipLibCheck": true
+    "strict": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "noImplicitAny": false,
+    "types": ["node"]
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

@@ -12,9 +12,9 @@ export function parseResumeText(text: string, isOCR: boolean): ResumeData {
     // 2. EXTRACT PHONE
     // Matches: +1-555-555-5555, (555) 555-5555, 555 555 5555, etc.
     const phoneRegex = /(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?)?\d{3}[-.\s]?\d{4}/g;
-    const phones = text.match(phoneRegex) || [];
+    const phones: string[] = text.match(phoneRegex) || [];
     // Filter out unlikely matches (too short or just years)
-    const validPhones = phones.filter(p => p.replace(/\D/g, '').length >= 10);
+    const validPhones = phones.filter((p: string) => p.replace(/\D/g, '').length >= 10);
     const phone = validPhones.length > 0 ? validPhones[0] : null;
 
     // 3. EXTRACT NAME (Heuristic)

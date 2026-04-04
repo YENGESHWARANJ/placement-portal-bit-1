@@ -1,0 +1,22 @@
+# Monorepo: default service root is the Git repo root. Install + build MUST run in backend/
+# so node_modules exists before `tsup` (or tsc). Start uses dist output from repo root.
+# https://render.com/docs/monorepo-support
+services:
+  - type: web
+    name: placement-backend
+    env: node
+    buildCommand: cd backend && npm install --no-audit --no-fund && npm run build
+    startCommand: node backend/dist/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        fromSecret: MONGO_URI
+      - key: JWT_SECRET
+        fromSecret: JWT_SECRET
+      - key: GOOGLE_CLIENT_ID
+        fromSecret: GOOGLE_CLIENT_ID
+      - key: GOOGLE_CLIENT_SECRET
+        fromSecret: GOOGLE_CLIENT_SECRET
+      - key: FRONTEND_URL
+        fromSecret: FRONTEND_URL
