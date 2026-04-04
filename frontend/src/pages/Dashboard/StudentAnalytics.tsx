@@ -29,7 +29,7 @@ export default function StudentAnalytics() {
         <div className="pb-10 animate-in fade-in zoom-in duration-500 bg-apple-gray-50/50 min-h-screen p-8">
             <div className="mb-12">
                 <h1 className="text-4xl font-black text-apple-gray-900 tracking-tight">Growth Intelligence</h1>
-                <p className="text-apple-gray-400 font-bold uppercase tracking-widest text-[10px] mt-2">Neural assessment of placement readiness & velocity</p>
+                <p className="text-apple-gray-400 font-bold uppercase tracking-widest text-base mt-2">Neural assessment of placement readiness & velocity</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -39,15 +39,15 @@ export default function StudentAnalytics() {
                         <div className="absolute top-0 right-0 w-96 h-96 bg-apple-blue/5 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none" />
                         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
                             <div className="text-center md:text-left space-y-6">
-                                <span className="px-5 py-2 bg-apple-blue/10 text-apple-blue rounded-full text-[10px] font-bold uppercase tracking-widest inline-block border border-apple-blue/10">Readiness Score</span>
+                                <span className="px-5 py-2 bg-apple-blue/10 text-apple-blue rounded-full text-base font-bold uppercase tracking-widest inline-block border border-apple-blue/10">Readiness Score</span>
                                 <h2 className="text-8xl font-black text-apple-gray-900 tracking-tighter mb-2">92<span className="text-3xl text-apple-gray-300 ml-1">/ 100</span></h2>
                                 <p className="text-apple-gray-500 font-bold flex items-center gap-2 justify-center md:justify-start text-sm">
                                     <TrendingUp className="h-5 w-5 text-emerald-500" /> Currently Top 6% in Class of 2025
                                 </p>
                             </div>
-                            <div className="h-48 w-48 bg-apple-gray-900 rounded-[40px] p-10 flex flex-col items-center justify-center text-center shadow-2xl">
+                            <div className="h-48 w-48 bg-white rounded-[40px] p-10 flex flex-col items-center justify-center text-center shadow-2xl">
                                 <Star className="h-10 w-10 text-orange-500 mb-4 fill-orange-500 drop-shadow-[0_0_15px_rgba(255,165,0,0.5)]" />
-                                <p className="text-[10px] font-bold text-white uppercase tracking-widest leading-tight">Tier-1 Rank Verified</p>
+                                <p className="text-base font-bold text-slate-900 uppercase tracking-widest leading-tight">Tier-1 Rank Verified</p>
                             </div>
                         </div>
                     </div>
@@ -76,7 +76,7 @@ export default function StudentAnalytics() {
                     {/* Active Metrics */}
                     <div className="apple-card p-10 bg-white">
                         <div className="flex items-center gap-3 mb-10">
-                            <h3 className="font-bold text-apple-gray-400 uppercase tracking-[0.2em] text-[10px]">Active Trajectories</h3>
+                            <h3 className="font-bold text-apple-gray-400 uppercase tracking-[0.2em] text-base">Active Trajectories</h3>
                         </div>
                         <div className="space-y-8">
                             {[
@@ -87,10 +87,10 @@ export default function StudentAnalytics() {
                                 <div key={i} className="group">
                                     <div className="flex justify-between items-end mb-3">
                                         <div>
-                                            <p className="text-[10px] font-bold uppercase text-apple-gray-400 tracking-widest leading-none mb-2">{met.label}</p>
+                                            <p className="text-base font-bold uppercase text-apple-gray-400 tracking-widest leading-none mb-2">{met.label}</p>
                                             <p className="text-2xl font-black text-apple-gray-900 group-hover:text-apple-blue transition-colors leading-none">{met.val}</p>
                                         </div>
-                                        <p className="text-[9px] font-bold text-apple-gray-300 uppercase tracking-widest">{met.sub}</p>
+                                        <p className="text-xs font-bold text-apple-gray-300 uppercase tracking-widest">{met.sub}</p>
                                     </div>
                                     <div className="h-1.5 w-full bg-apple-gray-50 rounded-full overflow-hidden">
                                         <motion.div
@@ -106,7 +106,7 @@ export default function StudentAnalytics() {
                     </div>
 
                     {/* Improvement Suggestions */}
-                    <div className="p-10 rounded-[40px] bg-apple-gray-900 text-white relative overflow-hidden shadow-2xl group">
+                    <div className="p-10 rounded-[40px] bg-white text-slate-900 relative overflow-hidden shadow-2xl group">
                         <div className="absolute bottom-0 left-0 w-48 h-48 bg-apple-blue/10 rounded-full blur-[80px] -ml-24 -mb-24 pointer-events-none" />
                         <h3 className="text-xl font-black mb-8 tracking-tight flex items-center gap-3">
                             <Zap className="h-5 w-5 text-orange-500 fill-orange-500" /> Improvement Path
@@ -117,9 +117,9 @@ export default function StudentAnalytics() {
                                 "Participate in AI-Mock Arena sessions",
                                 "Optimize performance of project nodes"
                             ].map((hint, i) => (
-                                <div key={i} className="flex gap-4 p-5 bg-white/5 rounded-[20px] border border-white/5 hover:bg-white/10 transition-all cursor-pointer">
+                                <div key={i} className="flex gap-4 p-5 bg-slate-50 rounded-[20px] border border-slate-100 hover:bg-slate-100 transition-all cursor-pointer">
                                     <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                                    <p className="text-[13px] font-bold text-apple-gray-300 uppercase tracking-tight">{hint}</p>
+                                    <p className="text-base font-bold text-apple-gray-300 uppercase tracking-tight">{hint}</p>
                                 </div>
                             ))}
                         </div>
@@ -127,7 +127,7 @@ export default function StudentAnalytics() {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => navigate('/aptitude-test')}
-                            className="w-full mt-10 py-6 bg-apple-blue text-white rounded-[24px] font-bold uppercase tracking-widest text-xs shadow-apple-hover transition-all"
+                            className="w-full mt-10 py-6 bg-apple-blue text-slate-900 rounded-[24px] font-bold uppercase tracking-widest text-xs shadow-apple-hover transition-all"
                         >
                             Start Cognitive Sprint
                         </motion.button>

@@ -1,19 +1,51 @@
 import rateLimit from "express-rate-limit";
 
+const isProd = process.env.NODE_ENV === "production";
+
+// ─────────────────────────────────────────────────────────────
+// Auth Rate Limiter — Login, Register, OAuth
+// Max 10 attempts per 15 minutes per IP (production)
+// ─────────────────────────────────────────────────────────────
 export const authRateLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 10, // Limit each IP to 10 login/register requests per windowMs
-    message: {
-        message: "Too many attempts from this IP, please try again after 15 minutes",
-    },
-    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    windowMs: 15 * 60 * 1000,
+    max: isProd ? 10 : 1000,
+    message: { message: "Too many authentication attempts. Please try again in 15 minutes." },
+    standardHeaders: true,
+    legacyHeaders: false,
+    skipSuccessfulRequests: false,
 });
 
+// ─────────────────────────────────────────────────────────────
+// OTP Rate Limiter — Stricter: max 3 OTP requests per 10 min
+// Prevents OTP flooding / SMS bombing
+// ─────────────────────────────────────────────────────────────
+export const otpRateLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: isProd ? 3 : 1000,
+    message: { message: "Too many OTP requests. Please wait 10 minutes before trying again." },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// ─────────────────────────────────────────────────────────────
+// Strict Rate Limiter — Password Reset: max 3 per 30 min
+// Prevents email bombing via forgot-password
+// ─────────────────────────────────────────────────────────────
+export const strictRateLimiter = rateLimit({
+    windowMs: 30 * 60 * 1000,
+    max: isProd ? 3 : 1000,
+    message: { message: "Too many password reset requests. Please try again in 30 minutes." },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// ─────────────────────────────────────────────────────────────
+// API Rate Limiter — General API: max 100 requests per 15 min
+// ─────────────────────────────────────────────────────────────
 export const apiRateLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 100, // Limit each IP to 100 requests per 15 mins
-    message: {
-        message: "Too many requests, please try again later",
-    },
+    max: isProd ? 100 : 10000,
+    message: { message: "Too many requests. Please try again later." },
+    standardHeaders: true,
+    legacyHeaders: false,
 });

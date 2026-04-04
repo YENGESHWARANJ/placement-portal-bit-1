@@ -81,7 +81,7 @@ export default function TPOReports() {
     if (loading) return (
         <div className="p-20 flex flex-col items-center justify-center space-y-4">
             <div className="h-10 w-10 border-4 border-apple-blue/20 border-t-apple-blue rounded-full animate-spin" />
-            <p className="text-apple-gray-400 font-bold uppercase tracking-widest text-[10px]">Assembling Batch Intelligence...</p>
+            <p className="text-apple-gray-400 font-bold uppercase tracking-widest text-base">Assembling Batch Intelligence...</p>
         </div>
     );
 
@@ -95,13 +95,13 @@ export default function TPOReports() {
             <motion.div variants={stagger.item} className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                 <div>
                     <h1 className="text-4xl md:text-5xl font-black text-apple-gray-900 tracking-tight leading-none mb-4">Institutional Reports</h1>
-                    <p className="text-[11px] font-black text-apple-gray-300 uppercase tracking-[0.4em]">Placement Intelligence & Readiness Benchmarking</p>
+                    <p className="text-sm font-black text-apple-gray-300 uppercase tracking-[0.4em]">Placement Intelligence & Readiness Benchmarking</p>
                 </div>
                 <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleExport}
-                    className="flex items-center justify-center gap-3 bg-apple-gray-900 text-white px-8 py-4.5 rounded-[24px] font-black uppercase tracking-widest text-[11px] hover:bg-black transition-all shadow-apple-hover border border-white/10"
+                    className="flex items-center justify-center gap-3 bg-white text-slate-900 px-8 py-4.5 rounded-[24px] font-black uppercase tracking-widest text-sm hover:bg-black transition-all shadow-apple-hover border border-slate-200"
                 >
                     <Download className="h-4 w-4" /> Export Batch Dossier
                 </motion.button>
@@ -121,7 +121,7 @@ export default function TPOReports() {
                             <div className={cn("h-14 w-14 rounded-2xl flex items-center justify-center mb-8 shadow-inner border border-apple-gray-50/50", stat.bg, stat.color)}>
                                 <stat.icon className="h-7 w-7" />
                             </div>
-                            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-apple-gray-400 mb-2">{stat.label}</p>
+                            <p className="text-base font-black uppercase tracking-[0.3em] text-apple-gray-400 mb-2">{stat.label}</p>
                             <p className="text-4xl font-black text-apple-gray-900 tracking-tighter leading-none">{stat.val}</p>
                         </div>
                     </motion.div>
@@ -140,12 +140,12 @@ export default function TPOReports() {
                         </div>
                         <div>
                             <h3 className="text-2xl font-black text-apple-gray-900 tracking-tight uppercase">Readiness Vector</h3>
-                            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-apple-gray-400 mt-1">Aggregate Talent Performance</p>
+                            <p className="text-base font-black uppercase tracking-[0.4em] text-apple-gray-400 mt-1">Aggregate Talent Performance</p>
                         </div>
                     </div>
 
-                    <div className="h-[350px] md:h-[400px] w-full">
-                        <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={100}>
+                    <div className="h-[350px] md:h-[400px] w-full min-h-[350px]">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1} debounce={100}>
                             <BarChart data={[
                                 { name: 'Aptitude', value: data?.readinessStats?.aptitude },
                                 { name: 'Coding', value: data?.readinessStats?.coding },
@@ -176,17 +176,17 @@ export default function TPOReports() {
                 </motion.div>
 
                 {/* Growth Opportunities (Skill Gaps) */}
-                <motion.div variants={stagger.item} className="bg-apple-gray-900 p-10 md:p-12 rounded-[48px] text-white overflow-hidden relative shadow-2xl border border-black">
+                <motion.div variants={stagger.item} className="bg-white p-10 md:p-12 rounded-[48px] text-slate-900 overflow-hidden relative shadow-2xl border border-black">
                     <div className="absolute -bottom-24 -right-24 opacity-[0.08]">
                         <ShieldAlert className="h-72 w-72" />
                     </div>
                     <div className="flex items-center gap-5 mb-12">
-                        <div className="h-14 w-14 rounded-2xl bg-orange-500 flex items-center justify-center text-white shadow-xl shadow-orange-500/20">
+                        <div className="h-14 w-14 rounded-2xl bg-orange-500 flex items-center justify-center text-slate-900 shadow-xl shadow-orange-500/20">
                             <AlertTriangle className="h-7 w-7" />
                         </div>
                         <div>
-                            <h3 className="text-2xl font-black text-white tracking-tight uppercase">Deficit Matrix</h3>
-                            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 mt-1">Critical Intel Gaps</p>
+                            <h3 className="text-2xl font-black text-slate-900 tracking-tight uppercase">Deficit Matrix</h3>
+                            <p className="text-base font-black uppercase tracking-[0.4em] text-slate-900/40 mt-1">Critical Intel Gaps</p>
                         </div>
                     </div>
 
@@ -195,12 +195,12 @@ export default function TPOReports() {
                             <div key={i} className="space-y-4">
                                 <div className="flex justify-between items-end">
                                     <div className="space-y-1">
-                                        <p className="text-[9px] font-black text-white/30 uppercase tracking-widest">Skill Domain</p>
-                                        <p className="text-[13px] font-black uppercase tracking-widest text-white/90">{skill.name}</p>
+                                        <p className="text-xs font-black text-slate-900/30 uppercase tracking-widest">Skill Domain</p>
+                                        <p className="text-base font-black uppercase tracking-widest text-slate-900/90">{skill.name}</p>
                                     </div>
-                                    <span className="text-[11px] font-black text-orange-400 tabular-nums">{skill.gap}% DEFICIT</span>
+                                    <span className="text-sm font-black text-orange-400 tabular-nums">{skill.gap}% DEFICIT</span>
                                 </div>
-                                <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                                <div className="h-2 bg-slate-50 rounded-full overflow-hidden border border-slate-100">
                                     <motion.div
                                         initial={{ width: 0 }}
                                         animate={{ width: `${skill.gap}%` }}
@@ -212,13 +212,13 @@ export default function TPOReports() {
                         ))}
                     </div>
 
-                    <div className="mt-16 p-8 bg-white/5 rounded-[32px] border border-white/10 relative z-10 backdrop-blur-md">
+                    <div className="mt-16 p-8 bg-slate-50 rounded-[32px] border border-slate-200 relative z-10 backdrop-blur-md">
                         <div className="flex items-center gap-3 mb-4">
                             <Rocket className="h-4 w-4 text-apple-blue" />
-                            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-apple-blue">Optimization Hub</p>
+                            <p className="text-base font-black uppercase tracking-[0.3em] text-apple-blue">Optimization Hub</p>
                         </div>
-                        <p className="text-[14px] font-bold text-white/70 leading-relaxed italic">
-                            Redirect operational focus toward <span className="text-white font-black">{data?.skillGaps?.[0]?.name}</span> training protocols to ensure batch equilibrium.
+                        <p className="text-[16.5px] font-bold text-slate-900/70 leading-relaxed italic">
+                            Redirect operational focus toward <span className="text-slate-900 font-black">{data?.skillGaps?.[0]?.name}</span> training protocols to ensure batch equilibrium.
                         </p>
                     </div>
                 </motion.div>
@@ -232,7 +232,7 @@ export default function TPOReports() {
                     </div>
                     <div>
                         <h3 className="text-2xl font-black text-apple-gray-900 tracking-tight uppercase">Departmental Synchronization</h3>
-                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-apple-gray-400 mt-1">Inter-branch Performance Velocity</p>
+                        <p className="text-base font-black uppercase tracking-[0.4em] text-apple-gray-400 mt-1">Inter-branch Performance Velocity</p>
                     </div>
                 </div>
 
@@ -243,9 +243,9 @@ export default function TPOReports() {
                             whileHover={{ y: -5 }}
                             className="p-10 bg-apple-gray-50/50 rounded-[40px] border border-apple-gray-100 group hover:bg-white hover:shadow-apple-hover hover:border-apple-gray-200 transition-all duration-500"
                         >
-                            <p className="text-[11px] font-black uppercase tracking-[0.3em] text-apple-gray-400 mb-8 text-center">{dept.name}</p>
-                            <div className="relative h-44 w-44 mx-auto">
-                                <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={100}>
+                            <p className="text-sm font-black uppercase tracking-[0.3em] text-apple-gray-400 mb-8 text-center">{dept.name}</p>
+                            <div className="relative h-44 w-44 mx-auto min-h-[11rem]">
+                                <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1} debounce={100}>
                                     <RePieChart>
                                         <Pie
                                             data={[
@@ -265,13 +265,13 @@ export default function TPOReports() {
                                 </ResponsiveContainer>
                                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                                     <span className="text-3xl font-black text-apple-gray-900 tracking-tighter tabular-nums leading-none mb-1">{Math.round((dept.placed / dept.students) * 100)}%</span>
-                                    <span className="text-[9px] font-black text-apple-blue uppercase tracking-widest">Active</span>
+                                    <span className="text-xs font-black text-apple-blue uppercase tracking-widest">Active</span>
                                 </div>
                             </div>
                             <div className="mt-10 text-center">
                                 <div className="inline-flex items-center gap-3 px-4 py-2 bg-white rounded-full border border-apple-gray-100 shadow-sm">
                                     <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                                    <p className="text-[11px] font-black text-apple-gray-900 tracking-widest uppercase">
+                                    <p className="text-sm font-black text-apple-gray-900 tracking-widest uppercase">
                                         {dept.placed} <span className="text-apple-gray-300">/</span> {dept.students}
                                     </p>
                                 </div>

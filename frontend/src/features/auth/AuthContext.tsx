@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import api from "../../services/api";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -10,6 +10,10 @@ export interface User {
     photoURL?: string | null;
     company?: string;
     status?: string;
+    emailVerified?: boolean;
+    profileCompleted?: boolean;
+    provider?: "email" | "google";
+    lastLogin?: string;
 }
 
 export interface AuthContextType {
@@ -21,9 +25,10 @@ export interface AuthContextType {
     isAuthenticated: boolean;
     loading: boolean;
     redirectPath: string;
+    refreshUser: () => Promise<void>;
 }
 
-// ─── Role-based redirect helper ──────────────────────────────────────────────
+// ─── Role redirect helper ────────────────────────────────────────────────────
 export const getRoleRedirect = (role: string): string => {
     switch (role) {
         case "admin":
@@ -45,8 +50,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [token, setToken] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
 
-    // Hydrate from localStorage on mount
+    // Track whether we've attempted to restore session
+    const initialized = useRef(false);
+
+    // ── Hydrate session from localStorage on mount ───────────────────────────
     useEffect(() => {
+        if (initialized.current) return;
+        initialized.current = true;
+
         try {
             const storedToken = localStorage.getItem("auth_token");
             const storedUser = localStorage.getItem("auth_user");
@@ -55,11 +66,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 const parsedUser = JSON.parse(storedUser) as User;
                 setToken(storedToken);
                 setUser(parsedUser);
-                // Attach token to api instance
                 api.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
             }
-        } catch (e) {
-            // Corrupted storage — clear it
+        } catch {
+            // Corrupted storage — wipe it
             localStorage.removeItem("auth_token");
             localStorage.removeItem("auth_user");
         } finally {
@@ -67,6 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     }, []);
 
+    // ── Login ────────────────────────────────────────────────────────────────
     const login = useCallback((newToken: string, newUser: User) => {
         localStorage.setItem("auth_token", newToken);
         localStorage.setItem("auth_user", JSON.stringify(newUser));
@@ -75,18 +86,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(newUser);
     }, []);
 
+    // ── Logout ───────────────────────────────────────────────────────────────
     const logout = useCallback(async () => {
         try {
-            // Notify backend (logs the event and clears the httpOnly cookie)
             await api.post("/auth/logout");
         } catch {
-            // Ignore errors — still clear local state
+            // Ignore — still clear local state
         } finally {
             localStorage.removeItem("auth_token");
             localStorage.removeItem("auth_user");
             delete api.defaults.headers.common["Authorization"];
             setToken(null);
             setUser(null);
+        }
+    }, []);
+
+    // ── Refresh user profile from server ────────────────────────────────────
+    const refreshUser = useCallback(async () => {
+        try {
+            const { data } = await api.get<{ user: User }>("/auth/me");
+            setUser(data.user);
+            localStorage.setItem("auth_user", JSON.stringify(data.user));
+        } catch {
+            // If 401, api.ts interceptor handles refresh or redirects
         }
     }, []);
 
@@ -103,6 +125,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 isAuthenticated: !!token,
                 loading,
                 redirectPath,
+                refreshUser,
             }}
         >
             {children}

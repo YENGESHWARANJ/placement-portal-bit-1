@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { registerStudent, getStudents, updateProfile, getProfile, getStudentById, getSavedJobs, addSavedJob, removeSavedJob, getLeaderboard, getOnlineStudents } from "./student.controller";
+import { registerStudent, getStudents, getPlacedStudents, updateProfile, getProfile, getStudentById, getSavedJobs, addSavedJob, removeSavedJob, getLeaderboard, getOnlineStudents, bulkRegisterStudents } from "./student.controller";
 import { authMiddleware } from "../../middleware/auth.middleware";
 import { rbacMiddleware } from "../../middleware/rbac.middleware";
 import { UserRole } from "../auth/auth.types";
@@ -20,13 +20,17 @@ router.get("/", authMiddleware, rbacMiddleware([UserRole.ADMIN, UserRole.RECRUIT
 
 // Leaderboard - Accessible to everyone with auth
 router.get("/leaderboard", authMiddleware, getLeaderboard);
+router.get("/placed-showcase", authMiddleware, getPlacedStudents);
 
 router.get("/online", authMiddleware, getOnlineStudents);
 
 // Get specific student profile (Recruiters/Admins)
 router.get("/:id", authMiddleware, rbacMiddleware([UserRole.ADMIN, UserRole.RECRUITER, UserRole.OFFICER]), getStudentById);
 
-// Students can update their own profile
-router.post("/profile", authMiddleware, rbacMiddleware([UserRole.STUDENT]), updateProfile);
+// Students (and Admins/Officers) can update their own profile
+router.post("/profile", authMiddleware, rbacMiddleware([UserRole.STUDENT, UserRole.ADMIN, UserRole.OFFICER]), updateProfile);
+
+// Bulk Admin Registration
+router.post("/bulk-register", authMiddleware, rbacMiddleware([UserRole.ADMIN, UserRole.OFFICER]), bulkRegisterStudents);
 
 export default router;

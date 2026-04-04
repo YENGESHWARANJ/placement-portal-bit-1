@@ -78,15 +78,15 @@ export default function ActivityHistory() {
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <div className="flex justify-between items-start mb-1">
-                                            <p className="text-[14px] font-bold text-apple-gray-900">{log.action}</p>
-                                            <span className="flex items-center gap-1.5 text-[12px] font-medium text-apple-gray-400 py-1 px-2.5 rounded-full bg-apple-gray-100">
+                                            <p className="text-[16.5px] font-bold text-apple-gray-900">{log.action}</p>
+                                            <span className="flex items-center gap-1.5 text-lg font-medium text-apple-gray-400 py-1 px-2.5 rounded-full bg-apple-gray-100">
                                                 <Clock className="w-3.5 h-3.5" />
                                                 {new Date(log.createdAt).toLocaleString(undefined, {
                                                     month: "short", day: "numeric", hour: "numeric", minute: "2-digit"
                                                 })}
                                             </span>
                                         </div>
-                                        <p className="text-[13px] text-apple-gray-500">{log.description}</p>
+                                        <p className="text-base text-apple-gray-500">{log.description}</p>
                                     </div>
                                 </div>
                             </motion.div>

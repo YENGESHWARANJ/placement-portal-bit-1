@@ -113,24 +113,24 @@ export default function ResumeBuilder() {
         <div className="min-h-[calc(100vh-4rem)] flex flex-col lg:flex-row bg-[#f8f9fa] dark:bg-[#0B0F19]">
 
             {/* Editor Panel */}
-            <div className={cn("w-full lg:w-[480px] xl:w-[550px] border-r border-slate-200 dark:border-white/5 bg-white dark:bg-[#0A0D1E] shadow-2xl z-10 relative flex flex-col transition-all duration-300", showPreviewMobile ? "hidden lg:flex" : "flex")}>
-                <div className="px-6 py-5 border-b border-slate-200 dark:border-white/5 flex items-center justify-between sticky top-0 bg-white/80 dark:bg-[#0A0D1E]/80 backdrop-blur-md z-20">
+            <div className={cn("w-full lg:w-[480px] xl:w-[550px] border-r border-slate-200 dark:border-slate-100 bg-white dark:bg-white shadow-2xl z-10 relative flex flex-col transition-all duration-300", showPreviewMobile ? "hidden lg:flex" : "flex")}>
+                <div className="px-6 py-5 border-b border-slate-200 dark:border-slate-100 flex items-center justify-between sticky top-0 bg-white/80 dark:bg-white/80 backdrop-blur-md z-20">
                     <div>
-                        <h1 className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tighter italic flex items-center gap-2">
+                        <h1 className="text-xl font-black text-slate-900 dark:text-slate-900 uppercase tracking-tighter italic flex items-center gap-2">
                             <FileText className="h-5 w-5 text-indigo-500" /> AI Auto-Resume
                         </h1>
                     </div>
                     <div className="flex items-center gap-2">
                         <button
                             onClick={() => setShowPreviewMobile(true)}
-                            className="lg:hidden p-2 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 rounded-lg"
+                            className="lg:hidden p-2 bg-slate-100 dark:bg-slate-50 text-slate-600 dark:text-slate-500 rounded-lg"
                         >
                             <Eye className="h-4 w-4" />
                         </button>
                         <button
                             onClick={exportPDF}
                             disabled={isGeneratingPdf}
-                            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all flex items-center gap-2 shadow-lg shadow-indigo-500/20 disabled:opacity-50"
+                            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-slate-900 rounded-xl font-bold text-xs uppercase tracking-widest transition-all flex items-center gap-2 shadow-lg shadow-indigo-500/20 disabled:opacity-50"
                         >
                             {isGeneratingPdf ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
                             Export PDF
@@ -138,14 +138,14 @@ export default function ResumeBuilder() {
                     </div>
                 </div>
 
-                <div className="flex border-b border-slate-200 dark:border-white/5 overflow-x-auto no-scrollbar shrink-0">
+                <div className="flex border-b border-slate-200 dark:border-slate-100 overflow-x-auto no-scrollbar shrink-0">
                     {['personal', 'experience', 'education', 'skills'].map((tab) => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
-                            className={`flex-1 py-4 text-[10px] font-black uppercase tracking-widest whitespace-nowrap px-4 border-b-2 transition-all ${activeTab === tab
-                                ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/5'
-                                : 'border-transparent text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5'
+                            className={`flex-1 py-4 text-base font-black uppercase tracking-widest whitespace-nowrap px-4 border-b-2 transition-all ${activeTab === tab
+                                ? 'border-indigo-500 text-indigo-600 dark:text-indigo-600 bg-indigo-50 dark:bg-indigo-500/5'
+                                : 'border-transparent text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-50'
                                 }`}
                         >
                             {tab}
@@ -158,30 +158,30 @@ export default function ResumeBuilder() {
                         {activeTab === 'personal' && (
                             <motion.div key="personal" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-5">
                                 <div>
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1 block">Full Name</label>
-                                    <input type="text" value={personalInfo.name} onChange={e => setPersonalInfo({ ...personalInfo, name: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/5 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-white" />
+                                    <label className="text-base font-bold uppercase tracking-widest text-slate-500 mb-1 block">Full Name</label>
+                                    <input type="text" value={personalInfo.name} onChange={e => setPersonalInfo({ ...personalInfo, name: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-slate-100 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-slate-900" />
                                 </div>
                                 <div>
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1 block">Email</label>
-                                    <input type="email" value={personalInfo.email} onChange={e => setPersonalInfo({ ...personalInfo, email: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/5 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-white" />
+                                    <label className="text-base font-bold uppercase tracking-widest text-slate-500 mb-1 block">Email</label>
+                                    <input type="email" value={personalInfo.email} onChange={e => setPersonalInfo({ ...personalInfo, email: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-slate-100 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-slate-900" />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1 block">Phone</label>
-                                        <input type="text" value={personalInfo.phone} onChange={e => setPersonalInfo({ ...personalInfo, phone: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/5 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-white" />
+                                        <label className="text-base font-bold uppercase tracking-widest text-slate-500 mb-1 block">Phone</label>
+                                        <input type="text" value={personalInfo.phone} onChange={e => setPersonalInfo({ ...personalInfo, phone: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-slate-100 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-slate-900" />
                                     </div>
                                     <div>
-                                        <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1 block">Location</label>
-                                        <input type="text" value={personalInfo.location} onChange={e => setPersonalInfo({ ...personalInfo, location: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/5 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-white" />
+                                        <label className="text-base font-bold uppercase tracking-widest text-slate-500 mb-1 block">Location</label>
+                                        <input type="text" value={personalInfo.location} onChange={e => setPersonalInfo({ ...personalInfo, location: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-slate-100 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-slate-900" />
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1 block">LinkedIn</label>
-                                    <input type="text" value={personalInfo.linkedin} onChange={e => setPersonalInfo({ ...personalInfo, linkedin: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/5 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-white" />
+                                    <label className="text-base font-bold uppercase tracking-widest text-slate-500 mb-1 block">LinkedIn</label>
+                                    <input type="text" value={personalInfo.linkedin} onChange={e => setPersonalInfo({ ...personalInfo, linkedin: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-slate-100 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-slate-900" />
                                 </div>
                                 <div>
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1 block">Portfolio / GitHub</label>
-                                    <input type="text" value={personalInfo.portfolio} onChange={e => setPersonalInfo({ ...personalInfo, portfolio: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/5 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-white" />
+                                    <label className="text-base font-bold uppercase tracking-widest text-slate-500 mb-1 block">Portfolio / GitHub</label>
+                                    <input type="text" value={personalInfo.portfolio} onChange={e => setPersonalInfo({ ...personalInfo, portfolio: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-slate-100 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-slate-900" />
                                 </div>
                             </motion.div>
                         )}
@@ -189,21 +189,21 @@ export default function ResumeBuilder() {
                         {activeTab === 'experience' && (
                             <motion.div key="experience" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
                                 {experiences.map((exp, index) => (
-                                    <div key={exp.id} className="p-5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 rounded-2xl relative group">
+                                    <div key={exp.id} className="p-5 bg-slate-50 dark:bg-slate-50 border border-slate-200 dark:border-slate-100 rounded-2xl relative group">
                                         <div className="absolute top-4 right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button onClick={() => removeExperience(exp.id)} className="p-1.5 bg-rose-500/10 text-rose-500 rounded-lg hover:bg-rose-500 hover:text-white transition-colors">
+                                            <button onClick={() => removeExperience(exp.id)} className="p-1.5 bg-rose-500/10 text-rose-500 rounded-lg hover:bg-rose-500 hover:text-slate-900 transition-colors">
                                                 <Trash2 className="h-4 w-4" />
                                             </button>
                                         </div>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 pr-10">
                                             <div>
-                                                <input type="text" placeholder="Job Title" value={exp.title} onChange={e => updateExperience(exp.id, 'title', e.target.value)} className="w-full bg-transparent border-b border-slate-200 dark:border-white/10 px-0 py-2 text-sm font-bold focus:outline-none focus:border-indigo-500 text-slate-900 dark:text-white placeholder:text-slate-400" />
+                                                <input type="text" placeholder="Job Title" value={exp.title} onChange={e => updateExperience(exp.id, 'title', e.target.value)} className="w-full bg-transparent border-b border-slate-200 dark:border-slate-200 px-0 py-2 text-sm font-bold focus:outline-none focus:border-indigo-500 text-slate-900 dark:text-slate-900 placeholder:text-slate-500" />
                                             </div>
                                             <div>
-                                                <input type="text" placeholder="Company" value={exp.company} onChange={e => updateExperience(exp.id, 'company', e.target.value)} className="w-full bg-transparent border-b border-slate-200 dark:border-white/10 px-0 py-2 text-sm font-medium focus:outline-none focus:border-indigo-500 text-slate-900 dark:text-white placeholder:text-slate-400" />
+                                                <input type="text" placeholder="Company" value={exp.company} onChange={e => updateExperience(exp.id, 'company', e.target.value)} className="w-full bg-transparent border-b border-slate-200 dark:border-slate-200 px-0 py-2 text-sm font-medium focus:outline-none focus:border-indigo-500 text-slate-900 dark:text-slate-900 placeholder:text-slate-500" />
                                             </div>
                                             <div className="sm:col-span-2">
-                                                <input type="text" placeholder="Date (e.g. Summer 2023 - Present)" value={exp.date} onChange={e => updateExperience(exp.id, 'date', e.target.value)} className="w-full bg-transparent border-b border-slate-200 dark:border-white/10 px-0 py-2 text-xs font-medium focus:outline-none focus:border-indigo-500 text-slate-500 placeholder:text-slate-400" />
+                                                <input type="text" placeholder="Date (e.g. Summer 2023 - Present)" value={exp.date} onChange={e => updateExperience(exp.id, 'date', e.target.value)} className="w-full bg-transparent border-b border-slate-200 dark:border-slate-200 px-0 py-2 text-xs font-medium focus:outline-none focus:border-indigo-500 text-slate-500 placeholder:text-slate-500" />
                                             </div>
                                         </div>
                                         <div className="relative">
@@ -211,12 +211,12 @@ export default function ResumeBuilder() {
                                                 placeholder="Describe your achievements..."
                                                 value={exp.description}
                                                 onChange={e => updateExperience(exp.id, 'description', e.target.value)}
-                                                className="w-full h-32 bg-white dark:bg-black/20 border border-slate-200 dark:border-white/5 rounded-xl p-4 text-sm font-medium resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white placeholder:text-slate-300"
+                                                className="w-full h-32 bg-white dark:bg-black/20 border border-slate-200 dark:border-slate-100 rounded-xl p-4 text-sm font-medium resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-900 placeholder:text-slate-500"
                                             />
                                             <button
                                                 onClick={() => handleOptimizeSection(exp.id, exp.description)}
                                                 disabled={isOptimizing === exp.id || !exp.description}
-                                                className="absolute bottom-3 right-3 px-3 py-1.5 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500 hover:text-white rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 disabled:opacity-50"
+                                                className="absolute bottom-3 right-3 px-3 py-1.5 bg-indigo-500/10 text-indigo-600 dark:text-indigo-600 hover:bg-indigo-500 hover:text-slate-900 rounded-lg text-base font-black uppercase tracking-widest transition-all flex items-center gap-1.5 disabled:opacity-50"
                                             >
                                                 {isOptimizing === exp.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Wand2 className="h-3 w-3" />}
                                                 AI Enhance
@@ -226,7 +226,7 @@ export default function ResumeBuilder() {
                                 ))}
                                 <button
                                     onClick={addExperience}
-                                    className="w-full py-5 border-2 border-dashed border-slate-200 dark:border-white/10 text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 hover:border-indigo-500/50 hover:text-indigo-500 dark:hover:text-indigo-400 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2"
+                                    className="w-full py-5 border-2 border-dashed border-slate-200 dark:border-slate-200 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-50 hover:border-indigo-500/50 hover:text-indigo-500 dark:hover:text-indigo-600 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2"
                                 >
                                     <Plus className="h-4 w-4" /> Add Experience Block
                                 </button>
@@ -236,21 +236,21 @@ export default function ResumeBuilder() {
                         {activeTab === 'education' && (
                             <motion.div key="education" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-5">
                                 <div>
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1 block">University Name</label>
-                                    <input type="text" value={education.university} onChange={e => setEducation({ ...education, university: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/5 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-white" />
+                                    <label className="text-base font-bold uppercase tracking-widest text-slate-500 mb-1 block">University Name</label>
+                                    <input type="text" value={education.university} onChange={e => setEducation({ ...education, university: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-slate-100 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-slate-900" />
                                 </div>
                                 <div>
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1 block">Degree / Major</label>
-                                    <input type="text" value={education.degree} onChange={e => setEducation({ ...education, degree: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/5 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-white" />
+                                    <label className="text-base font-bold uppercase tracking-widest text-slate-500 mb-1 block">Degree / Major</label>
+                                    <input type="text" value={education.degree} onChange={e => setEducation({ ...education, degree: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-slate-100 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-slate-900" />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1 block">Date</label>
-                                        <input type="text" value={education.date} onChange={e => setEducation({ ...education, date: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/5 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-white" />
+                                        <label className="text-base font-bold uppercase tracking-widest text-slate-500 mb-1 block">Date</label>
+                                        <input type="text" value={education.date} onChange={e => setEducation({ ...education, date: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-slate-100 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-slate-900" />
                                     </div>
                                     <div>
-                                        <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1 block">GPA</label>
-                                        <input type="text" value={education.gpa} onChange={e => setEducation({ ...education, gpa: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/5 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-white" />
+                                        <label className="text-base font-bold uppercase tracking-widest text-slate-500 mb-1 block">GPA</label>
+                                        <input type="text" value={education.gpa} onChange={e => setEducation({ ...education, gpa: e.target.value })} className="w-full h-12 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-slate-100 rounded-xl px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-slate-900" />
                                     </div>
                                 </div>
                             </motion.div>
@@ -258,14 +258,14 @@ export default function ResumeBuilder() {
 
                         {activeTab === 'skills' && (
                             <motion.div key="skills" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
-                                <div className="bg-indigo-500/10 border border-indigo-500/20 p-4 rounded-xl flex gap-3 text-indigo-600 dark:text-indigo-400">
+                                <div className="bg-indigo-500/10 border border-indigo-500/20 p-4 rounded-xl flex gap-3 text-indigo-600 dark:text-indigo-600">
                                     <Wand2 className="h-5 w-5 shrink-0" />
                                     <p className="text-xs font-medium leading-relaxed">List your core technical and soft skills separated by commas. Our AI parsing engines prefer clean, comma-separated formats for optimal ATS ranking.</p>
                                 </div>
                                 <textarea
                                     value={skills}
                                     onChange={e => setSkills(e.target.value)}
-                                    className="w-full h-40 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/5 rounded-xl p-5 text-sm font-medium resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white"
+                                    className="w-full h-40 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-slate-100 rounded-xl p-5 text-sm font-medium resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-900"
                                 />
                             </motion.div>
                         )}
@@ -274,15 +274,15 @@ export default function ResumeBuilder() {
             </div>
 
             {/* Live Preview Panel */}
-            <div className={cn("flex-1 bg-slate-200 dark:bg-[#05070A] p-4 lg:p-8 items-start lg:items-center justify-center overflow-y-auto no-scrollbar", showPreviewMobile ? "flex" : "hidden lg:flex")}>
+            <div className={cn("flex-1 bg-slate-200 dark:bg-white p-4 lg:p-8 items-start lg:items-center justify-center overflow-y-auto no-scrollbar", showPreviewMobile ? "flex" : "hidden lg:flex")}>
 
                 <div className="w-full max-w-[850px] relative flex flex-col items-center">
                     {/* Mobile Header */}
                     {showPreviewMobile && (
-                        <div className="w-full flex items-center justify-between mb-4 lg:hidden sticky top-0 bg-slate-200 dark:bg-[#05070A] z-20 py-2">
+                        <div className="w-full flex items-center justify-between mb-4 lg:hidden sticky top-0 bg-slate-200 dark:bg-white z-20 py-2">
                             <button
                                 onClick={() => setShowPreviewMobile(false)}
-                                className="px-4 py-2 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-bold flex items-center gap-2"
+                                className="px-4 py-2 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-500 rounded-lg text-sm font-bold flex items-center gap-2"
                             >
                                 <ChevronRight className="h-4 w-4 rotate-180" /> Back to Editor
                             </button>
@@ -314,20 +314,20 @@ export default function ResumeBuilder() {
 
                         {/* Education */}
                         <div className="mb-5">
-                            <h2 className="text-[12px] font-bold uppercase tracking-widest text-black mb-2 border-b border-black pb-0.5">Education</h2>
+                            <h2 className="text-lg font-bold uppercase tracking-widest text-black mb-2 border-b border-black pb-0.5">Education</h2>
                             <div className="flex justify-between items-baseline mb-0.5">
                                 <h3 className="text-[11.5px] font-bold text-black">{education.university || 'University Name'}</h3>
                                 <span className="text-[11.5px] font-normal text-black">{education.date}</span>
                             </div>
                             <div className="flex justify-between items-baseline">
                                 <p className="text-[11.5px] font-normal text-black italic">{education.degree}</p>
-                                {education.gpa && <span className="text-[11px] font-normal text-black">GPA: {education.gpa}</span>}
+                                {education.gpa && <span className="text-sm font-normal text-black">GPA: {education.gpa}</span>}
                             </div>
                         </div>
 
                         {/* Experience */}
                         <div className="mb-5">
-                            <h2 className="text-[12px] font-bold uppercase tracking-widest text-black mb-2 border-b border-black pb-0.5">Experience</h2>
+                            <h2 className="text-lg font-bold uppercase tracking-widest text-black mb-2 border-b border-black pb-0.5">Experience</h2>
                             <div className="space-y-4">
                                 {experiences.map(exp => (
                                     <div key={exp.id}>
@@ -337,7 +337,7 @@ export default function ResumeBuilder() {
                                         </div>
                                         <p className="text-[11.5px] font-normal text-black italic mb-1.5">{exp.title || 'Role Title'}</p>
 
-                                        <ul className="list-disc text-[11px] font-normal text-black ml-6 space-y-1 pl-1 leading-snug text-justify">
+                                        <ul className="list-disc text-sm font-normal text-black ml-6 space-y-1 pl-1 leading-snug text-justify">
                                             {exp.description.split('\n').filter(Boolean).map((bullet, i) => (
                                                 <li key={i}>{bullet.replace(/^[-\*\•]\s*/, '')}</li>
                                             ))}
@@ -349,7 +349,7 @@ export default function ResumeBuilder() {
 
                         {/* Technical Skills */}
                         <div className="mb-5">
-                            <h2 className="text-[12px] font-bold uppercase tracking-widest text-black mb-2 border-b border-black pb-0.5">Skills</h2>
+                            <h2 className="text-lg font-bold uppercase tracking-widest text-black mb-2 border-b border-black pb-0.5">Skills</h2>
                             <p className="text-[11.5px] font-normal text-black leading-relaxed">
                                 {skills || 'List your skills here...'}
                             </p>

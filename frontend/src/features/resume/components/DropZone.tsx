@@ -79,10 +79,10 @@ export default function DropZone({ onFileSelect }: DropZoneProps) {
             {selectedFile ? (
                 <div className="flex flex-col items-center animate-in zoom-in duration-500 relative z-10">
                     <div className="h-24 w-24 bg-blue-600 dark:bg-blue-500 rounded-[30px] flex items-center justify-center mb-8 shadow-2xl rotate-3">
-                        <FileText className="h-12 w-12 text-white" />
+                        <FileText className="h-12 w-12 text-slate-900" />
                     </div>
-                    <h3 className="text-2xl font-black text-slate-900 dark:text-white italic tracking-tighter mb-2">{selectedFile.name}</h3>
-                    <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                    <h3 className="text-2xl font-black text-slate-900 dark:text-slate-900 italic tracking-tighter mb-2">{selectedFile.name}</h3>
+                    <div className="flex items-center gap-4 text-base font-black uppercase tracking-[0.2em] text-slate-500">
                         <span className="flex items-center gap-1"><Shield className="h-3 w-3 text-emerald-500" /> Secure</span>
                         <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
                         <span>{(selectedFile.size / 1024 / 1024).toFixed(2)} MB</span>
@@ -90,7 +90,7 @@ export default function DropZone({ onFileSelect }: DropZoneProps) {
 
                     <button
                         onClick={clearFile}
-                        className="mt-10 px-8 py-3 bg-rose-50 dark:bg-rose-900/30 text-rose-600 rounded-xl text-[10px] font-black uppercase tracking-widest border border-rose-100 dark:border-rose-800 hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                        className="mt-10 px-8 py-3 bg-rose-50 dark:bg-rose-900/30 text-rose-600 rounded-xl text-base font-black uppercase tracking-widest border border-rose-100 dark:border-rose-800 hover:bg-rose-500 hover:text-slate-900 transition-all shadow-sm"
                     >
                         Eject File
                     </button>
@@ -98,23 +98,23 @@ export default function DropZone({ onFileSelect }: DropZoneProps) {
             ) : (
                 <div className="flex flex-col items-center relative z-10">
                     <div className="h-24 w-24 bg-slate-100 dark:bg-slate-800 rounded-[35px] flex items-center justify-center mb-8 group-hover/dz:scale-110 group-hover/dz:-rotate-6 transition-all duration-500 shadow-inner">
-                        <Upload className="h-10 w-10 text-slate-400 group-hover/dz:text-blue-500 transition-colors" />
+                        <Upload className="h-10 w-10 text-slate-500 group-hover/dz:text-blue-500 transition-colors" />
                     </div>
-                    <h3 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter mb-3">Initialize Upload</h3>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-10">Deploy your resume for neural analysis</p>
+                    <h3 className="text-3xl font-black text-slate-900 dark:text-slate-900 italic tracking-tighter mb-3">Initialize Upload</h3>
+                    <p className="text-base font-black text-slate-500 uppercase tracking-[0.3em] mb-10">Deploy your resume for neural analysis</p>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="flex items-center gap-3 px-6 py-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
                             <FileSearch className="h-4 w-4 text-blue-500" />
-                            <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">PDF / DOCX</span>
+                            <span className="text-xs font-black uppercase tracking-widest text-slate-500">PDF / DOCX</span>
                         </div>
                         <div className="flex items-center gap-3 px-6 py-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
                             <Zap className="h-4 w-4 text-yellow-500" />
-                            <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Fast OCR</span>
+                            <span className="text-xs font-black uppercase tracking-widest text-slate-500">Fast OCR</span>
                         </div>
                     </div>
 
-                    <button className="mt-12 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-blue-600/20 hover:border-blue-600 transition-all pb-1 leading-none">
+                    <button className="mt-12 text-blue-600 dark:text-blue-600 text-base font-black uppercase tracking-[0.2em] border-b-2 border-blue-600/20 hover:border-blue-600 transition-all pb-1 leading-none">
                         Or Browse Local Storage
                     </button>
                 </div>

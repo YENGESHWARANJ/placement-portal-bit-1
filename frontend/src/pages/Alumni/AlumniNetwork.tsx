@@ -60,18 +60,18 @@ export default function AlumniNetwork() {
             {/* Header */}
             <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 relative z-10">
                 <div>
-                    <h1 className="text-4xl font-black text-slate-900 dark:text-white uppercase tracking-tighter italic">Alumni <span className="text-indigo-600 dark:text-indigo-400">Network</span></h1>
+                    <h1 className="text-4xl font-black text-slate-900 dark:text-slate-900 uppercase tracking-tighter italic">Alumni <span className="text-indigo-600 dark:text-indigo-600">Network</span></h1>
                     <p className="text-slate-500 font-bold uppercase tracking-widest text-xs mt-2">Connect with Placed Graduates & Elite Mentors</p>
                 </div>
 
                 <div className="relative w-full md:w-96">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
                     <input
                         type="text"
                         placeholder="Search by company, role, or name..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm font-bold placeholder:text-slate-400 focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm"
+                        className="w-full bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm font-bold placeholder:text-slate-500 focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm"
                     />
                 </div>
             </div>
@@ -89,16 +89,16 @@ export default function AlumniNetwork() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.05 }}
                             key={alumnus._id}
-                            className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/10 rounded-[32px] p-6 hover:shadow-2xl hover:-translate-y-2 transition-all group flex flex-col h-full overflow-hidden relative"
+                            className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-200 rounded-[32px] p-6 hover:shadow-2xl hover:-translate-y-2 transition-all group flex flex-col h-full overflow-hidden relative"
                         >
                             {alumnus.mentorshipAvailable && (
-                                <div className="absolute top-0 right-0 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-black uppercase tracking-widest px-4 py-2 rounded-bl-2xl border-l border-b border-emerald-500/20">
+                                <div className="absolute top-0 right-0 bg-emerald-500/10 text-emerald-600 dark:text-emerald-600 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-bl-2xl border-l border-b border-emerald-500/20">
                                     Mentorship Active
                                 </div>
                             )}
 
                             <div className="flex items-center gap-4 mb-6">
-                                <div className="h-16 w-16 rounded-full bg-indigo-100 dark:bg-indigo-500/10 flex items-center justify-center text-xl font-black text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/20 shadow-inner">
+                                <div className="h-16 w-16 rounded-full bg-indigo-100 dark:bg-indigo-500/10 flex items-center justify-center text-xl font-black text-indigo-600 dark:text-indigo-600 border border-indigo-200 dark:border-indigo-500/20 shadow-inner">
                                     {alumnus.profilePicture ? (
                                         <img src={alumnus.profilePicture} alt={alumnus.name} className="h-full w-full rounded-full object-cover" />
                                     ) : (
@@ -106,31 +106,31 @@ export default function AlumniNetwork() {
                                     )}
                                 </div>
                                 <div>
-                                    <h3 className="font-black text-slate-900 dark:text-white text-lg">{alumnus.name}</h3>
+                                    <h3 className="font-black text-slate-900 dark:text-slate-900 text-lg">{alumnus.name}</h3>
                                     <p className="text-xs font-bold text-slate-500 flex items-center gap-1"><GraduationCap className="h-3 w-3" /> Class of {alumnus.year || '2023'}</p>
                                 </div>
                             </div>
 
                             <div className="space-y-4 flex-1">
                                 <div>
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Current Role</p>
+                                    <p className="text-base font-black uppercase tracking-widest text-slate-500 mb-1">Current Role</p>
                                     <div className="flex flex-col">
-                                        <span className="font-bold text-slate-900 dark:text-white text-sm">{alumnus.jobTitle}</span>
-                                        <span className="text-indigo-600 dark:text-indigo-400 font-black text-sm flex items-center gap-1">@ {alumnus.currentCompany}</span>
+                                        <span className="font-bold text-slate-900 dark:text-slate-900 text-sm">{alumnus.jobTitle}</span>
+                                        <span className="text-indigo-600 dark:text-indigo-600 font-black text-sm flex items-center gap-1">@ {alumnus.currentCompany}</span>
                                     </div>
                                 </div>
 
                                 {alumnus.skills && alumnus.skills.length > 0 && (
                                     <div>
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Expertise</p>
+                                        <p className="text-base font-black uppercase tracking-widest text-slate-500 mb-2">Expertise</p>
                                         <div className="flex flex-wrap gap-2">
                                             {alumnus.skills.slice(0, 3).map((skill: string) => (
-                                                <span key={skill} className="px-3 py-1 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full text-[10px] font-bold text-slate-600 dark:text-slate-300">
+                                                <span key={skill} className="px-3 py-1 bg-slate-100 dark:bg-slate-50 border border-slate-200 dark:border-slate-200 rounded-full text-base font-bold text-slate-600 dark:text-slate-500">
                                                     {skill}
                                                 </span>
                                             ))}
                                             {alumnus.skills.length > 3 && (
-                                                <span className="px-3 py-1 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full text-[10px] font-bold text-slate-400">
+                                                <span className="px-3 py-1 bg-slate-100 dark:bg-slate-50 border border-slate-200 dark:border-slate-200 rounded-full text-base font-bold text-slate-500">
                                                     +{alumnus.skills.length - 3}
                                                 </span>
                                             )}
@@ -141,7 +141,7 @@ export default function AlumniNetwork() {
 
                             <button
                                 onClick={() => setSelectedAlumnus(alumnus)}
-                                className="mt-6 w-full py-4 bg-slate-50 dark:bg-white/5 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-500 rounded-[20px] font-black uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2 border border-slate-200 dark:border-white/10"
+                                className="mt-6 w-full py-4 bg-slate-50 dark:bg-slate-50 hover:bg-indigo-600 hover:text-slate-900 dark:hover:bg-indigo-500 rounded-[20px] font-black uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-200"
                             >
                                 <MessageSquare className="h-4 w-4" /> Request Mentorship
                             </button>
@@ -165,9 +165,9 @@ export default function AlumniNetwork() {
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white dark:bg-[#0A0D1E] border border-slate-200 dark:border-white/10 shadow-2xl rounded-[40px] p-8 z-50"
+                            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white dark:bg-white border border-slate-200 dark:border-slate-200 shadow-2xl rounded-[40px] p-8 z-50"
                         >
-                            <button onClick={() => setSelectedAlumnus(null)} className="absolute top-6 right-6 p-2 rounded-full bg-slate-100 dark:bg-white/5 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
+                            <button onClick={() => setSelectedAlumnus(null)} className="absolute top-6 right-6 p-2 rounded-full bg-slate-100 dark:bg-slate-50 text-slate-500 hover:text-slate-900 dark:hover:text-slate-900 transition-colors">
                                 <X className="h-5 w-5" />
                             </button>
 
@@ -176,28 +176,28 @@ export default function AlumniNetwork() {
                                     {selectedAlumnus.name?.charAt(0)}
                                 </div>
                                 <div>
-                                    <h2 className="text-2xl font-black text-slate-900 dark:text-white">{selectedAlumnus.name}</h2>
-                                    <p className="text-indigo-600 dark:text-indigo-400 font-bold text-sm">Mentee Application</p>
+                                    <h2 className="text-2xl font-black text-slate-900 dark:text-slate-900">{selectedAlumnus.name}</h2>
+                                    <p className="text-indigo-600 dark:text-indigo-600 font-bold text-sm">Mentee Application</p>
                                 </div>
                             </div>
 
                             <form onSubmit={handleRequestMentorship} className="space-y-6">
                                 <div>
-                                    <label className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2 block">Your Request Message</label>
+                                    <label className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-500 mb-2 block">Your Request Message</label>
                                     <textarea
                                         required
                                         value={requestMessage}
                                         onChange={(e) => setRequestMessage(e.target.value)}
                                         placeholder={`Hi ${selectedAlumnus.name.split(' ')[0]}, I'm interested in your journey at ${selectedAlumnus.currentCompany}...`}
-                                        className="w-full h-32 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl p-4 text-sm font-medium resize-none focus:ring-2 focus:ring-indigo-500"
+                                        className="w-full h-32 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-200 rounded-2xl p-4 text-sm font-medium resize-none focus:ring-2 focus:ring-indigo-500"
                                     />
-                                    <p className="text-[10px] text-slate-400 mt-2 font-medium">Keep it professional and specific. Explain what you'd like guidance on.</p>
+                                    <p className="text-base text-slate-500 mt-2 font-medium">Keep it professional and specific. Explain what you'd like guidance on.</p>
                                 </div>
 
                                 <button
                                     type="submit"
                                     disabled={sendingRequest}
-                                    className="w-full py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[24px] font-black uppercase tracking-widest text-sm transition-all shadow-lg shadow-indigo-500/30 flex items-center justify-center gap-3 disabled:opacity-50"
+                                    className="w-full py-5 bg-indigo-600 hover:bg-indigo-700 text-slate-900 rounded-[24px] font-black uppercase tracking-widest text-sm transition-all shadow-lg shadow-indigo-500/30 flex items-center justify-center gap-3 disabled:opacity-50"
                                 >
                                     {sendingRequest ? <Loader2 className="h-5 w-5 animate-spin" /> : <MessageSquare className="h-5 w-5" />}
                                     {sendingRequest ? 'Sending...' : 'Send Request'}

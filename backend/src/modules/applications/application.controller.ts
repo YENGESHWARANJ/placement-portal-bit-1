@@ -1,5 +1,6 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import Application from "./application.model";
+import PlacementDrive from "../placement-drives/drive.model";
 import Job from "../jobs/job.model";
 import Student from "../students/student.model";
 import User from "../users/user.model";
@@ -303,5 +304,80 @@ export const withdrawApplication = async (req: AuthRequest, res: Response) => {
     } catch (error) {
         console.error("WITHDRAW APPLICATION ERROR:", error);
         return res.status(500).json({ message: "Failed to withdraw application" });
+    }
+};
+// ================================
+// APPLY FOR DRIVE (Student)
+// ================================
+export const applyForDrive = async (req: AuthRequest, res: Response) => {
+    try {
+        const userId = req.user?.userId;
+        const { driveId } = req.body;
+
+        const student = await Student.findOne({ userId });
+        if (!student) return res.status(403).json({ message: "Student record not found" });
+
+        // Verify eligibility (redundant but safe)
+        const drive = await PlacementDrive.findById(driveId);
+        if (!drive || drive.status !== 'Open') return res.status(404).json({ message: "Drive not found or closed" });
+
+        if (student.cgpa < drive.criterias.cgpa) return res.status(403).json({ message: "CGPA below cutoff" });
+        if (!drive.criterias.branches.includes(student.branch)) return res.status(403).json({ message: "Branch not eligible" });
+        if (!drive.criterias.arrearsAllowed && student.currentArrears > 0) return res.status(403).json({ message: "Arrears not allowed" });
+
+        const application = await Application.create({
+            driveId,
+            studentId: student._id,
+            status: "Applied"
+        });
+
+        return res.status(201).json({ message: "Applied for drive successfully", application });
+    } catch (error: any) {
+        if (error.code === 11000) return res.status(400).json({ message: "Already applied" });
+        return res.status(500).json({ message: "Application failed" });
+    }
+};
+
+// ================================
+// GET DRIVE APPLICANTS (Admin)
+// ================================
+export const getDriveApplicants = async (req: AuthRequest, res: Response) => {
+    try {
+        const { driveId } = req.params;
+        const applications = await Application.find({ driveId })
+            .populate("studentId", "name usn branch cgpa email skills aptitudeScore codingScore interviewScore")
+            .sort({ createdAt: -1 });
+
+        // Transform for frontend
+        const result = applications.map(app => ({
+            _id: app._id,
+            student: app.studentId,
+            status: app.status,
+            appliedAt: app.appliedAt
+        }));
+
+        return res.json({ applications: result });
+    } catch (error) {
+        return res.status(500).json({ message: "Failed to fetch drive applicants" });
+    }
+};
+
+// ================================
+// BULK UPDATE STATUS (Admin)
+// ================================
+export const bulkUpdateApplicationStatus = async (req: AuthRequest, res: Response) => {
+    try {
+        const { applicationIds, status } = req.body;
+        if (!Array.isArray(applicationIds)) return res.status(400).json({ message: "Invalid application list" });
+
+        await Application.updateMany(
+            { _id: { $in: applicationIds } },
+            { $set: { status } }
+        );
+
+        // Optionally send notifications here
+        return res.json({ message: `Bulk updated ${applicationIds.length} applicants to ${status}` });
+    } catch (error) {
+        return res.status(500).json({ message: "Bulk update failed" });
     }
 };

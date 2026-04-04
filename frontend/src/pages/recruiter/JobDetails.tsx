@@ -49,8 +49,8 @@ export default function JobDetails() {
 
     const fetchJobDetails = async () => {
         try {
-            const { data } = await api.get<Job>(`/jobs/${id}`);
-            setJob(data);
+            const { data } = await api.get<{ job: Job }>(`/jobs/${id}`);
+            setJob(data.job);
 
             const { data: appsData } = await api.get<{ applications: any[] }>("/applications/my");
             const applied = appsData.applications.some((app: any) => app.jobId._id === id);
@@ -58,7 +58,7 @@ export default function JobDetails() {
         } catch (error) {
             console.error("Failed to fetch job", error);
             toast.error("Job details not found");
-            navigate("/recruit/jobs"); // Changed to recruiter path
+            navigate(-1);
         } finally {
             setLoading(false);
         }
@@ -80,7 +80,7 @@ export default function JobDetails() {
     if (loading) return (
         <div className="p-20 flex flex-col items-center justify-center space-y-4">
             <div className="h-10 w-10 border-4 border-apple-blue/20 border-t-apple-blue rounded-full animate-spin" />
-            <p className="text-apple-gray-400 font-bold uppercase tracking-widest text-[10px]">Processing Listing Intelligence...</p>
+            <p className="text-apple-gray-400 font-bold uppercase tracking-widest text-base">Processing Listing Intelligence...</p>
         </div>
     );
 
@@ -98,7 +98,7 @@ export default function JobDetails() {
             <motion.div variants={stagger.item} className="flex items-center justify-between">
                 <button
                     onClick={() => navigate(-1)}
-                    className="flex items-center gap-3 text-apple-gray-400 hover:text-apple-blue transition-all font-black text-[10px] uppercase tracking-widest group"
+                    className="flex items-center gap-3 text-apple-gray-400 hover:text-apple-blue transition-all font-black text-base uppercase tracking-widest group"
                 >
                     <div className="h-10 w-10 rounded-2xl bg-white border border-apple-gray-100 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                         <ChevronLeft className="h-4 w-4" />
@@ -143,7 +143,7 @@ export default function JobDetails() {
                         <div className="p-8 md:p-12">
                             <div className="flex flex-col md:flex-row md:items-start justify-between gap-10">
                                 <div className="space-y-6">
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-apple-blue/5 text-apple-blue rounded-full text-[9px] font-black uppercase tracking-[0.2em] border border-apple-blue/10">
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-apple-blue/5 text-apple-blue rounded-full text-xs font-black uppercase tracking-[0.2em] border border-apple-blue/10">
                                         <ShieldCheck className="h-3 w-3" /> Verified Protocol
                                     </div>
                                     <h1 className="text-4xl md:text-5xl font-black text-apple-gray-900 tracking-tight leading-none">{job.title}</h1>
@@ -153,8 +153,8 @@ export default function JobDetails() {
                                                 <Building2 className="h-5 w-5" />
                                             </div>
                                             <div>
-                                                <p className="text-[8px] font-black uppercase tracking-widest text-apple-gray-400 leading-none mb-1">Company</p>
-                                                <p className="text-[15px] font-black text-apple-gray-900 tracking-tight">{job.company}</p>
+                                                <p className="text-base font-black uppercase tracking-widest text-apple-gray-400 leading-none mb-1">Company</p>
+                                                <p className="text-lg font-black text-apple-gray-900 tracking-tight">{job.company}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3">
@@ -162,8 +162,8 @@ export default function JobDetails() {
                                                 <MapPin className="h-5 w-5" />
                                             </div>
                                             <div>
-                                                <p className="text-[8px] font-black uppercase tracking-widest text-apple-gray-400 leading-none mb-1">Origin</p>
-                                                <p className="text-[15px] font-black text-apple-gray-900 tracking-tight">{job.location}</p>
+                                                <p className="text-base font-black uppercase tracking-widest text-apple-gray-400 leading-none mb-1">Origin</p>
+                                                <p className="text-lg font-black text-apple-gray-900 tracking-tight">{job.location}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3">
@@ -171,19 +171,36 @@ export default function JobDetails() {
                                                 <Briefcase className="h-5 w-5" />
                                             </div>
                                             <div>
-                                                <p className="text-[8px] font-black uppercase tracking-widest text-apple-gray-400 leading-none mb-1">Mission</p>
-                                                <p className="text-[15px] font-black text-apple-gray-900 tracking-tight">{job.type}</p>
+                                                <p className="text-base font-black uppercase tracking-widest text-apple-gray-400 leading-none mb-1">Mission</p>
+                                                <p className="text-lg font-black text-apple-gray-900 tracking-tight">{job.type}</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex flex-col items-start md:items-end gap-4 shrink-0 bg-apple-gray-50/50 p-6 rounded-[28px] border border-apple-gray-100">
-                                    <div className="px-5 py-2.5 bg-apple-gray-900 text-white rounded-2xl text-[12px] font-black tracking-widest uppercase shadow-xl">
-                                        {job.salary}
+                                <div className="flex flex-col items-start md:items-end gap-5 shrink-0">
+                                    <div className="bg-apple-gray-50/50 p-6 rounded-[28px] border border-apple-gray-100 flex flex-col gap-3 w-full">
+                                        <div className="px-5 py-2.5 bg-white text-slate-900 rounded-2xl text-lg font-black tracking-widest uppercase shadow-xl text-center">
+                                            {job.salary}
+                                        </div>
+                                        <span className="text-xs font-black text-apple-gray-400 flex items-center justify-center gap-2 uppercase tracking-[0.2em]">
+                                            <Calendar className="h-3.5 w-3.5" /> Deployment: 48h Ago
+                                        </span>
                                     </div>
-                                    <span className="text-[9px] font-black text-apple-gray-400 flex items-center gap-2 uppercase tracking-[0.2em]">
-                                        <Calendar className="h-3.5 w-3.5" /> Deployment: 48h Ago
-                                    </span>
+
+                                    {!hasApplied ? (
+                                        <button
+                                            onClick={handleApply}
+                                            disabled={applying}
+                                            className="w-full apple-btn-primary py-5 rounded-[24px] text-xs font-black uppercase tracking-[0.2em] shadow-apple-hover flex items-center justify-center gap-2 min-w-[200px]"
+                                        >
+                                            {applying ? "Synchronizing..." : "Initialize Profile & Apply"}
+                                            <ArrowRight className="h-4 w-4" />
+                                        </button>
+                                    ) : (
+                                        <div className="w-full py-5 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-[24px] text-xs font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 min-w-[200px]">
+                                            <CheckCircle className="h-4 w-4" /> Application Finalized
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -191,17 +208,17 @@ export default function JobDetails() {
 
                     {/* Job Intelligence */}
                     <motion.div variants={stagger.item} className="apple-card p-12 bg-white border border-apple-gray-50 shadow-sm">
-                        <h2 className="text-[11px] font-black text-apple-gray-300 uppercase tracking-[0.4em] mb-10 flex items-center gap-3">
+                        <h2 className="text-sm font-black text-apple-gray-300 uppercase tracking-[0.4em] mb-10 flex items-center gap-3">
                             <Info className="h-4 w-4" /> Operational Briefing
                         </h2>
-                        <div className="text-apple-gray-700 font-bold leading-relaxed text-[16px] space-y-8 prose prose-apple max-w-none">
+                        <div className="text-apple-gray-700 font-bold leading-relaxed text-[18px] space-y-8 prose prose-apple max-w-none">
                             {job.description || "Analytical parameters pending deployment."}
                         </div>
                     </motion.div>
 
                     {/* Tactical Requirements */}
                     <motion.div variants={stagger.item} className="apple-card p-12 bg-white border border-apple-gray-50 shadow-sm">
-                        <h2 className="text-[11px] font-black text-apple-gray-300 uppercase tracking-[0.4em] mb-10 flex items-center gap-3">
+                        <h2 className="text-sm font-black text-apple-gray-300 uppercase tracking-[0.4em] mb-10 flex items-center gap-3">
                             <CheckCircle className="h-4 w-4" /> Core Prerequisites
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -212,14 +229,14 @@ export default function JobDetails() {
                                         whileHover={{ scale: 1.02, backgroundColor: 'rgba(0,113,227,0.02)' }}
                                         className="flex gap-5 bg-apple-gray-50/30 p-6 rounded-2xl border border-apple-gray-100 hover:border-apple-blue/30 transition-all group"
                                     >
-                                        <div className="h-7 w-7 rounded-xl bg-white flex items-center justify-center text-apple-blue shadow-sm border border-apple-gray-100 group-hover:bg-apple-blue group-hover:text-white transition-all shrink-0">
+                                        <div className="h-7 w-7 rounded-xl bg-white flex items-center justify-center text-apple-blue shadow-sm border border-apple-gray-100 group-hover:bg-apple-blue group-hover:text-slate-900 transition-all shrink-0">
                                             <CheckCircle className="h-4 w-4" />
                                         </div>
-                                        <span className="text-[14px] text-apple-gray-800 font-bold leading-tight">{req}</span>
+                                        <span className="text-[16.5px] text-apple-gray-800 font-bold leading-tight">{req}</span>
                                     </motion.div>
                                 ))
                             ) : (
-                                <p className="text-apple-gray-300 text-[11px] font-black uppercase tracking-widest col-span-full italic">Parameters not specified.</p>
+                                <p className="text-apple-gray-300 text-sm font-black uppercase tracking-widest col-span-full italic">Parameters not specified.</p>
                             )}
                         </div>
                     </motion.div>
@@ -229,13 +246,13 @@ export default function JobDetails() {
                 <div className="space-y-8">
 
                     {/* Apply Card - THE ACTION HUB */}
-                    <motion.div variants={stagger.item} className="apple-card p-10 bg-apple-gray-900 border border-black shadow-2xl relative overflow-hidden flex flex-col items-center text-center">
+                    <motion.div variants={stagger.item} className="apple-card p-10 bg-white border border-black shadow-2xl relative overflow-hidden flex flex-col items-center text-center">
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-apple-blue to-transparent opacity-50" />
                         <div className="relative z-10 space-y-8 w-full">
                             <div>
-                                <h3 className="text-xl font-black text-white tracking-tight leading-tight mb-4 uppercase">Intake Terminal</h3>
-                                <p className="text-apple-gray-400 text-[13px] font-bold leading-relaxed">
-                                    Finalizing selection for {job.company}. Intel window closes <span className="text-white font-black">{job.deadline ? new Date(job.deadline).toLocaleDateString() : "TBD"}</span>.
+                                <h3 className="text-xl font-black text-slate-900 tracking-tight leading-tight mb-4 uppercase">Direct Intake</h3>
+                                <p className="text-apple-gray-400 text-sm font-bold leading-relaxed">
+                                    Finalizing selection for {job.company}. Intelligence window closes <span className="text-slate-900 font-black">{job.deadline ? new Date(job.deadline).toLocaleDateString() : "TBD"}</span>.
                                 </p>
                             </div>
 
@@ -243,7 +260,7 @@ export default function JobDetails() {
                                 <motion.div
                                     initial={{ scale: 0.9, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
-                                    className="w-full bg-apple-blue/20 text-apple-blue py-5 rounded-2xl font-black text-[11px] uppercase tracking-widest border border-apple-blue/30 flex items-center justify-center gap-3"
+                                    className="w-full bg-apple-blue/20 text-apple-blue py-5 rounded-2xl font-black text-sm uppercase tracking-widest border border-apple-blue/30 flex items-center justify-center gap-3"
                                 >
                                     <CheckCircle className="h-5 w-5" /> Dossier Finalized
                                 </motion.div>
@@ -253,17 +270,17 @@ export default function JobDetails() {
                                     whileTap={{ scale: 0.98 }}
                                     onClick={handleApply}
                                     disabled={applying}
-                                    className="w-full bg-apple-blue hover:bg-white hover:text-apple-gray-900 text-white py-5 rounded-2xl font-black text-[11px] uppercase tracking-[0.3em] shadow-apple-hover transition-all flex items-center justify-center gap-3 group"
+                                    className="w-full bg-apple-blue hover:bg-white hover:text-apple-gray-900 text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.3em] shadow-apple-hover transition-all flex items-center justify-center gap-3 group"
                                 >
                                     {applying ? "Synchronizing..." : "Initialize Profile"}
                                     {!applying && <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />}
                                 </motion.button>
                             )}
 
-                            <div className="pt-8 border-t border-white/10 flex flex-col items-center">
-                                <span className="text-[9px] font-black text-apple-gray-500 uppercase tracking-[0.4em] mb-4">Neural Match Signal</span>
+                            <div className="pt-8 border-t border-slate-200 flex flex-col items-center">
+                                <span className="text-xs font-black text-apple-gray-500 uppercase tracking-[0.4em] mb-4">Neural Match Signal</span>
                                 <div className="flex items-center gap-4">
-                                    <div className="h-1.5 w-32 bg-white/10 rounded-full overflow-hidden">
+                                    <div className="h-1.5 w-32 bg-slate-100 rounded-full overflow-hidden">
                                         <motion.div
                                             initial={{ width: 0 }}
                                             animate={{ width: '92%' }}
@@ -271,7 +288,7 @@ export default function JobDetails() {
                                             className="h-full bg-apple-blue rounded-full shadow-[0_0_15px_rgba(0,113,227,0.8)]"
                                         />
                                     </div>
-                                    <span className="text-[12px] font-black text-apple-blue">92%</span>
+                                    <span className="text-lg font-black text-apple-blue">92%</span>
                                 </div>
                             </div>
                         </div>
@@ -279,7 +296,7 @@ export default function JobDetails() {
 
                     {/* Company Metrics */}
                     <motion.div variants={stagger.item} className="apple-card p-10 bg-white border border-apple-gray-50 shadow-sm">
-                        <h3 className="text-[11px] font-black text-apple-gray-900 tracking-[0.3em] uppercase mb-10">Neural Activity</h3>
+                        <h3 className="text-sm font-black text-apple-gray-900 tracking-[0.3em] uppercase mb-10">Neural Activity</h3>
                         <div className="space-y-10">
                             {[
                                 { icon: Users, label: 'Applicants', value: '142', color: 'text-apple-blue', bg: 'bg-apple-blue/5' },
@@ -291,9 +308,9 @@ export default function JobDetails() {
                                         <div className={cn("h-11 w-11 rounded-2xl flex items-center justify-center transition-all shadow-inner border border-apple-gray-50", stat.bg, stat.color)}>
                                             <stat.icon className="h-5 w-5" />
                                         </div>
-                                        <span className="text-[11px] font-black text-apple-gray-400 uppercase tracking-widest">{stat.label}</span>
+                                        <span className="text-sm font-black text-apple-gray-400 uppercase tracking-widest">{stat.label}</span>
                                     </div>
-                                    <span className="font-black text-apple-gray-900 tracking-tighter text-[16px]">{stat.value}</span>
+                                    <span className="font-black text-apple-gray-900 tracking-tighter text-[18px]">{stat.value}</span>
                                 </div>
                             ))}
                         </div>
@@ -301,10 +318,10 @@ export default function JobDetails() {
 
                     {/* Navigation Link */}
                     <motion.div variants={stagger.item}>
-                        <Link to="/recruit/jobs" className="flex items-center justify-between p-8 bg-apple-gray-50 rounded-[32px] border border-apple-gray-100 group transition-all hover:bg-white hover:shadow-apple-hover">
+                        <Link to="/job-recommendations" className="flex items-center justify-between p-8 bg-apple-gray-50 rounded-[32px] border border-apple-gray-100 group transition-all hover:bg-white hover:shadow-apple-hover">
                             <div>
-                                <p className="text-[9px] font-black text-apple-gray-400 uppercase tracking-[0.2em] mb-1">Global Command</p>
-                                <p className="text-[14px] font-black text-apple-gray-900 uppercase">Universal Access</p>
+                                <p className="text-xs font-black text-apple-gray-400 uppercase tracking-[0.2em] mb-1">Global Command</p>
+                                <p className="text-sm font-black text-apple-gray-900 uppercase">Universal Access</p>
                             </div>
                             <div className="h-10 w-10 rounded-full bg-white border border-apple-gray-100 flex items-center justify-center text-apple-gray-300 group-hover:text-apple-blue group-hover:scale-110 transition-all">
                                 <ChevronLeft className="h-5 w-5 rotate-180" />

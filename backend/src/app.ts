@@ -6,6 +6,8 @@ import hpp from "hpp";
 import mongoose from "mongoose";
 import morgan from "morgan";
 import { stream } from "./utils/logger";
+import compression from "compression";
+import { connectRedis } from "./utils/redis";
 
 import routes from "./routes";
 
@@ -20,6 +22,7 @@ const app = express();
 
 // ✅ Security Headers
 app.use(helmet());
+app.use(compression());
 
 // ✅ HTTP Logging
 app.use(morgan("combined", { stream }));
@@ -66,11 +69,14 @@ app.use(cookieParser());
 // ✅ Rate Limiting
 app.use("/api", apiRateLimiter);
 
+import chatRoutes from "./modules/chat/chat.routes";
+
 // API routes
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/notices", noticeRoutes);
 app.use("/api/activity", activityRoutes);
 app.use("/api/alumni", alumniRoutes);
+app.use("/api/chat", chatRoutes);
 
 // ✅ Favicon fix
 app.get("/favicon.ico", (req, res) => res.status(204).end());

@@ -26,7 +26,7 @@ export default function CommandPalette() {
 
         <Command.Input
           placeholder="Search actions…"
-          className="w-full bg-transparent outline-none text-white mb-4"
+          className="w-full bg-transparent outline-none text-slate-900 mb-4"
         />
 
         <Command.List>

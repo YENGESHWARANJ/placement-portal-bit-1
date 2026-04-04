@@ -32,14 +32,14 @@ function Cursor() {
 
 /* ─── Log entry ─────────────────────────────────────────────────── */
 function LogEntry({ text, type = "info", delay }: { text: string; type?: "ok" | "info" | "warn"; delay: number }) {
-    const colors = { ok: "text-emerald-400", info: "text-blue-400", warn: "text-amber-400" };
+    const colors = { ok: "text-emerald-600", info: "text-blue-600", warn: "text-amber-600" };
     const tags = { ok: "[OK]", info: "[INFO]", warn: "[WARN]" };
     return (
         <motion.p
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay, duration: 0.3 }}
-            className="text-[10px] font-mono flex items-center gap-2"
+            className="text-base font-mono flex items-center gap-2"
         >
             <span className={`${colors[type]} font-bold shrink-0`}>{tags[type]}</span>
             <span className="text-slate-500">{text}</span>
@@ -117,21 +117,21 @@ export default function AdminLogin() {
                         <motion.div
                             initial={{ scale: 0.9 }}
                             animate={{ scale: 1 }}
-                            className="w-16 h-16 bg-apple-gray-900 rounded-[1.25rem] flex items-center justify-center shadow-lg shadow-apple-gray-900/10 mb-6"
+                            className="w-16 h-16 bg-white rounded-[1.25rem] flex items-center justify-center shadow-lg shadow-apple-gray-900/10 mb-6"
                         >
-                            <ShieldAlert className="h-8 w-8 text-white" />
+                            <ShieldAlert className="h-8 w-8 text-slate-900" />
                         </motion.div>
-                        <h1 className="text-2xl font-bold text-apple-gray-900 tracking-tight mb-2 uppercase">Root Access</h1>
+                        <h1 className="text-2xl font-bold text-apple-gray-900 tracking-tight mb-2 uppercase">Placement Officer Access</h1>
                         <div className="flex items-center gap-2">
                             <span className="h-1.5 w-1.5 rounded-full bg-apple-blue animate-pulse" />
-                            <p className="text-[11px] font-bold text-apple-gray-400 uppercase tracking-widest">Command Center Authorization</p>
+                            <p className="text-sm font-bold text-apple-gray-400 uppercase tracking-widest">Command Center Authorization</p>
                         </div>
                     </div>
 
                     {/* Admin Form */}
                     <form onSubmit={handleLogin} className="space-y-6">
                         <div className="space-y-2">
-                            <label className="text-[13px] font-semibold text-apple-gray-400 ml-1">Admin Identifier</label>
+                            <label className="text-base font-semibold text-apple-gray-400 ml-1">Admin Identifier</label>
                             <div className="relative">
                                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-apple-gray-300 pointer-events-none" />
                                 <input
@@ -147,7 +147,7 @@ export default function AdminLogin() {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[13px] font-semibold text-apple-gray-400 ml-1">Passkey Protocol</label>
+                            <label className="text-base font-semibold text-apple-gray-400 ml-1">Passkey Protocol</label>
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-apple-gray-300 pointer-events-none" />
                                 <input
@@ -171,7 +171,7 @@ export default function AdminLogin() {
                         {/* Security Warning */}
                         <div className="flex items-start gap-3 p-4 bg-apple-gray-50 border border-apple-gray-100 rounded-2xl">
                             <AlertCircle className="h-4 w-4 text-apple-gray-400 shrink-0 mt-0.5" />
-                            <p className="text-[11px] text-apple-gray-400 italic leading-relaxed">
+                            <p className="text-sm text-apple-gray-400 italic leading-relaxed">
                                 Unauthorized access attempts are traced, logged, and reported to the system security team automatically.
                             </p>
                         </div>
@@ -179,7 +179,7 @@ export default function AdminLogin() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="apple-btn-primary w-full py-4 text-[14px] font-bold uppercase tracking-widest flex items-center justify-center gap-3"
+                            className="apple-btn-primary w-full py-4 text-[16.5px] font-bold uppercase tracking-widest flex items-center justify-center gap-3"
                         >
                             {loading ? (
                                 <Activity className="h-5 w-5 animate-spin" />
@@ -195,7 +195,7 @@ export default function AdminLogin() {
 
                     {/* Footer */}
                     <div className="mt-10 pt-8 border-t border-apple-gray-100 text-center">
-                        <p className="text-[11px] text-apple-gray-300 uppercase tracking-[0.2em] font-bold mb-6">Provisioning</p>
+                        <p className="text-sm text-apple-gray-300 uppercase tracking-[0.2em] font-bold mb-6">Provisioning</p>
                         <Link to="/admin-portal/register" className="text-apple-blue font-semibold hover:underline text-sm">
                             Request Admin Credentials →
                         </Link>
@@ -210,7 +210,7 @@ export default function AdminLogin() {
                     </Link>
                     <Link to="/recruiter-portal" className="text-xs font-medium text-apple-gray-300 hover:text-apple-blue transition-colors flex items-center gap-1.5">
                         <Briefcase className="h-3.5 w-3.5" />
-                        Recruiter
+                        Mentor
                     </Link>
                 </div>
             </motion.div>

@@ -11,7 +11,8 @@ export const getSocket = (userId?: string) => {
       withCredentials: true,
       query: { userId },
       reconnectionAttempts: 5,
-      timeout: 10000
+      timeout: 10000,
+      transports: ["websocket"]
     });
     console.log("🔌 Socket initialized for user:", userId);
   }

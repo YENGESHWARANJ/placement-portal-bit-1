@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import StudentFilters from "../../features/students/components/StudentFilters";
 import {
     Download,
@@ -56,6 +57,7 @@ export default function StudentManagement() {
     const [totalPages, setTotalPages] = useState(1);
 
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [onlineUserIds, setOnlineUserIds] = useState<Set<string>>(new Set());
 
     useEffect(() => {
@@ -137,7 +139,39 @@ export default function StudentManagement() {
         );
     };
 
+    const handleExportCSV = () => {
+        if (students.length === 0) return toast.error("No data to export");
+        
+        const headers = ["Name", "USN", "Branch", "CGPA", "Status", "Aptitude", "Coding", "Interview"];
+        const rows = students.map(s => [
+            s.name, s.usn, s.branch, s.cgpa, s.status, 
+            `${s.aptitudeScore || 0}%`, `${s.codingScore || 0}%`, `${s.interviewScore || 0}%`
+        ]);
+
+        const csvContent = "data:text/csv;charset=utf-8," 
+            + headers.join(",") + "\n" 
+            + rows.map(e => e.join(",")).join("\n");
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `BIT_Talent_Directory_${new Date().toLocaleDateString()}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast.success("CSV Export started!");
+    };
+
     const handleBulkAction = (action: string) => {
+        if (action === "Emailing") {
+            const emails = students
+                .filter(s => selectedStudents.includes(s._id))
+                .map(s => s.email)
+                .join(',');
+            window.location.href = `mailto:${emails}?subject=Placement Update from BIT`;
+            return;
+        }
+
         toast.promise(
             new Promise((resolve) => setTimeout(resolve, 1500)),
             {
@@ -158,11 +192,17 @@ export default function StudentManagement() {
                     <p className="text-slate-500 mt-1">AI-powered candidate search and management.</p>
                 </div>
                 <div className="flex gap-3">
-                    <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition-colors shadow-sm font-medium">
+                    <button 
+                        onClick={handleExportCSV}
+                        className="flex items-center gap-2 px-4 py-2 border border-slate-200 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition-colors shadow-sm font-medium"
+                    >
                         <Download className="h-4 w-4" />
                         <span className="hidden sm:inline">Export CSV</span>
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors shadow-lg shadow-slate-200 font-medium">
+                    <button 
+                        onClick={() => navigate("/admin/students")}
+                        className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-black transition-all shadow-lg shadow-slate-200 font-bold active:scale-95"
+                    >
                         <Plus className="h-4 w-4" />
                         <span>Add Candidate</span>
                     </button>
@@ -173,7 +213,7 @@ export default function StudentManagement() {
             <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between sticky top-20 z-10">
                 <div className="flex items-center gap-3 w-full md:w-auto flex-1">
                     <div className="relative flex-1 md:max-w-md">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                         <input
                             type="text"
                             placeholder="Search by name, USN, or skills (e.g., Python)..."
@@ -189,9 +229,12 @@ export default function StudentManagement() {
                             onChange={(e) => setBranchFilter(e.target.value)}
                         >
                             <option value="All">All Branches</option>
-                            <option value="CS">Computer Science</option>
-                            <option value="IS">Information Science</option>
-                            <option value="EC">Electronics</option>
+                            <option value="CSE">Computer Science (CSE)</option>
+                            <option value="ISE">Information Science (ISE)</option>
+                            <option value="ECE">Electronics (ECE)</option>
+                            <option value="EEE">Electrical (EEE)</option>
+                            <option value="MECH">Mechanical (MECH)</option>
+                            <option value="AI&DS">Artificial Intelligence (AI&DS)</option>
                         </select>
                         <select
                             className="bg-transparent text-sm font-medium text-slate-600 focus:outline-none cursor-pointer"
@@ -223,7 +266,7 @@ export default function StudentManagement() {
                     <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200">
                         <button
                             onClick={() => setViewMode('grid')}
-                            className={cn("p-1.5 rounded-md transition-all", viewMode === 'grid' ? "bg-white shadow text-slate-900" : "text-slate-400 hover:text-slate-600")}
+                            className={cn("p-1.5 rounded-md transition-all", viewMode === 'grid' ? "bg-white shadow text-slate-900" : "text-slate-500 hover:text-slate-600")}
                         >
                             <div className="grid grid-cols-2 gap-0.5 w-4 h-4">
                                 <div className="bg-current rounded-[1px]"></div>
@@ -234,7 +277,7 @@ export default function StudentManagement() {
                         </button>
                         <button
                             onClick={() => setViewMode('table')}
-                            className={cn("p-1.5 rounded-md transition-all", viewMode === 'table' ? "bg-white shadow text-slate-900" : "text-slate-400 hover:text-slate-600")}
+                            className={cn("p-1.5 rounded-md transition-all", viewMode === 'table' ? "bg-white shadow text-slate-900" : "text-slate-500 hover:text-slate-600")}
                         >
                             <div className="flex flex-col gap-0.5 w-4 h-4 justify-center">
                                 <div className="h-[2px] w-full bg-current rounded-[1px]"></div>
@@ -256,7 +299,7 @@ export default function StudentManagement() {
             ) : students.length === 0 ? (
                 <div className="text-center py-20 bg-white rounded-xl border border-dashed border-slate-200">
                     <div className="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Search className="h-8 w-8 text-slate-300" />
+                        <Search className="h-8 w-8 text-slate-500" />
                     </div>
                     <h3 className="text-lg font-semibold text-slate-900">No candidates found</h3>
                     <p className="text-slate-500">Try adjusting your filters or search query.</p>
@@ -282,7 +325,7 @@ export default function StudentManagement() {
                                     )}
 
                                     {/* AI Score Badge */}
-                                    <div className="absolute top-0 left-0 bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-br-lg z-10 flex items-center gap-1">
+                                    <div className="absolute top-0 left-0 bg-slate-900 text-slate-900 text-base font-bold px-3 py-1 rounded-br-lg z-10 flex items-center gap-1">
                                         <Bot className="h-3 w-3" />
                                         {student.aiMatchScore}% MATCH
                                     </div>
@@ -309,7 +352,7 @@ export default function StudentManagement() {
 
                                         <div className="space-y-3 mb-6">
                                             <div className="flex items-center gap-2 text-sm text-slate-600">
-                                                <GraduationCap className="h-4 w-4 text-slate-400" />
+                                                <GraduationCap className="h-4 w-4 text-slate-500" />
                                                 <span className="truncate">{student.branch} • {student.cgpa} CGPA</span>
                                             </div>
                                             {student.skills && student.skills.length > 0 && (
@@ -320,7 +363,7 @@ export default function StudentManagement() {
                                                         </span>
                                                     ))}
                                                     {student.skills.length > 4 && (
-                                                        <span className="px-2 py-0.5 text-xs text-slate-400">+ {student.skills.length - 4}</span>
+                                                        <span className="px-2 py-0.5 text-xs text-slate-500">+ {student.skills.length - 4}</span>
                                                     )}
                                                 </div>
                                             )}
@@ -328,27 +371,34 @@ export default function StudentManagement() {
                                             {/* Readiness Scores - MINI METRICS */}
                                             <div className="grid grid-cols-3 gap-2 py-3 bg-slate-50/50 rounded-xl px-3 border border-slate-100 group-hover:bg-blue-50/30 transition-all">
                                                 <div className="text-center">
-                                                    <p className="text-[8px] font-black text-slate-400 uppercase tracking-tighter">Aptitude</p>
+                                                    <p className="text-sm font-black text-slate-500 uppercase tracking-tighter">Aptitude</p>
                                                     <p className="text-xs font-black text-slate-900">{student.aptitudeScore || 0}%</p>
                                                 </div>
                                                 <div className="text-center border-x border-slate-200">
-                                                    <p className="text-[8px] font-black text-slate-400 uppercase tracking-tighter">Coding</p>
+                                                    <p className="text-sm font-black text-slate-500 uppercase tracking-tighter">Coding</p>
                                                     <p className="text-xs font-black text-indigo-600">{student.codingScore || 0}%</p>
                                                 </div>
                                                 <div className="text-center">
-                                                    <p className="text-[8px] font-black text-slate-400 uppercase tracking-tighter">Interview</p>
+                                                    <p className="text-sm font-black text-slate-500 uppercase tracking-tighter">Interview</p>
                                                     <p className="text-xs font-black text-rose-500">{student.interviewScore || 0}%</p>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div className="flex items-center gap-2 pt-4 border-t border-slate-100">
-                                            <button className="flex-1 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center justify-center gap-2">
-                                                <Mail className="h-4 w-4" /> Email
-                                            </button>
+                                            <a 
+                                                href={`mailto:${student.email}?subject=Placement Query - BIT`}
+                                                onClick={(e) => e.stopPropagation()}
+                                                className="flex-1 py-1.5 text-[12px] font-bold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center justify-center gap-2"
+                                            >
+                                                <Mail className="h-3.5 w-3.5" /> Email
+                                            </a>
                                             <div className="w-px h-6 bg-slate-200"></div>
-                                            <button className="flex-1 py-2 text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors flex items-center justify-center gap-2">
-                                                <MoreHorizontal className="h-4 w-4" /> More
+                                            <button 
+                                                onClick={(e) => { e.stopPropagation(); navigate(`/students/${student._id}`); }}
+                                                className="flex-1 py-1.5 text-[12px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors flex items-center justify-center gap-2"
+                                            >
+                                                <MoreHorizontal className="h-3.5 w-3.5" /> Profile
                                             </button>
                                         </div>
                                     </div>
@@ -409,15 +459,15 @@ export default function StudentManagement() {
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-4">
                                                     <div className="text-center">
-                                                        <div className="text-[9px] font-black text-slate-400 uppercase">Apt</div>
+                                                        <div className="text-xs font-black text-slate-500 uppercase">Apt</div>
                                                         <div className="text-xs font-black">{student.aptitudeScore || 0}</div>
                                                     </div>
                                                     <div className="text-center">
-                                                        <div className="text-[9px] font-black text-slate-400 uppercase">Cod</div>
+                                                        <div className="text-xs font-black text-slate-500 uppercase">Cod</div>
                                                         <div className="text-xs font-black text-indigo-600">{student.codingScore || 0}</div>
                                                     </div>
                                                     <div className="text-center">
-                                                        <div className="text-[9px] font-black text-slate-400 uppercase">Int</div>
+                                                        <div className="text-xs font-black text-slate-500 uppercase">Int</div>
                                                         <div className="text-xs font-black text-rose-500">{student.interviewScore || 0}</div>
                                                     </div>
                                                 </div>
@@ -433,7 +483,7 @@ export default function StudentManagement() {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 text-right">
-                                                <button className="text-slate-400 hover:text-slate-600 p-2 hover:bg-slate-100 rounded-full transition-colors">
+                                                <button className="text-slate-500 hover:text-slate-600 p-2 hover:bg-slate-100 rounded-full transition-colors">
                                                     <MoreHorizontal className="h-4 w-4" />
                                                 </button>
                                             </td>

@@ -70,13 +70,13 @@ export default function ForgotPassword() {
               <div className="space-y-4">
                 <button
                   onClick={() => { setSent(false); setEmail(""); }}
-                  className="w-full py-4 text-[15px] font-bold text-apple-gray-900 bg-apple-gray-50 rounded-xl hover:bg-apple-gray-100 transition-all border border-apple-gray-100"
+                  className="w-full py-4 text-lg font-bold text-apple-gray-900 bg-apple-gray-50 rounded-xl hover:bg-apple-gray-100 transition-all border border-apple-gray-100"
                 >
                   Try another email
                 </button>
                 <button
                   onClick={() => navigate("/login")}
-                  className="w-full py-4 text-[15px] font-bold text-apple-blue hover:underline"
+                  className="w-full py-4 text-lg font-bold text-apple-blue hover:underline"
                 >
                   Return to sign in
                 </button>
@@ -86,9 +86,10 @@ export default function ForgotPassword() {
             <>
               <div className="flex flex-col items-center text-center mb-10">
                 <div className="w-16 h-16 bg-apple-blue rounded-[1.25rem] flex items-center justify-center shadow-lg shadow-apple-blue/20 mb-6">
-                  <Mail className="h-8 w-8 text-white" />
+                  <Mail className="h-8 w-8 text-slate-900" />
                 </div>
                 <h2 className="text-3xl font-bold text-apple-gray-900 tracking-tight mb-3">Reset Password</h2>
+                <p className="text-apple-blue font-black text-[10px] uppercase tracking-[0.3em] mb-4">BIT Academic Network</p>
                 <p className="text-apple-gray-400 font-medium px-2">
                   Enter your email and we'll send you a link to regain access.
                 </p>
@@ -96,7 +97,7 @@ export default function ForgotPassword() {
 
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-apple-gray-400 ml-1">Email Address</label>
+                  <label className="text-base font-semibold text-apple-gray-400 ml-1">Email Address</label>
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-apple-gray-300 pointer-events-none" />
                     <input
@@ -116,7 +117,7 @@ export default function ForgotPassword() {
                   id="forgot-submit"
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="apple-btn-primary w-full py-4 text-[15px] font-semibold flex items-center justify-center gap-2 mt-2"
+                  className="apple-btn-primary w-full py-4 text-lg font-semibold flex items-center justify-center gap-2 mt-2"
                 >
                   {loading ? (
                     <div className="h-5 w-5 rounded-full border-2 border-white/30 border-t-white animate-spin" />

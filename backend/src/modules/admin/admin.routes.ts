@@ -6,7 +6,11 @@ import {
     manageJobStatus,
     getAllTests,
     deleteStudent,
-    updateStudentStatus
+    updateStudentStatus,
+    getJobAnalytics,
+    getPendingApprovals,
+    approveRejectDrive,
+    approveRejectCompany
 } from "./admin.controller";
 import { authMiddleware } from "../../middleware/auth.middleware";
 import { rbacMiddleware } from "../../middleware/rbac.middleware";
@@ -28,8 +32,14 @@ router.put("/recruiters/:id/status", updateRecruiterStatus);
 // Job Management
 router.get("/jobs", getAllJobsAdmin);
 router.put("/jobs/:id/status", manageJobStatus);
+router.get("/job-analytics", getJobAnalytics); // Added GET /job-analytics route
 
 // Test/Assessment Management
 router.get("/tests", getAllTests);
+
+// Approval Management
+router.get("/approvals/pending", getPendingApprovals);
+router.put("/approvals/drive/:id", approveRejectDrive);
+router.put("/approvals/company/:id", approveRejectCompany);
 
 export default router;

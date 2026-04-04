@@ -20,7 +20,7 @@ const TABS = [
 function SettingField({ label, value, onChange, icon: Icon, type = 'text', placeholder = '' }: any) {
     return (
         <div className="space-y-2 group">
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1 flex items-center gap-2">
+            <label className="text-base font-black uppercase tracking-widest text-slate-500 ml-1 flex items-center gap-2">
                 {Icon && <Icon className="h-3 w-3" />} {label}
             </label>
             <div className="relative">
@@ -29,7 +29,7 @@ function SettingField({ label, value, onChange, icon: Icon, type = 'text', place
                     value={value || ''}
                     onChange={e => onChange(e.target.value)}
                     placeholder={placeholder}
-                    className="w-full h-14 bg-slate-50 border-2 border-transparent rounded-2xl pl-5 pr-5 font-bold text-slate-800 text-sm focus:outline-none focus:border-blue-400 focus:bg-white transition-all placeholder:text-slate-300"
+                    className="w-full h-14 bg-slate-50 border-2 border-transparent rounded-2xl pl-5 pr-5 font-bold text-slate-800 text-sm focus:outline-none focus:border-blue-400 focus:bg-white transition-all placeholder:text-slate-500"
                 />
             </div>
         </div>
@@ -46,7 +46,7 @@ function ToggleRow({ icon: Icon, label, desc, enabled, onToggle, color = 'bg-blu
                 </div>
                 <div>
                     <p className="text-sm font-black italic text-slate-800 uppercase tracking-tight">{label}</p>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{desc}</p>
+                    <p className="text-base font-bold text-slate-500 uppercase tracking-widest">{desc}</p>
                 </div>
             </div>
             <button onClick={onToggle}
@@ -67,18 +67,18 @@ function SecurityCard({ icon: Icon, label, desc, active = false, onAction }: any
             className="p-8 bg-white rounded-[35px] border border-slate-100 shadow-sm flex items-center justify-between group hover:shadow-xl transition-all duration-300">
             <div className="flex items-center gap-6">
                 <div className={cn("h-14 w-14 rounded-[24px] flex items-center justify-center shadow-sm border transition-all",
-                    active ? "bg-emerald-50 border-emerald-100 text-emerald-500" : "bg-slate-50 border-slate-100 text-slate-400 group-hover:border-blue-100 group-hover:text-blue-500")}>
+                    active ? "bg-emerald-50 border-emerald-100 text-emerald-500" : "bg-slate-50 border-slate-100 text-slate-500 group-hover:border-blue-100 group-hover:text-blue-500")}>
                     <Icon className="h-6 w-6" />
                 </div>
                 <div>
                     <p className="font-black italic text-slate-900 uppercase tracking-tight text-sm mb-1">{label}</p>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{desc}</p>
+                    <p className="text-base font-bold text-slate-500 uppercase tracking-widest">{desc}</p>
                 </div>
             </div>
             {active
-                ? <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-50 px-4 py-2 rounded-full border border-emerald-100">Active</span>
+                ? <span className="text-xs font-black text-emerald-500 uppercase tracking-widest bg-emerald-50 px-4 py-2 rounded-full border border-emerald-100">Active</span>
                 : <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={onAction}
-                    className="px-6 py-2.5 bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-600 transition-all">
+                    className="px-6 py-2.5 bg-slate-900 text-slate-900 text-xs font-black uppercase tracking-widest rounded-xl hover:bg-blue-600 transition-all">
                     Enable
                 </motion.button>}
         </motion.div>
@@ -133,7 +133,7 @@ export default function StudentSettings() {
 
             {/* Header */}
             <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
-                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400 mb-3">Control Panel v2.0</p>
+                <p className="text-base font-black uppercase tracking-[0.5em] text-slate-500 mb-3">Control Panel v2.0</p>
                 <h1 className="text-6xl font-black text-slate-900 tracking-[-0.04em] uppercase leading-none">
                     Command <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-600">System</span>
                 </h1>
@@ -153,8 +153,8 @@ export default function StudentSettings() {
                             className={cn(
                                 "w-full flex items-center justify-between p-5 rounded-[28px] transition-all group border-2",
                                 activeTab === tab.id
-                                    ? "bg-[#080B1A] text-white border-transparent shadow-xl"
-                                    : "bg-white text-slate-400 border-slate-100 hover:border-slate-200 hover:text-slate-700"
+                                    ? "bg-[#080B1A] text-slate-900 border-transparent shadow-xl"
+                                    : "bg-white text-slate-500 border-slate-100 hover:border-slate-200 hover:text-slate-700"
                             )}
                         >
                             <div className="flex items-center gap-4">
@@ -164,9 +164,9 @@ export default function StudentSettings() {
                                         ? `bg-gradient-to-br ${tab.color} shadow-md`
                                         : "bg-slate-50 group-hover:bg-slate-100"
                                 )}>
-                                    <tab.icon className={cn("h-4 w-4", activeTab === tab.id ? "text-white" : "text-slate-400")} />
+                                    <tab.icon className={cn("h-4 w-4", activeTab === tab.id ? "text-slate-900" : "text-slate-500")} />
                                 </div>
-                                <span className="text-[11px] font-black uppercase tracking-widest">{tab.label}</span>
+                                <span className="text-sm font-black uppercase tracking-widest">{tab.label}</span>
                             </div>
                             <ChevronRight className={cn("h-4 w-4 transition-all", activeTab === tab.id ? "text-slate-500 opacity-100" : "opacity-0 group-hover:opacity-100")} />
                         </motion.button>
@@ -177,20 +177,20 @@ export default function StudentSettings() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.35 }}
-                        className="mt-6 bg-[#080B1A] p-8 rounded-[40px] text-white relative overflow-hidden border border-white/5"
+                        className="mt-6 bg-[#080B1A] p-8 rounded-[40px] text-slate-900 relative overflow-hidden border border-slate-100"
                     >
                         <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 rounded-full blur-3xl" />
-                        <p className="text-[9px] font-black uppercase tracking-[0.4em] text-slate-500 mb-5">Profile Integrity</p>
+                        <p className="text-xs font-black uppercase tracking-[0.4em] text-slate-500 mb-5">Profile Integrity</p>
                         {[
                             { label: 'Bio Shield', value: 100, color: 'bg-emerald-500' },
                             { label: 'Node Sync', value: 88, color: 'bg-blue-500' },
                             { label: 'Data Depth', value: 72, color: 'bg-indigo-500' },
                         ].map((s, i) => (
                             <div key={i} className="mb-4 last:mb-0">
-                                <div className="flex justify-between text-[9px] font-black text-slate-500 uppercase mb-1.5">
+                                <div className="flex justify-between text-xs font-black text-slate-500 uppercase mb-1.5">
                                     <span>{s.label}</span><span>{s.value}%</span>
                                 </div>
-                                <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div className="h-1 bg-slate-50 rounded-full overflow-hidden">
                                     <motion.div
                                         initial={{ width: 0 }}
                                         animate={{ width: `${s.value}%` }}
@@ -221,20 +221,20 @@ export default function StudentSettings() {
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <h3 className="text-3xl font-black uppercase tracking-tight italic text-slate-900">Biometric Identity</h3>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">Academic & skills configuration</p>
+                                            <p className="text-base font-black uppercase tracking-widest text-slate-500 mt-1">Academic & skills configuration</p>
                                         </div>
                                         <Activity className="h-6 w-6 text-blue-500 animate-pulse" />
                                     </div>
 
                                     {/* Avatar + Name */}
                                     <div className="flex items-center gap-6 p-6 bg-slate-50 rounded-[35px]">
-                                        <div className="h-20 w-20 rounded-[28px] bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-2xl font-black shadow-xl shadow-blue-200">
+                                        <div className="h-20 w-20 rounded-[28px] bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-slate-900 text-2xl font-black shadow-xl shadow-blue-200">
                                             {(user?.name || 'U').charAt(0).toUpperCase()}
                                         </div>
                                         <div>
                                             <p className="text-xl font-black italic uppercase tracking-tight text-slate-900">{user?.name || 'Student'}</p>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">{user?.email}</p>
-                                            <span className="inline-block mt-2 px-3 py-1 bg-blue-50 text-blue-600 text-[9px] font-black uppercase tracking-widest rounded-full border border-blue-100">
+                                            <p className="text-base font-black uppercase tracking-widest text-slate-500 mt-1">{user?.email}</p>
+                                            <span className="inline-block mt-2 px-3 py-1 bg-blue-50 text-blue-600 text-xs font-black uppercase tracking-widest rounded-full border border-blue-100">
                                                 {user?.role || 'Student'} Node
                                             </span>
                                         </div>
@@ -251,7 +251,7 @@ export default function StudentSettings() {
                                                 onChange={(v: any) => setProfile({ ...profile, skills: v })} />
                                         </div>
                                         <div className="md:col-span-2 space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1 flex items-center gap-2">
+                                            <label className="text-base font-black uppercase tracking-widest text-slate-500 ml-1 flex items-center gap-2">
                                                 <User className="h-3 w-3" /> Bio Manifest
                                             </label>
                                             <textarea
@@ -259,7 +259,7 @@ export default function StudentSettings() {
                                                 value={profile?.about || ''}
                                                 onChange={e => setProfile({ ...profile, about: e.target.value })}
                                                 placeholder="Define your operative footprint..."
-                                                className="w-full bg-slate-50 border-2 border-transparent rounded-[28px] p-6 font-bold text-slate-800 text-sm focus:outline-none focus:border-blue-400 focus:bg-white transition-all resize-none placeholder:text-slate-300"
+                                                className="w-full bg-slate-50 border-2 border-transparent rounded-[28px] p-6 font-bold text-slate-800 text-sm focus:outline-none focus:border-blue-400 focus:bg-white transition-all resize-none placeholder:text-slate-500"
                                             />
                                         </div>
                                     </div>
@@ -272,7 +272,7 @@ export default function StudentSettings() {
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <h3 className="text-3xl font-black uppercase tracking-tight italic text-slate-900">Access Protocol</h3>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">Defensive shield configuration</p>
+                                            <p className="text-base font-black uppercase tracking-widest text-slate-500 mt-1">Defensive shield configuration</p>
                                         </div>
                                         <Shield className="h-6 w-6 text-emerald-500" />
                                     </div>
@@ -292,7 +292,7 @@ export default function StudentSettings() {
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <h3 className="text-3xl font-black uppercase tracking-tight italic text-slate-900">Alert Config</h3>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">Notification stream control</p>
+                                            <p className="text-base font-black uppercase tracking-widest text-slate-500 mt-1">Notification stream control</p>
                                         </div>
                                         <Bell className="h-6 w-6 text-amber-500" />
                                     </div>
@@ -313,12 +313,12 @@ export default function StudentSettings() {
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <h3 className="text-3xl font-black uppercase tracking-tight italic text-slate-900">Visual Interface</h3>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">Theme & display preferences</p>
+                                            <p className="text-base font-black uppercase tracking-widest text-slate-500 mt-1">Theme & display preferences</p>
                                         </div>
                                         <Palette className="h-6 w-6 text-purple-500" />
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-5">Interface Theme</p>
+                                        <p className="text-base font-black uppercase tracking-widest text-slate-500 mb-5">Interface Theme</p>
                                         <div className="grid grid-cols-3 gap-4">
                                             {[
                                                 { id: 'light', label: 'Light', icon: Sun, desc: 'Bright & clear' },
@@ -329,9 +329,9 @@ export default function StudentSettings() {
                                                     onClick={() => setTheme(t.id as any)}
                                                     className={cn("p-6 rounded-[30px] flex flex-col items-center gap-3 border-2 transition-all",
                                                         theme === t.id ? "border-blue-500 bg-blue-50 shadow-lg shadow-blue-100" : "border-slate-100 bg-slate-50 hover:bg-white")}>
-                                                    <t.icon className={cn("h-6 w-6", theme === t.id ? "text-blue-600" : "text-slate-400")} />
-                                                    <span className={cn("text-[10px] font-black uppercase tracking-widest", theme === t.id ? "text-blue-700" : "text-slate-500")}>{t.label}</span>
-                                                    <span className="text-[9px] text-slate-400 font-bold">{t.desc}</span>
+                                                    <t.icon className={cn("h-6 w-6", theme === t.id ? "text-blue-600" : "text-slate-500")} />
+                                                    <span className={cn("text-base font-black uppercase tracking-widest", theme === t.id ? "text-blue-700" : "text-slate-500")}>{t.label}</span>
+                                                    <span className="text-xs text-slate-500 font-bold">{t.desc}</span>
                                                 </motion.button>
                                             ))}
                                         </div>
@@ -350,7 +350,7 @@ export default function StudentSettings() {
                                     whileTap={{ scale: 0.96 }}
                                     onClick={handleSave}
                                     disabled={saving}
-                                    className="px-12 py-5 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-[30px] font-black uppercase tracking-widest text-[10px] shadow-2xl hover:shadow-slate-300 transition-all flex items-center gap-4 disabled:opacity-60"
+                                    className="px-12 py-5 bg-gradient-to-r from-slate-900 to-slate-800 text-slate-900 rounded-[30px] font-black uppercase tracking-widest text-base shadow-2xl hover:shadow-slate-300 transition-all flex items-center gap-4 disabled:opacity-60"
                                 >
                                     {saving
                                         ? <><Loader2 className="h-4 w-4 animate-spin" /> Synchronizing...</>

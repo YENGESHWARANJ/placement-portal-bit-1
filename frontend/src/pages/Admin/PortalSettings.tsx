@@ -28,16 +28,16 @@ export default function PortalSettings() {
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-6 duration-1000 pb-20">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-4xl font-black text-white tracking-tighter italic uppercase flex items-center gap-4">
+                    <h1 className="text-4xl font-black text-slate-900 tracking-tighter italic uppercase flex items-center gap-4">
                         <Settings className="h-8 w-8 text-emerald-500" />
                         Portal <span className="text-emerald-600">Executive</span> Config
                     </h1>
-                    <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em] mt-2">Adjust Global Placement Protocols</p>
+                    <p className="text-slate-500 text-base font-black uppercase tracking-[0.4em] mt-2">Adjust Global Placement Protocols</p>
                 </div>
                 <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="px-10 py-4 bg-emerald-600 text-white rounded-[25px] text-[10px] font-black uppercase tracking-widest shadow-2xl shadow-emerald-900/40 flex items-center gap-3 hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
+                    className="px-10 py-4 bg-emerald-600 text-white rounded-[25px] text-base font-black uppercase tracking-widest shadow-2xl shadow-emerald-900/40 flex items-center gap-3 hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
                 >
                     {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                     {saving ? "Encrypting..." : "Sync Parameters"}
@@ -46,14 +46,14 @@ export default function PortalSettings() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 {/* Placement Rules */}
-                <div className="bg-[#0F1121] p-10 rounded-[50px] border border-white/5 space-y-10">
+                <div className="bg-[#0F1121] p-10 rounded-[50px] border border-slate-100 space-y-10">
                     <div className="flex items-center gap-4 mb-4">
                         <div className="h-12 w-12 bg-emerald-600/10 rounded-2xl flex items-center justify-center text-emerald-500">
                             <Shield className="h-6 w-6" />
                         </div>
                         <div>
-                            <h3 className="text-xl font-black text-white italic tracking-tight">Placement Protocols</h3>
-                            <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Global Cutoffs & Rules</p>
+                            <h3 className="text-xl font-black text-slate-900 italic tracking-tight">Placement Protocols</h3>
+                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Global Cutoffs & Rules</p>
                         </div>
                     </div>
 
@@ -83,14 +83,14 @@ export default function PortalSettings() {
                 </div>
 
                 {/* System Control */}
-                <div className="bg-[#0F1121] p-10 rounded-[50px] border border-white/5 space-y-10">
+                <div className="bg-[#0F1121] p-10 rounded-[50px] border border-slate-100 space-y-10">
                     <div className="flex items-center gap-4 mb-4">
                         <div className="h-12 w-12 bg-teal-600/10 rounded-2xl flex items-center justify-center text-teal-500">
                             <Cpu className="h-6 w-6" />
                         </div>
                         <div>
-                            <h3 className="text-xl font-black text-white italic tracking-tight">System Infrastructure</h3>
-                            <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Automation & Visibility</p>
+                            <h3 className="text-xl font-black text-slate-900 italic tracking-tight">System Infrastructure</h3>
+                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Automation & Visibility</p>
                         </div>
                     </div>
 
@@ -122,9 +122,9 @@ export default function PortalSettings() {
                 <div className="flex items-center justify-between">
                     <div>
                         <h3 className="text-xl font-black text-rose-500 italic tracking-tight uppercase">Critical Override Zone</h3>
-                        <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest mt-1 italic leading-none">High-risk system wide operations</p>
+                        <p className="text-slate-500 text-base font-black uppercase tracking-widest mt-1 italic leading-none">High-risk system wide operations</p>
                     </div>
-                    <button className="px-8 py-3 bg-rose-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-rose-700 transition-colors">
+                    <button className="px-8 py-3 bg-rose-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-rose-700 transition-colors">
                         Purge Session Cache
                     </button>
                 </div>
@@ -138,13 +138,13 @@ function ConfigRow({ label, desc, value, onChange, type }: any) {
         <div className="flex items-center justify-between gap-10">
             <div className="flex-1">
                 <p className="text-sm font-black text-slate-200 uppercase tracking-tight">{label}</p>
-                <p className="text-[10px] font-bold text-slate-500 italic">{desc}</p>
+                <p className="text-base font-bold text-slate-500 italic">{desc}</p>
             </div>
             <input
                 type={type}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                className="bg-white/5 border border-white/10 px-6 py-2.5 rounded-xl text-xs font-black text-emerald-400 w-24 text-center focus:bg-white/10 outline-none transition-all"
+                className="bg-slate-50 border border-slate-200 px-6 py-2.5 rounded-xl text-xs font-black text-emerald-600 w-24 text-center focus:bg-slate-100 outline-none transition-all"
             />
         </div>
     );
@@ -155,7 +155,7 @@ function ToggleRow({ label, desc, checked, onChange }: any) {
         <div className="flex items-center justify-between">
             <div className="flex-1">
                 <p className="text-sm font-black text-slate-200 uppercase tracking-tight">{label}</p>
-                <p className="text-[10px] font-bold text-slate-500 italic">{desc}</p>
+                <p className="text-base font-bold text-slate-500 italic">{desc}</p>
             </div>
             <button
                 onClick={() => onChange(!checked)}

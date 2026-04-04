@@ -30,7 +30,7 @@ export default function AdminProfile() {
                             <img src={`https://api.dicebear.com/7.x/bottts/svg?seed=${adminDetails.name}&backgroundColor=6d28d9`} className="h-full w-full rounded-[40px] opacity-80" alt="Admin" />
                         </div>
                         <div className="absolute -bottom-2 -right-2 h-12 w-12 bg-purple-600 rounded-2xl flex items-center justify-center border-4 border-slate-950 shadow-lg">
-                            <Key className="h-6 w-6 text-white" />
+                            <Key className="h-6 w-6 text-slate-900" />
                         </div>
                     </div>
                     <div className="text-center md:text-left">
@@ -38,15 +38,15 @@ export default function AdminProfile() {
                             <div className="h-2 w-2 bg-purple-500 rounded-full animate-ping" />
                             <span className="text-purple-400 font-mono text-xs font-black uppercase tracking-[0.3em]">Root.Access.Granted</span>
                         </div>
-                        <h1 className="text-5xl font-black text-white tracking-tighter mb-2">{adminDetails.name}</h1>
+                        <h1 className="text-5xl font-black text-slate-900 tracking-tighter mb-2">{adminDetails.name}</h1>
                         <div className="flex flex-wrap items-center gap-6 mt-6 justify-center md:justify-start">
                             <div className="flex items-center gap-3 bg-slate-900 px-5 py-2.5 rounded-2xl border border-slate-800">
                                 <ShieldCheck className="h-4 w-4 text-purple-500" />
-                                <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{adminDetails.accessLevel}</span>
+                                <span className="text-base font-black text-slate-500 uppercase tracking-widest">{adminDetails.accessLevel}</span>
                             </div>
                             <div className="flex items-center gap-3 bg-slate-900 px-5 py-2.5 rounded-2xl border border-slate-800">
                                 <Server className="h-4 w-4 text-blue-500" />
-                                <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Node: {adminDetails.node}</span>
+                                <span className="text-base font-black text-slate-500 uppercase tracking-widest">Node: {adminDetails.node}</span>
                             </div>
                         </div>
                     </div>
@@ -66,9 +66,9 @@ export default function AdminProfile() {
                             key={item.id}
                             onClick={() => setActiveTab(item.id)}
                             className={cn(
-                                "w-full flex items-center gap-4 px-8 py-5 rounded-[24px] transition-all font-black text-[10px] tracking-[0.2em] uppercase",
+                                "w-full flex items-center gap-4 px-8 py-5 rounded-[24px] transition-all font-black text-base tracking-[0.2em] uppercase",
                                 activeTab === item.id
-                                    ? "bg-purple-600 text-white shadow-xl shadow-purple-600/20 translate-x-2"
+                                    ? "bg-purple-600 text-slate-900 shadow-xl shadow-purple-600/20 translate-x-2"
                                     : "bg-slate-900 text-slate-500 hover:text-slate-200 border border-slate-800/50"
                             )}
                         >
@@ -82,11 +82,11 @@ export default function AdminProfile() {
                     <div className="bg-slate-900/40 p-10 rounded-[50px] border border-slate-800/50 shadow-inner">
                         <div className="flex items-center justify-between mb-10">
                             <div>
-                                <h3 className="text-2xl font-black text-white tracking-tight flex items-center gap-3">
+                                <h3 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-3">
                                     <Terminal className="h-6 w-6 text-purple-500" />
                                     System Core Settings
                                 </h3>
-                                <p className="text-slate-500 text-[9px] font-black uppercase tracking-[0.3em] mt-2 italic">CAUTION: Changes reflect globally</p>
+                                <p className="text-slate-500 text-xs font-black uppercase tracking-[0.3em] mt-2 italic">CAUTION: Changes reflect globally</p>
                             </div>
                         </div>
 
@@ -102,10 +102,10 @@ export default function AdminProfile() {
                                         <config.icon className="h-8 w-8 text-slate-700 group-hover:text-purple-500 transition-colors" />
                                         <div className="h-2 w-2 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
                                     </div>
-                                    <h4 className="text-white font-black text-xs uppercase tracking-widest mb-2">{config.title}</h4>
+                                    <h4 className="text-slate-900 font-black text-xs uppercase tracking-widest mb-2">{config.title}</h4>
                                     <div className="flex items-center justify-between">
-                                        <span className="text-[10px] font-mono text-emerald-500 font-black">{config.status}</span>
-                                        <button className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 hover:text-purple-400">[{config.action}]</button>
+                                        <span className="text-base font-mono text-emerald-500 font-black">{config.status}</span>
+                                        <button className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 hover:text-purple-400">[{config.action}]</button>
                                     </div>
                                 </div>
                             ))}
@@ -119,11 +119,11 @@ export default function AdminProfile() {
                                 <Lock className="h-10 w-10" />
                             </div>
                             <div>
-                                <h3 className="text-3xl font-black text-white tracking-tighter mb-3">Kernel Security Access</h3>
+                                <h3 className="text-3xl font-black text-slate-900 tracking-tighter mb-3">Kernel Security Access</h3>
                                 <p className="text-slate-500 text-sm font-bold max-w-xl leading-relaxed">System session management and root key rotation services. Advanced security logs are stored in encrypted clusters at Node DC-01.</p>
                                 <div className="flex gap-4 mt-8">
-                                    <button className="px-8 py-3 bg-purple-600 text-white rounded-2xl font-black uppercase tracking-widest text-[9px] hover:bg-purple-700 shadow-xl shadow-purple-600/20">Rotate Keys</button>
-                                    <button className="px-8 py-3 bg-slate-800 text-slate-300 rounded-2xl font-black uppercase tracking-widest text-[9px] hover:text-white border border-slate-700">Audit Logs</button>
+                                    <button className="px-8 py-3 bg-purple-600 text-slate-900 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-purple-700 shadow-xl shadow-purple-600/20">Rotate Keys</button>
+                                    <button className="px-8 py-3 bg-slate-800 text-slate-500 rounded-2xl font-black uppercase tracking-widest text-xs hover:text-slate-900 border border-slate-700">Audit Logs</button>
                                 </div>
                             </div>
                         </div>

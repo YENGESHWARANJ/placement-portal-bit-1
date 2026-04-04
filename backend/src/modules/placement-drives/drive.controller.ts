@@ -1,9 +1,32 @@
 import { Request, Response } from "express";
 import PlacementDrive from "./drive.model";
+import { AuthRequest } from "../../middleware/auth.middleware";
+import Notice from "../notices/notice.model";
+import { broadcastGlobalEvent } from "../../config/socket.config";
 
-export const createDrive = async (req: Request, res: Response) => {
+export const createDrive = async (req: AuthRequest, res: Response) => {
     try {
-        const drive = await PlacementDrive.create(req.body);
+        const driveData = {
+            ...req.body,
+            createdBy: req.user?.userId
+        };
+        const drive = await PlacementDrive.create(driveData);
+
+        // CREATE INSTITUTIONAL NOTICE
+        await Notice.create({
+            title: `🚀 NEW PLACEMENT DRIVE: ${drive.company}`,
+            content: `A new recruitment drive for the role of ${drive.jobRole} has been broadcasted. Package: ${drive.packageName}. Deadline: ${new Date(drive.deadline).toLocaleDateString()}. Check details in the Placement Portal.`,
+            createdBy: req.user?.userId,
+            type: "All",
+            priority: "High"
+        });
+
+        // BROADCAST REAL-TIME NOTIFICATION
+        broadcastGlobalEvent("global_notification", {
+            message: `🚀 NEW DRIVE: ${drive.company} is hiring for ${drive.jobRole}!`,
+            type: "success"
+        });
+
         return res.status(201).json({ drive });
     } catch (error) {
         console.error("CREATE DRIVE ERROR:", error);
@@ -11,13 +34,31 @@ export const createDrive = async (req: Request, res: Response) => {
     }
 };
 
-export const getAllDrives = async (req: Request, res: Response) => {
+import Student from "../students/student.model";
+
+export const getAllDrives = async (req: AuthRequest, res: Response) => {
     try {
+        if (req.user?.role === 'STUDENT') {
+            const student = await Student.findOne({ userId: req.user.userId });
+            if (!student) return res.status(404).json({ message: "Student context not found" });
+
+            const drives = await PlacementDrive.find({
+                status: 'Open',
+                'criterias.cgpa': { $lte: student.cgpa },
+                'criterias.branches': student.branch,
+                $or: [
+                    { 'criterias.arrearsAllowed': true },
+                    { 'criterias.arrearsAllowed': false, currentArrears: 0 }
+                ]
+            }).sort({ date: 1 });
+            return res.json({ drives });
+        }
+
         const drives = await PlacementDrive.find().sort({ date: 1 });
         return res.json({ drives });
     } catch (error) {
         console.error("GET DRIVES ERROR:", error);
-        return res.status(500).json({ message: "Failed to fetch drives" });
+        return res.status(500).json({ message: "System failed to aggregate drive nodes" });
     }
 };
 

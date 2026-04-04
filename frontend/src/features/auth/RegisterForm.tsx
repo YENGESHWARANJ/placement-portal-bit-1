@@ -25,7 +25,7 @@ export default function RegisterForm() {
           className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black"
         />
 
-        <button className="w-full bg-black text-white py-3 rounded-lg hover:opacity-90">
+        <button className="w-full bg-black text-slate-900 py-3 rounded-lg hover:opacity-90">
           Register
         </button>
       </form>

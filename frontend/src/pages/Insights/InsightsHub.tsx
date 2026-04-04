@@ -110,7 +110,7 @@ export default function InsightsHub() {
                         <Sparkles className="h-8 w-8 text-amber-500" aria-hidden />
                         Insights Hub
                     </h1>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mt-1 italic">
+                    <p className="text-slate-500 dark:text-slate-500 text-sm font-medium mt-1 italic">
                         Next-level prep intelligence for {user?.name ?? "you"}
                     </p>
                 </div>
@@ -135,13 +135,13 @@ export default function InsightsHub() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <motion.section {...fadeUp(0.1)} className="bg-white dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-700 p-6 shadow-sm" aria-labelledby="skill-matrix-heading">
-                    <h2 id="skill-matrix-heading" className="text-sm font-black text-slate-400 dark:text-slate-300 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <h2 id="skill-matrix-heading" className="text-sm font-black text-slate-500 dark:text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                         <BarChart3 className="h-4 w-4" /> Skill Matrix
                     </h2>
                     <div className="space-y-4">
                         {skillAreas.map((area, i) => (
                             <div key={area.label}>
-                                <div className="flex justify-between text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">
+                                <div className="flex justify-between text-xs font-bold text-slate-600 dark:text-slate-500 mb-1">
                                     <span>{area.label}</span>
                                     <span>{area.value}%</span>
                                 </div>
@@ -159,7 +159,7 @@ export default function InsightsHub() {
                 </motion.section>
 
                 <motion.section {...fadeUp(0.15)} className="bg-white dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-700 p-6 shadow-sm" aria-labelledby="prep-calendar-heading">
-                    <h2 id="prep-calendar-heading" className="text-sm font-black text-slate-400 dark:text-slate-300 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <h2 id="prep-calendar-heading" className="text-sm font-black text-slate-500 dark:text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                         <Calendar className="h-4 w-4" /> Prep Calendar
                     </h2>
                     <div className="space-y-3">
@@ -168,10 +168,10 @@ export default function InsightsHub() {
                                 key={day}
                                 className="flex items-start gap-3 p-3 rounded-xl bg-slate-50/80 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-600"
                             >
-                                <span className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase w-10">{day}</span>
+                                <span className="text-xs font-black text-slate-500 dark:text-slate-500 uppercase w-10">{day}</span>
                                 <ul className="flex-1 space-y-1">
                                     {tasks.map((t, j) => (
-                                        <li key={j} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+                                        <li key={j} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-500">
                                             <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
                                             {t}
                                         </li>
@@ -183,19 +183,19 @@ export default function InsightsHub() {
                 </motion.section>
             </div>
 
-            <motion.section {...fadeUp(0.2)} className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-6 text-white border border-slate-700/50" aria-labelledby="weekly-focus-heading">
-                <h2 id="weekly-focus-heading" className="text-sm font-black text-white/70 uppercase tracking-widest mb-4 flex items-center gap-2">
+            <motion.section {...fadeUp(0.2)} className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-6 text-slate-900 border border-slate-700/50" aria-labelledby="weekly-focus-heading">
+                <h2 id="weekly-focus-heading" className="text-sm font-black text-slate-900/70 uppercase tracking-widest mb-4 flex items-center gap-2">
                     <Target className="h-4 w-4" /> This Week&apos;s Focus
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {weeklyFocusItems.map((item, i) => (
                         <div
                             key={i}
-                            className="flex items-center gap-3 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+                            className="flex items-center gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors"
                         >
-                            <item.icon className="h-5 w-5 text-amber-400" aria-hidden />
+                            <item.icon className="h-5 w-5 text-amber-600" aria-hidden />
                             <span className="font-bold text-sm italic">{item.title}</span>
-                            <ChevronRight className="h-4 w-4 text-white/30 ml-auto" aria-hidden />
+                            <ChevronRight className="h-4 w-4 text-slate-900/30 ml-auto" aria-hidden />
                         </div>
                     ))}
                 </div>

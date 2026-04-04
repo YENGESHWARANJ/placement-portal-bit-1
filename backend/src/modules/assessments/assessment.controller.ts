@@ -215,6 +215,51 @@ export const saveAssessment = async (req: Request, res: Response) => {
 };
 
 // ─────────────────────────────────────────────────────────
+// GET RECOMMENDED PREP QUESTIONS (based on skills)
+// ─────────────────────────────────────────────────────────
+export const getRecommendedPrepQuestions = async (req: Request, res: Response) => {
+    try {
+        const { skills = [] } = req.body;
+        const skillList = Array.isArray(skills) ? skills : [skills];
+
+        if (skillList.length === 0) {
+            return res.json({
+                coding: getRandomQuestions(codingBank, 3),
+                interview: getRandomQuestions(interviewBank, 3),
+                aptitude: getRandomQuestions(aptitudeBank, 3)
+            });
+        }
+
+        // Filter banks by skills
+        const coding = codingBank.filter(q =>
+            skillList.some(s =>
+                q.title.toLowerCase().includes(s.toLowerCase()) ||
+                q.topic.toLowerCase().includes(s.toLowerCase())
+            )
+        ).slice(0, 3);
+
+        const interview = interviewBank.filter(q =>
+            skillList.some(s =>
+                q.category.toLowerCase().includes(s.toLowerCase()) ||
+                q.question.toLowerCase().includes(s.toLowerCase())
+            )
+        ).slice(0, 5);
+
+        // Fill with random if empty or not enough
+        const finalCoding = coding.length >= 3 ? coding : [...coding, ...getRandomQuestions(codingBank, 3 - coding.length)];
+        const finalInterview = interview.length >= 5 ? interview : [...interview, ...getRandomQuestions(interviewBank, 5 - interview.length)];
+
+        return res.json({
+            coding: finalCoding,
+            interview: finalInterview,
+            aptitude: getRandomQuestions(aptitudeBank, 3)
+        });
+    } catch (error) {
+        return res.status(500).json({ message: "Failed to fetch recommendations" });
+    }
+};
+
+// ─────────────────────────────────────────────────────────
 // GET STUDENT ASSESSMENTS
 // ─────────────────────────────────────────────────────────
 export const getStudentAssessments = async (req: Request, res: Response) => {

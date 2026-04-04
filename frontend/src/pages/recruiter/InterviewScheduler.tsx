@@ -49,12 +49,12 @@ export default function InterviewScheduler({ application, onClose, onScheduled }
     };
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-apple-gray-900/60 backdrop-blur-md">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-white/60 backdrop-blur-md">
             <motion.div
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                className="bg-white/90 backdrop-blur-xl w-full max-w-xl rounded-[40px] shadow-2xl overflow-hidden border border-white/20 p-2"
+                className="bg-white/90 backdrop-blur-xl w-full max-w-xl rounded-[40px] shadow-2xl overflow-hidden border border-slate-200 p-2"
             >
                 <div className="bg-white rounded-[32px] p-8 space-y-10">
                     <div className="flex items-center justify-between">
@@ -64,7 +64,7 @@ export default function InterviewScheduler({ application, onClose, onScheduled }
                             </div>
                             <div>
                                 <h2 className="text-2xl font-black text-apple-gray-900 tracking-tight">Interview Setup</h2>
-                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-apple-gray-300">Synchronize Protocol</p>
+                                <p className="text-base font-black uppercase tracking-[0.4em] text-apple-gray-300">Synchronize Protocol</p>
                             </div>
                         </div>
                         <button onClick={onClose} className="h-10 w-10 flex items-center justify-center hover:bg-apple-gray-50 rounded-full transition-colors text-apple-gray-400">
@@ -77,11 +77,11 @@ export default function InterviewScheduler({ application, onClose, onScheduled }
                             {application.studentId.name.charAt(0)}
                         </div>
                         <div className="space-y-0.5">
-                            <p className="text-[9px] font-black uppercase text-apple-gray-300 tracking-[0.2em]">Selected Candidate</p>
+                            <p className="text-xs font-black uppercase text-apple-gray-300 tracking-[0.2em]">Selected Candidate</p>
                             <p className="font-black text-apple-gray-900 tracking-tight">{application.studentId.name}</p>
                         </div>
                         <div className="ml-auto text-right space-y-0.5">
-                            <p className="text-[9px] font-black uppercase text-apple-gray-300 tracking-[0.2em]">Target Node</p>
+                            <p className="text-xs font-black uppercase text-apple-gray-300 tracking-[0.2em]">Target Node</p>
                             <p className="font-black text-apple-blue tracking-tight text-sm">Tech Evolution</p>
                         </div>
                     </div>
@@ -89,19 +89,19 @@ export default function InterviewScheduler({ application, onClose, onScheduled }
                     <form onSubmit={handleSubmit} className="space-y-8">
                         <div className="grid grid-cols-2 gap-8">
                             <div className="space-y-3">
-                                <label className="text-[10px] font-black uppercase tracking-[0.3em] text-apple-gray-400 ml-1">Deployment Time</label>
+                                <label className="text-base font-black uppercase tracking-[0.3em] text-apple-gray-400 ml-1">Deployment Time</label>
                                 <input
                                     required
                                     type="datetime-local"
-                                    className="w-full px-5 py-4 bg-apple-gray-50 border border-apple-gray-100 rounded-2xl focus:ring-4 focus:ring-apple-blue/10 outline-none transition-all font-bold text-[13px] text-apple-gray-900"
+                                    className="w-full px-5 py-4 bg-apple-gray-50 border border-apple-gray-100 rounded-2xl focus:ring-4 focus:ring-apple-blue/10 outline-none transition-all font-bold text-base text-apple-gray-900"
                                     value={formData.scheduledAt}
                                     onChange={e => setFormData({ ...formData, scheduledAt: e.target.value })}
                                 />
                             </div>
                             <div className="space-y-3">
-                                <label className="text-[10px] font-black uppercase tracking-[0.3em] text-apple-gray-400 ml-1">Evaluation Type</label>
+                                <label className="text-base font-black uppercase tracking-[0.3em] text-apple-gray-400 ml-1">Evaluation Type</label>
                                 <select
-                                    className="w-full px-5 py-4 bg-apple-gray-50 border border-apple-gray-100 rounded-2xl focus:ring-4 focus:ring-apple-blue/10 outline-none transition-all font-bold text-[13px] text-apple-gray-900 appearance-none"
+                                    className="w-full px-5 py-4 bg-apple-gray-50 border border-apple-gray-100 rounded-2xl focus:ring-4 focus:ring-apple-blue/10 outline-none transition-all font-bold text-base text-apple-gray-900 appearance-none"
                                     value={formData.type}
                                     onChange={e => setFormData({ ...formData, type: e.target.value })}
                                 >
@@ -114,13 +114,13 @@ export default function InterviewScheduler({ application, onClose, onScheduled }
                         </div>
 
                         <div className="space-y-3">
-                            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-apple-gray-400 ml-1">Format</label>
+                            <label className="text-base font-black uppercase tracking-[0.3em] text-apple-gray-400 ml-1">Format</label>
                             <div className="grid grid-cols-2 gap-5">
                                 <button
                                     type="button"
                                     onClick={() => setFormData({ ...formData, mode: 'Virtual' })}
                                     className={cn(
-                                        "flex items-center justify-center gap-3 py-4 rounded-2xl border transition-all font-black uppercase tracking-widest text-[10px]",
+                                        "flex items-center justify-center gap-3 py-4 rounded-2xl border transition-all font-black uppercase tracking-widest text-base",
                                         formData.mode === 'Virtual' ? "bg-apple-blue/5 border-apple-blue text-apple-blue shadow-[0_0_20px_rgba(0,122,255,0.1)]" : "bg-white border-apple-gray-100 text-apple-gray-400 hover:border-apple-gray-200"
                                     )}
                                 >
@@ -130,7 +130,7 @@ export default function InterviewScheduler({ application, onClose, onScheduled }
                                     type="button"
                                     onClick={() => setFormData({ ...formData, mode: 'In-Person' })}
                                     className={cn(
-                                        "flex items-center justify-center gap-3 py-4 rounded-2xl border transition-all font-black uppercase tracking-widest text-[10px]",
+                                        "flex items-center justify-center gap-3 py-4 rounded-2xl border transition-all font-black uppercase tracking-widest text-base",
                                         formData.mode === 'In-Person' ? "bg-apple-blue/5 border-apple-blue text-apple-blue shadow-[0_0_20px_rgba(0,122,255,0.1)]" : "bg-white border-apple-gray-100 text-apple-gray-400 hover:border-apple-gray-200"
                                     )}
                                 >
@@ -140,14 +140,14 @@ export default function InterviewScheduler({ application, onClose, onScheduled }
                         </div>
 
                         <div className="space-y-3">
-                            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-apple-gray-400 ml-1">
+                            <label className="text-base font-black uppercase tracking-[0.3em] text-apple-gray-400 ml-1">
                                 {formData.mode === 'Virtual' ? 'Meeting Link Protocol' : 'Location Grid'}
                             </label>
                             <input
                                 required
                                 type="text"
                                 placeholder={formData.mode === 'Virtual' ? "https://zoom.us/j/..." : "Executive Boardroom 12"}
-                                className="w-full px-5 py-4 bg-apple-gray-50 border border-apple-gray-100 rounded-2xl focus:ring-4 focus:ring-apple-blue/10 outline-none transition-all font-bold text-[13px] text-apple-gray-900"
+                                className="w-full px-5 py-4 bg-apple-gray-50 border border-apple-gray-100 rounded-2xl focus:ring-4 focus:ring-apple-blue/10 outline-none transition-all font-bold text-base text-apple-gray-900"
                                 value={formData.mode === 'Virtual' ? formData.link : formData.location}
                                 onChange={e => formData.mode === 'Virtual' ? setFormData({ ...formData, link: e.target.value }) : setFormData({ ...formData, location: e.target.value })}
                             />
@@ -155,15 +155,15 @@ export default function InterviewScheduler({ application, onClose, onScheduled }
 
                         <button
                             disabled={loading}
-                            className="w-full py-5 bg-apple-blue text-white rounded-2xl flex items-center justify-center gap-3 hover:bg-apple-blue-dark transition-all shadow-apple-hover group disabled:opacity-50"
+                            className="w-full py-5 bg-apple-blue text-slate-900 rounded-2xl flex items-center justify-center gap-3 hover:bg-apple-blue-dark transition-all shadow-apple-hover group disabled:opacity-50"
                         >
                             <Send className={cn("h-4 w-4 transition-transform", loading ? "animate-ping" : "group-hover:translate-x-1 group-hover:-translate-y-1")} />
-                            <span className="font-black uppercase tracking-[0.2em] text-[10px]">
+                            <span className="font-black uppercase tracking-[0.2em] text-base">
                                 {loading ? "Synchronizing..." : "Initialize Protocol"}
                             </span>
                         </button>
 
-                        <div className="flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-[0.4em] text-apple-gray-300">
+                        <div className="flex items-center justify-center gap-2 text-xs font-black uppercase tracking-[0.4em] text-apple-gray-300">
                             <ShieldCheck className="h-4 w-4 text-emerald-500" />
                             Secure Deployment Active
                         </div>

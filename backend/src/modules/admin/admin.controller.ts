@@ -4,6 +4,8 @@ import Job from "../jobs/job.model";
 import Student from "../students/student.model";
 import Assessment from "../assessments/assessment.model";
 import Application from "../applications/application.model";
+import PlacementDrive from "../placement-drives/drive.model";
+import Company from "../companies/company.model";
 
 // --- RECRUITER MANAGEMENT ---
 
@@ -148,5 +150,106 @@ export const getAllTests = async (req: Request, res: Response) => {
     } catch (error) {
         console.error("GET ALL TESTS ERROR:", error);
         return res.status(500).json({ message: "Failed to fetch tests" });
+    }
+};
+// --- ANALYTICS MANAGEMENT ---
+
+import GlobalJob from "../jobs/global-job.model";
+
+export const getJobAnalytics = async (req: Request, res: Response) => {
+    try {
+        const totalGlobalJobs = await GlobalJob.countDocuments();
+        const totalInternalJobs = await Job.countDocuments();
+
+        const topCompanies = await GlobalJob.aggregate([
+            { $group: { _id: "$company", count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+            { $limit: 5 }
+        ]);
+
+        const sources = await GlobalJob.aggregate([
+            { $group: { _id: "$source", count: { $sum: 1 } } }
+        ]);
+
+        const trendingSkillsByTitle = await GlobalJob.aggregate([
+            { $limit: 1000 },
+            { $project: { title: { $split: ["$title", " "] } } },
+            { $unwind: "$title" },
+            { $group: { _id: { $toLower: "$title" }, count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+            { $limit: 10 }
+        ]);
+
+        return res.json({
+            success: true,
+            analytics: {
+                total_jobs: totalGlobalJobs + totalInternalJobs,
+                global_jobs: totalGlobalJobs,
+                internal_jobs: totalInternalJobs,
+                top_companies: topCompanies,
+                sources: sources,
+                trending_skills: trendingSkillsByTitle.map(s => s._id)
+            }
+        });
+    } catch (error) {
+        console.error("GET JOB ANALYTICS ERROR:", error);
+        return res.status(500).json({ message: "Failed to fetch analytics" });
+    }
+};
+
+// --- APPROVAL MANAGEMENT ---
+
+export const getPendingApprovals = async (req: Request, res: Response) => {
+    try {
+        const [pendingCompanies, pendingDrives] = await Promise.all([
+            Company.find({ status: 'pending' }).sort({ createdAt: -1 }),
+            PlacementDrive.find({ status: 'Pending' }).sort({ createdAt: -1 })
+        ]);
+
+        return res.json({
+            pendingCompanies,
+            pendingDrives
+        });
+    } catch (error) {
+        console.error("GET PENDING APPROVALS ERROR:", error);
+        return res.status(500).json({ message: "Failed to fetch approvals" });
+    }
+};
+
+export const approveRejectDrive = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body; // 'Open' or 'Cancelled'
+
+        if (!['Open', 'Cancelled'].includes(status)) {
+            return res.status(400).json({ message: "Invalid approval status for drive" });
+        }
+
+        const drive = await PlacementDrive.findByIdAndUpdate(id, { status }, { new: true });
+        if (!drive) return res.status(404).json({ message: "Drive not found" });
+
+        return res.json({ message: `Drive ${status === 'Open' ? 'approved' : 'rejected'}`, drive });
+    } catch (error) {
+        console.error("APPROVE REJECT DRIVE ERROR:", error);
+        return res.status(500).json({ message: "Failed to process drive approval" });
+    }
+};
+
+export const approveRejectCompany = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body; // 'active' or 'rejected'
+
+        if (!['active', 'rejected'].includes(status)) {
+            return res.status(400).json({ message: "Invalid approval status for company" });
+        }
+
+        const company = await Company.findByIdAndUpdate(id, { status }, { new: true });
+        if (!company) return res.status(404).json({ message: "Company not found" });
+
+        return res.json({ message: `Company ${status === 'active' ? 'approved' : 'rejected'}`, company });
+    } catch (error) {
+        console.error("APPROVE REJECT COMPANY ERROR:", error);
+        return res.status(500).json({ message: "Failed to process company approval" });
     }
 };

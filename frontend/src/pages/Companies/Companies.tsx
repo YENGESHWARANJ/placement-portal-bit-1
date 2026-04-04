@@ -52,7 +52,7 @@ export default function Companies() {
             {/* Header / Search */}
             <motion.div variants={stagger.item} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div>
-                    <span className="text-[11px] font-bold text-apple-blue uppercase tracking-[0.2em] mb-2 block">Network</span>
+                    <span className="text-sm font-bold text-apple-blue uppercase tracking-[0.2em] mb-2 block">Network</span>
                     <h1 className="text-4xl font-bold text-apple-gray-900 tracking-tight">Partner Directory</h1>
                     <p className="text-apple-gray-400 mt-2 font-medium">Elite organizations hiring from our talent pool.</p>
                 </div>
@@ -81,7 +81,7 @@ export default function Companies() {
                         <motion.div key={i} variants={stagger.item} className="apple-card p-10 group hover:shadow-apple-hover transition-all duration-500 overflow-hidden relative">
                             <div className="flex justify-between items-start mb-8">
                                 <div className="flex gap-6">
-                                    <div className="h-20 w-20 bg-apple-gray-900 text-white rounded-[24px] flex items-center justify-center text-3xl font-bold shadow-lg group-hover:bg-apple-blue transition-all duration-700">
+                                    <div className="h-20 w-20 bg-white text-slate-900 rounded-[24px] flex items-center justify-center text-3xl font-bold shadow-lg group-hover:bg-apple-blue transition-all duration-700">
                                         {company.logo}
                                     </div>
                                     <div>
@@ -89,7 +89,7 @@ export default function Companies() {
                                             {company.name}
                                             <ShieldCheck className="h-5 w-5 text-apple-blue" />
                                         </h3>
-                                        <div className="flex items-center gap-3 text-[12px] text-apple-gray-400 font-semibold uppercase tracking-wider">
+                                        <div className="flex items-center gap-3 text-lg text-apple-gray-400 font-semibold uppercase tracking-wider">
                                             <span>{company.industry || "Technology"}</span>
                                             <span className="h-1 w-1 rounded-full bg-apple-gray-200"></span>
                                             <div className="flex items-center gap-1.5 text-amber-500">
@@ -99,7 +99,7 @@ export default function Companies() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-600 border border-emerald-100">
+                                <div className="px-4 py-1.5 rounded-full text-base font-bold uppercase tracking-wider bg-emerald-50 text-emerald-600 border border-emerald-100">
                                     {company.hiringStatus}
                                 </div>
                             </div>
@@ -126,11 +126,11 @@ export default function Companies() {
                             <div className="flex items-center justify-between pt-8 border-t border-apple-gray-50">
                                 <div className="flex items-center gap-3">
                                     <span className="text-3xl font-bold text-apple-gray-900 tracking-tight">{company.jobs}</span>
-                                    <span className="text-[10px] font-bold uppercase tracking-widest text-apple-gray-400">Open Roles</span>
+                                    <span className="text-base font-bold uppercase tracking-widest text-apple-gray-400">Open Roles</span>
                                 </div>
                                 <Link
                                     to="/job-recommendations"
-                                    className="apple-btn-primary px-8 py-3.5 text-[11px]"
+                                    className="apple-btn-primary px-8 py-3.5 text-sm"
                                 >
                                     View Jobs
                                 </Link>

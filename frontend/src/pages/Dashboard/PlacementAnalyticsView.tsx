@@ -67,14 +67,14 @@ export default function PlacementAnalyticsView() {
                     <button
                         type="button"
                         onClick={() => setFilterOpen(prev => !prev)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold transition-all shadow-sm ${filterOpen ? 'bg-slate-900 text-white' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'}`}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold transition-all shadow-sm ${filterOpen ? 'bg-slate-900 text-slate-900' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'}`}
                     >
                         <Filter className="h-4 w-4" /> Filter By
                     </button>
                     <button
                         type="button"
                         onClick={handleExportReport}
-                        className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-200"
+                        className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-slate-900 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-200"
                     >
                         <Download className="h-4 w-4" /> Export Report
                     </button>
@@ -120,11 +120,11 @@ export default function PlacementAnalyticsView() {
                             <div className={`p-3 rounded-xl ${stat.bg} group-hover:scale-110 transition-transform`}>
                                 <stat.icon className={`h-6 w-6 ${stat.color}`} />
                             </div>
-                            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Real-time</span>
+                            <span className="text-base font-black uppercase tracking-wider text-slate-500">Real-time</span>
                         </div>
                         <h3 className="text-2xl font-black text-slate-900">{stat.value}</h3>
                         <p className="text-sm font-bold text-slate-500">{stat.label}</p>
-                        <p className="text-xs text-slate-400 mt-2 flex items-center gap-1">
+                        <p className="text-xs text-slate-500 mt-2 flex items-center gap-1">
                             <TrendingUp className="h-3 w-3 text-green-500" /> {stat.sub}
                         </p>
                     </div>
@@ -137,8 +137,8 @@ export default function PlacementAnalyticsView() {
                         <h3 className="text-lg font-bold text-slate-900 mb-8 flex items-center gap-2">
                             <BarChart2 className="h-5 w-5 text-blue-500" /> Performance Trends
                         </h3>
-                        <div className="h-80 w-full">
-                            <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={100}>
+                        <div className="h-80 min-h-[320px] w-full">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1} debounce={100}>
                                 <AreaChart data={placementData}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                     <XAxis dataKey="name" axisLine={false} tickLine={false} />

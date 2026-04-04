@@ -53,21 +53,21 @@ export function FloatingAI() {
                         )}
                     >
                         {/* Header */}
-                        <div className="p-6 bg-slate-900 text-white flex items-center justify-between border-b border-white/5">
+                        <div className="p-6 bg-slate-900 text-slate-900 flex items-center justify-between border-b border-slate-100">
                             <div className="flex items-center gap-3">
                                 <div className="h-10 w-10 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
                                     <Bot className="h-6 w-6" />
                                 </div>
                                 <div>
                                     <p className="text-xs font-black uppercase tracking-widest">Antigravity AI</p>
-                                    <p className="text-[9px] font-bold text-blue-400 uppercase tracking-[0.2em] animate-pulse">Neural Link Active</p>
+                                    <p className="text-xs font-bold text-blue-600 uppercase tracking-[0.2em] animate-pulse">Neural Link Active</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
-                                <button onClick={() => setIsMinimized(!isMinimized)} className="p-2 hover:bg-white/10 rounded-xl transition-all">
+                                <button onClick={() => setIsMinimized(!isMinimized)} className="p-2 hover:bg-slate-100 rounded-xl transition-all">
                                     {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minus className="h-4 w-4" />}
                                 </button>
-                                <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-xl transition-all text-slate-400 hover:text-white">
+                                <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-slate-100 rounded-xl transition-all text-slate-500 hover:text-slate-900">
                                     <X className="h-4 w-4" />
                                 </button>
                             </div>
@@ -83,7 +83,7 @@ export function FloatingAI() {
                                                 "max-w-[85%] p-5 rounded-[25px] text-sm font-bold leading-relaxed shadow-sm italic",
                                                 msg.role === 'user'
                                                     ? "bg-blue-600 text-white rounded-tr-none shadow-blue-500/10"
-                                                    : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-tl-none border border-slate-100 dark:border-slate-700"
+                                                    : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-500 rounded-tl-none border border-slate-100 dark:border-slate-700"
                                             )}>
                                                 {msg.text}
                                             </div>
@@ -133,7 +133,7 @@ export function FloatingAI() {
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => setIsOpen(true)}
-                    className="h-16 w-16 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-[22px] shadow-[0_20px_50px_-10px_rgba(37,99,235,0.4)] flex items-center justify-center relative group overflow-hidden"
+                    className="h-16 w-16 bg-slate-900 dark:bg-white text-slate-900 dark:text-slate-900 rounded-[22px] shadow-[0_20px_50px_-10px_rgba(37,99,235,0.4)] flex items-center justify-center relative group overflow-hidden"
                 >
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity"></div>
                     <MessageSquare className="h-7 w-7 relative z-10" />

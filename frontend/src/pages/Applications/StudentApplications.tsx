@@ -42,11 +42,11 @@ export default function StudentApplications() {
     }, []);
 
     const statusColors: any = {
-        "Applied": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-        "Shortlisted": "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400",
-        "Assessment": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+        "Applied": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-600",
+        "Shortlisted": "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-600",
+        "Assessment": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-600",
         "Interview": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
-        "Offered": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+        "Offered": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-600",
         "Rejected": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
     };
 
@@ -68,8 +68,8 @@ export default function StudentApplications() {
             {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                 <div>
-                    <h1 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter mb-4 italic">My Journey</h1>
-                    <p className="text-slate-500 dark:text-slate-400 font-bold text-sm uppercase tracking-widest flex items-center gap-3">
+                    <h1 className="text-5xl font-black text-slate-900 dark:text-slate-900 tracking-tighter mb-4 italic">My Journey</h1>
+                    <p className="text-slate-500 dark:text-slate-500 font-bold text-sm uppercase tracking-widest flex items-center gap-3">
                         <TrendingUp className="h-5 w-5 text-blue-600" /> Tracking {applications.length} Active Applications
                     </p>
                 </div>
@@ -77,13 +77,13 @@ export default function StudentApplications() {
                 <div className="flex items-center gap-4 bg-white dark:bg-slate-900 p-2 rounded-[24px] border border-slate-100 dark:border-slate-800 shadow-sm">
                     <button
                         onClick={() => setViewMode("list")}
-                        className={cn("p-3 rounded-xl transition-all", viewMode === "list" ? "bg-slate-100 dark:bg-slate-800 text-blue-600 shadow-inner" : "text-slate-400")}
+                        className={cn("p-3 rounded-xl transition-all", viewMode === "list" ? "bg-slate-100 dark:bg-slate-800 text-blue-600 shadow-inner" : "text-slate-500")}
                     >
                         <List className="h-5 w-5" />
                     </button>
                     <button
                         onClick={() => setViewMode("grid")}
-                        className={cn("p-3 rounded-xl transition-all", viewMode === "grid" ? "bg-slate-100 dark:bg-slate-800 text-blue-600 shadow-inner" : "text-slate-400")}
+                        className={cn("p-3 rounded-xl transition-all", viewMode === "grid" ? "bg-slate-100 dark:bg-slate-800 text-blue-600 shadow-inner" : "text-slate-500")}
                     >
                         <LayoutGrid className="h-5 w-5" />
                     </button>
@@ -97,10 +97,10 @@ export default function StudentApplications() {
                         key={status}
                         onClick={() => setFilterStatus(status)}
                         className={cn(
-                            "px-6 py-4 rounded-3xl text-[10px] font-black uppercase tracking-widest transition-all border",
+                            "px-6 py-4 rounded-3xl text-base font-black uppercase tracking-widest transition-all border",
                             filterStatus === status
-                                ? "bg-blue-600 border-blue-600 text-white shadow-xl shadow-blue-200 dark:shadow-none"
-                                : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 text-slate-400 hover:border-blue-200"
+                                ? "bg-blue-600 border-blue-600 text-slate-900 shadow-xl shadow-blue-200 dark:shadow-none"
+                                : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 text-slate-500 hover:border-blue-200"
                         )}
                     >
                         {status}
@@ -135,25 +135,25 @@ export default function StudentApplications() {
                             )}></div>
 
                             <div className="flex items-center gap-8">
-                                <div className="h-20 w-20 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[30px] flex items-center justify-center text-3xl font-black text-slate-300 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">
+                                <div className="h-20 w-20 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[30px] flex items-center justify-center text-3xl font-black text-slate-500 group-hover:bg-blue-600 group-hover:text-slate-900 transition-all shadow-sm">
                                     {app.jobId.company.charAt(0)}
                                 </div>
                                 <div>
                                     <div className="flex items-center gap-3 mb-2">
-                                        <h3 className="text-2xl font-black text-slate-900 dark:text-white group-hover:text-blue-600 transition-all">{app.jobId.title}</h3>
-                                        <span className={cn("px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-2", statusColors[app.status] || statusColors["Applied"])}>
+                                        <h3 className="text-2xl font-black text-slate-900 dark:text-slate-900 group-hover:text-blue-600 transition-all">{app.jobId.title}</h3>
+                                        <span className={cn("px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-2", statusColors[app.status] || statusColors["Applied"])}>
                                             <StatusIcon status={app.status} />
                                             {app.status}
                                         </span>
                                     </div>
                                     <div className="flex flex-wrap items-center gap-6">
-                                        <span className="text-[11px] font-bold text-slate-400 flex items-center gap-2 uppercase tracking-widest">
+                                        <span className="text-sm font-bold text-slate-500 flex items-center gap-2 uppercase tracking-widest">
                                             <Building2 className="h-4 w-4" /> {app.jobId.company}
                                         </span>
-                                        <span className="text-[11px] font-bold text-slate-400 flex items-center gap-2 uppercase tracking-widest">
+                                        <span className="text-sm font-bold text-slate-500 flex items-center gap-2 uppercase tracking-widest">
                                             <MapPin className="h-4 w-4" /> {app.jobId.location}
                                         </span>
-                                        <span className="text-[11px] font-bold text-slate-400 flex items-center gap-2 uppercase tracking-widest">
+                                        <span className="text-sm font-bold text-slate-500 flex items-center gap-2 uppercase tracking-widest">
                                             <Calendar className="h-4 w-4" /> {new Date(app.createdAt).toLocaleDateString()}
                                         </span>
                                     </div>
@@ -165,15 +165,15 @@ export default function StudentApplications() {
                                 viewMode === "grid" ? "mt-10 pt-10 border-t border-slate-50 dark:border-slate-800 justify-between" : "ml-auto"
                             )}>
                                 <div className="text-right">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Match Index</p>
-                                    <p className="text-xl font-black text-slate-900 dark:text-white italic">{app.matchScore || "88"}%</p>
+                                    <p className="text-base font-black text-slate-500 uppercase tracking-widest mb-1">Match Index</p>
+                                    <p className="text-xl font-black text-slate-900 dark:text-slate-900 italic">{app.matchScore || "88"}%</p>
                                 </div>
                                 <div className="h-12 w-px bg-slate-100 dark:bg-slate-800 hidden md:block"></div>
                                 <div className="flex items-center gap-4">
-                                    <button className="h-14 w-14 rounded-2xl bg-slate-50 dark:bg-slate-900 flex items-center justify-center text-slate-400 hover:text-blue-600 cursor-pointer transition-all border border-slate-100 dark:border-slate-800">
+                                    <button className="h-14 w-14 rounded-2xl bg-slate-50 dark:bg-slate-900 flex items-center justify-center text-slate-500 hover:text-blue-600 cursor-pointer transition-all border border-slate-100 dark:border-slate-800">
                                         <MoreVertical className="h-5 w-5" />
                                     </button>
-                                    <button className="px-8 py-4 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-200 dark:shadow-none hover:translate-y-[-2px] transition-all flex items-center gap-3 group/btn">
+                                    <button className="px-8 py-4 bg-blue-600 text-white rounded-2xl text-base font-black uppercase tracking-widest shadow-lg shadow-blue-200 dark:shadow-none hover:translate-y-[-2px] transition-all flex items-center gap-3 group/btn">
                                         Full Details <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                                     </button>
                                 </div>
@@ -186,9 +186,9 @@ export default function StudentApplications() {
                     <div className="h-24 w-24 bg-blue-50 dark:bg-blue-900/20 rounded-[40px] flex items-center justify-center mx-auto mb-8">
                         <Briefcase className="h-12 w-12 text-blue-500" />
                     </div>
-                    <h3 className="text-3xl font-black text-slate-900 dark:text-white mb-4">No Active Records</h3>
-                    <p className="text-slate-400 font-bold max-w-md mx-auto mb-10 leading-relaxed">It looks like you haven't applied for any positions yet. Start your journey by exploring available roles.</p>
-                    <button className="px-10 py-5 bg-blue-600 text-white rounded-3xl text-[10px] font-black uppercase tracking-widest shadow-2xl">Discover Opportunities</button>
+                    <h3 className="text-3xl font-black text-slate-900 dark:text-slate-900 mb-4">No Active Records</h3>
+                    <p className="text-slate-500 font-bold max-w-md mx-auto mb-10 leading-relaxed">It looks like you haven't applied for any positions yet. Start your journey by exploring available roles.</p>
+                    <button className="px-10 py-5 bg-blue-600 text-white rounded-3xl text-base font-black uppercase tracking-widest shadow-2xl">Discover Opportunities</button>
                 </div>
             )}
         </div>

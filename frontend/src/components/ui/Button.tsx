@@ -20,7 +20,7 @@ export default function Button({
   const variantStyles = {
     primary: "bg-indigo-600 text-white hover:bg-indigo-700 disabled:bg-indigo-400",
     secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300 disabled:bg-gray-100",
-    danger: "bg-red-600 text-white hover:bg-red-700 disabled:bg-red-400",
+    danger: "bg-red-600 text-slate-900 hover:bg-red-700 disabled:bg-red-400",
     outline: "border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 disabled:opacity-50",
   };
 

@@ -1,18 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ════════════════════════════════════════════════════════════════════
-   APPLE DESIGN SYSTEM — Redesign v1
-   ════════════════════════════════════════════════════════════════════ */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+/* =====================================================================
+   BIT PLACEMENT PORTAL BRAND SYSTEM - v5.0
+   ===================================================================== */
 
 @layer base {
   :root {
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-display: 'Inter', -apple-system, sans-serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --font-display: 'Plus Jakarta Sans', sans-serif;
 
-    /* ── Apple Color System ── */
+    /* ── BIT Color System ── */
     --background: #f5f5f7;
     --foreground: #1d1d1f;
     --card: #ffffff;
@@ -30,8 +31,8 @@
     --ring: #0071e3;
     --radius: 1.25rem;
 
-    /* ── Apple Specific ── */
-    --apple-blue: #0071e3;
+    /* ── BIT Specific ── */
+    --apple-blue: #8b5cf6; /* Violet-500 */
     --apple-gray-50: #f5f5f7;
     --apple-gray-100: #e5e5e7;
     --apple-gray-200: #d2d2d7;
@@ -57,9 +58,9 @@
     --secondary-foreground: #f5f5f7;
     --border: rgba(255, 255, 255, 0.1);
     --input: rgba(255, 255, 255, 0.1);
-    --ring: #38bdf8;
+    --ring: #f43f5e; /* Rose-500 for BIT in dark mode */
 
-    --apple-blue: #38bdf8;
+    --apple-blue: #f43f5e; /* Rose-500 */
     --apple-gray-50: #060a14;
     --apple-gray-100: rgba(255, 255, 255, 0.1);
     --apple-gray-200: rgba(255, 255, 255, 0.15);
@@ -74,8 +75,14 @@
   }
 
   .dark .bg-slate-50,
-  .dark .bg-slate-100 {
+  .dark .bg-slate-100,
+  .dark .bg-\[\#f8fafc\] {
     background-color: var(--background) !important;
+  }
+
+  .dark .bg-slate-50\/50,
+  .dark .bg-slate-100\/50 {
+    background-color: transparent !important;
   }
 
   .dark .border-slate-100,
@@ -95,10 +102,26 @@
   .dark .text-slate-700,
   .dark .text-slate-600,
   .dark .text-slate-500,
+  .dark .text-slate-400,
   .dark .text-gray-700,
   .dark .text-gray-600,
-  .dark .text-gray-500 {
+  .dark .text-gray-500,
+  .dark .text-gray-400 {
     color: var(--muted-foreground) !important;
+  }
+
+  .dark .bg-red-50,
+  .dark .bg-rose-50 {
+    background-color: rgba(244, 63, 94, 0.1) !important;
+  }
+
+  .dark .bg-red-500,
+  .dark .bg-rose-500 {
+    background-color: var(--apple-blue) !important;
+  }
+
+  .dark .shadow-apple-soft {
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4) !important;
   }
 
   .dark .bg-white\/80 {
@@ -114,56 +137,48 @@
     padding: 0;
   }
 
-  html,
+  html {
+    font-size: 18px;
+    height: 100%;
+  }
+
   body,
   #root {
     height: 100%;
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
-    font-family: var(--font-sans);
+    @apply bg-background text-foreground antialiased font-sans;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
 
-  ::selection {
-    background-color: color-mix(in srgb, var(--apple-blue) 10%, transparent);
-    color: var(--apple-blue);
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-semibold tracking-tight;
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-black tracking-tight;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
     color: var(--apple-gray-900);
-    line-height: 1.2;
+    line-height: 1.1;
+    font-style: normal;
+    text-transform: none;
   }
 
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
-
-  button {
-    font-family: var(--font-sans);
-    cursor: pointer;
+  button, input, select, textarea {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 800 !important;
   }
 }
 
 @layer components {
 
-  /* Apple Glassmorphism */
+  /* BIT Glassmorphism */
   .apple-glass {
     @apply backdrop-blur-xl border-b sticky top-0 z-50;
     background: color-mix(in srgb, var(--card) 70%, transparent);
     border-color: color-mix(in srgb, var(--border) 50%, transparent);
   }
 
-  /* Apple Cards */
+  /* BIT Cards */
   .apple-card {
     @apply rounded-apple shadow-apple-soft transition-all duration-500 overflow-hidden;
     background: var(--card);
@@ -174,7 +189,7 @@
     @apply hover:shadow-apple-md hover:-translate-y-1 active:scale-[0.98];
   }
 
-  /* Apple Buttons */
+  /* BIT Buttons */
   .apple-btn-primary {
     @apply bg-apple-blue text-white font-medium rounded-full px-6 py-2.5 transition-all active:scale-95 hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm;
   }
@@ -187,7 +202,7 @@
     @apply text-apple-gray-400 font-medium rounded-full px-4 py-2 transition-all active:scale-95 hover:bg-apple-gray-100 hover:text-apple-gray-900;
   }
 
-  /* Apple Inputs */
+  /* BIT Inputs */
   .apple-input {
     @apply w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-4 transition-all;
     background: var(--card);
@@ -204,9 +219,9 @@
     color: var(--apple-gray-300);
   }
 
-  /* Apple Navigation Items */
+  /* BIT Navigation Items */
   .apple-nav-link {
-    @apply text-[13px] font-medium text-apple-gray-400 hover:text-apple-blue transition-colors relative py-1;
+    @apply text-base font-medium text-apple-gray-400 hover:text-apple-blue transition-colors relative py-1;
   }
 
   .apple-nav-link-active {
@@ -216,6 +231,19 @@
   .apple-nav-link-active::after {
     content: '';
     @apply absolute bottom-0 left-0 right-0 h-0.5 bg-apple-blue rounded-full;
+  }
+
+  /* Glass Premium for Admin & Elite views */
+  .glass-premium {
+    background: rgba(10, 13, 30, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Extreme depth shadows */
+  .shadow-3xl {
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -267,7 +295,7 @@
   @apply bg-apple-gray-300;
 }
 
-/* Utility: Apple Gradient Text */
+/* Utility: BIT Gradient Text */
 .text-apple-gradient {
   @apply bg-clip-text text-transparent bg-gradient-to-br from-apple-gray-900 to-apple-gray-400;
 }
@@ -276,6 +304,7 @@
 .line-clamp-1 {
   display: -webkit-box;
   -webkit-line-clamp: 1;
+  line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -283,6 +312,7 @@
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

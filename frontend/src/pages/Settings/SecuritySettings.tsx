@@ -99,13 +99,13 @@ export default function SecuritySettings() {
                 <div className="relative bg-white dark:bg-slate-900 p-12 rounded-[40px] shadow-sm border border-slate-100 dark:border-slate-800">
                     <div className="flex items-center gap-6 mb-4">
                         <div className="h-20 w-20 bg-gradient-to-br from-red-500 to-orange-500 rounded-[28px] flex items-center justify-center shadow-2xl">
-                            <Shield className="h-10 w-10 text-white" />
+                            <Shield className="h-10 w-10 text-slate-900" />
                         </div>
                         <div>
-                            <h1 className="text-5xl font-black text-slate-900 dark:text-white mb-2 tracking-tighter">
+                            <h1 className="text-5xl font-black text-slate-900 dark:text-slate-900 mb-2 tracking-tighter">
                                 Security Command Center
                             </h1>
-                            <p className="text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-[0.3em]">
+                            <p className="text-slate-500 dark:text-slate-500 text-base font-black uppercase tracking-[0.3em]">
                                 Military-Grade Protection Protocols
                             </p>
                         </div>
@@ -115,28 +115,28 @@ export default function SecuritySettings() {
 
             {/* Security Score Card */}
             <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-10 rounded-[40px] shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
+                <div className="absolute top-0 right-0 w-64 h-64 bg-slate-100 rounded-full blur-3xl -mr-20 -mt-20"></div>
                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                     <div>
-                        <p className="text-white/80 text-[10px] font-black uppercase tracking-[0.3em] mb-3">Security Score</p>
+                        <p className="text-slate-900/80 text-base font-black uppercase tracking-[0.3em] mb-3">Security Score</p>
                         <div className="flex items-baseline gap-4">
-                            <span className="text-7xl font-black text-white tracking-tighter">87</span>
-                            <span className="text-3xl text-white/60 font-bold">/100</span>
+                            <span className="text-7xl font-black text-slate-900 tracking-tighter">87</span>
+                            <span className="text-3xl text-slate-900/60 font-bold">/100</span>
                         </div>
-                        <p className="text-white/90 text-sm font-bold mt-4">Strong Protection Active</p>
+                        <p className="text-slate-900/90 text-sm font-bold mt-4">Strong Protection Active</p>
                     </div>
                     <div className="flex gap-4">
-                        <div className="bg-white/20 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/30">
-                            <ShieldCheck className="h-8 w-8 text-white mb-2" />
-                            <p className="text-[9px] font-black text-white uppercase tracking-widest">Encrypted</p>
+                        <div className="bg-slate-200 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/30">
+                            <ShieldCheck className="h-8 w-8 text-slate-900 mb-2" />
+                            <p className="text-xs font-black text-slate-900 uppercase tracking-widest">Encrypted</p>
                         </div>
-                        <div className="bg-white/20 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/30">
-                            <Fingerprint className="h-8 w-8 text-white mb-2" />
-                            <p className="text-[9px] font-black text-white uppercase tracking-widest">Verified</p>
+                        <div className="bg-slate-200 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/30">
+                            <Fingerprint className="h-8 w-8 text-slate-900 mb-2" />
+                            <p className="text-xs font-black text-slate-900 uppercase tracking-widest">Verified</p>
                         </div>
-                        <div className="bg-white/20 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/30">
-                            <Activity className="h-8 w-8 text-white mb-2" />
-                            <p className="text-[9px] font-black text-white uppercase tracking-widest">Monitored</p>
+                        <div className="bg-slate-200 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/30">
+                            <Activity className="h-8 w-8 text-slate-900 mb-2" />
+                            <p className="text-xs font-black text-slate-900 uppercase tracking-widest">Monitored</p>
                         </div>
                     </div>
                 </div>
@@ -148,17 +148,17 @@ export default function SecuritySettings() {
                 <div className="bg-white dark:bg-slate-900 p-10 rounded-[40px] border border-slate-100 dark:border-slate-800 shadow-sm">
                     <div className="flex items-center gap-4 mb-8">
                         <div className="h-14 w-14 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center">
-                            <Lock className="h-7 w-7 text-blue-600 dark:text-blue-400" />
+                            <Lock className="h-7 w-7 text-blue-600 dark:text-blue-600" />
                         </div>
                         <div>
-                            <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Change Password</h3>
-                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Update your access credentials</p>
+                            <h3 className="text-2xl font-black text-slate-900 dark:text-slate-900 tracking-tight">Change Password</h3>
+                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Update your access credentials</p>
                         </div>
                     </div>
 
                     <form onSubmit={handlePasswordChange} className="space-y-6">
                         <div>
-                            <label className="block text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-3">
+                            <label className="block text-base font-black text-slate-600 dark:text-slate-500 uppercase tracking-widest mb-3">
                                 Current Password
                             </label>
                             <div className="relative">
@@ -166,14 +166,14 @@ export default function SecuritySettings() {
                                     type={showCurrentPassword ? "text" : "password"}
                                     value={passwordForm.currentPassword}
                                     onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
-                                    className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white font-bold focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-slate-900 font-bold focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     placeholder="Enter current password"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-600 dark:hover:text-slate-500"
                                 >
                                     {showCurrentPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                 </button>
@@ -181,7 +181,7 @@ export default function SecuritySettings() {
                         </div>
 
                         <div>
-                            <label className="block text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-3">
+                            <label className="block text-base font-black text-slate-600 dark:text-slate-500 uppercase tracking-widest mb-3">
                                 New Password
                             </label>
                             <div className="relative">
@@ -189,14 +189,14 @@ export default function SecuritySettings() {
                                     type={showNewPassword ? "text" : "password"}
                                     value={passwordForm.newPassword}
                                     onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
-                                    className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white font-bold focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-slate-900 font-bold focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     placeholder="Enter new password"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowNewPassword(!showNewPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-600 dark:hover:text-slate-500"
                                 >
                                     {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                 </button>
@@ -204,14 +204,14 @@ export default function SecuritySettings() {
                         </div>
 
                         <div>
-                            <label className="block text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-3">
+                            <label className="block text-base font-black text-slate-600 dark:text-slate-500 uppercase tracking-widest mb-3">
                                 Confirm Password
                             </label>
                             <input
                                 type="password"
                                 value={passwordForm.confirmPassword}
                                 onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
-                                className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white font-bold focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-slate-900 font-bold focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                 placeholder="Confirm new password"
                                 required
                             />
@@ -219,7 +219,7 @@ export default function SecuritySettings() {
 
                         <button
                             type="submit"
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-95 shadow-lg"
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-slate-900 px-8 py-4 rounded-2xl text-sm font-black uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-95 shadow-lg"
                         >
                             Update Password
                         </button>
@@ -237,8 +237,8 @@ export default function SecuritySettings() {
                                     <Smartphone className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                                 </div>
                                 <div>
-                                    <h4 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">Two-Factor Authentication</h4>
-                                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Extra layer of security</p>
+                                    <h4 className="text-lg font-black text-slate-900 dark:text-slate-900 tracking-tight">Two-Factor Authentication</h4>
+                                    <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Extra layer of security</p>
                                 </div>
                             </div>
                             <button
@@ -267,11 +267,11 @@ export default function SecuritySettings() {
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center gap-4">
                                 <div className="h-12 w-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center">
-                                    <Fingerprint className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+                                    <Fingerprint className="h-6 w-6 text-indigo-600 dark:text-indigo-600" />
                                 </div>
                                 <div>
-                                    <h4 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">Biometric Login</h4>
-                                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Fingerprint & Face ID</p>
+                                    <h4 className="text-lg font-black text-slate-900 dark:text-slate-900 tracking-tight">Biometric Login</h4>
+                                    <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Fingerprint & Face ID</p>
                                 </div>
                             </div>
                             <button
@@ -295,8 +295,8 @@ export default function SecuritySettings() {
                                     <Mail className="h-6 w-6 text-orange-600 dark:text-orange-400" />
                                 </div>
                                 <div>
-                                    <h4 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">Email Alerts</h4>
-                                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Security notifications</p>
+                                    <h4 className="text-lg font-black text-slate-900 dark:text-slate-900 tracking-tight">Email Alerts</h4>
+                                    <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Security notifications</p>
                                 </div>
                             </div>
                             <button
@@ -318,11 +318,11 @@ export default function SecuritySettings() {
             <div className="bg-white dark:bg-slate-900 p-10 rounded-[40px] border border-slate-100 dark:border-slate-800 shadow-sm">
                 <div className="flex items-center gap-4 mb-8">
                     <div className="h-14 w-14 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center">
-                        <Activity className="h-7 w-7 text-slate-600 dark:text-slate-400" />
+                        <Activity className="h-7 w-7 text-slate-600 dark:text-slate-500" />
                     </div>
                     <div>
-                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Security Activity</h3>
-                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Recent account events</p>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-slate-900 tracking-tight">Security Activity</h3>
+                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Recent account events</p>
                     </div>
                 </div>
 
@@ -337,25 +337,25 @@ export default function SecuritySettings() {
                                     log.status === "warning" ? "bg-yellow-100 dark:bg-yellow-900/30" :
                                         "bg-red-100 dark:bg-red-900/30"
                                     }`}>
-                                    {log.status === "success" ? <CheckCircle2 className="h-6 w-6 text-emerald-600 dark:text-emerald-400" /> :
+                                    {log.status === "success" ? <CheckCircle2 className="h-6 w-6 text-emerald-600 dark:text-emerald-600" /> :
                                         log.status === "warning" ? <AlertTriangle className="h-6 w-6 text-yellow-600 dark:text-yellow-400" /> :
                                             <ShieldAlert className="h-6 w-6 text-red-600 dark:text-red-400" />}
                                 </div>
                                 <div>
-                                    <p className="font-black text-slate-900 dark:text-white text-sm tracking-tight">{log.action}</p>
+                                    <p className="font-black text-slate-900 dark:text-slate-900 text-sm tracking-tight">{log.action}</p>
                                     <div className="flex items-center gap-4 mt-1">
-                                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1">
                                             <Globe className="h-3 w-3" />
                                             {log.location}
                                         </p>
-                                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
                                             {log.device}
                                         </p>
                                     </div>
                                 </div>
                             </div>
                             <div className="text-right">
-                                <p className="text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                                <p className="text-xs font-bold text-slate-500 dark:text-slate-500 flex items-center gap-2">
                                     <Clock className="h-4 w-4" />
                                     {new Date(log.timestamp).toLocaleString()}
                                 </p>

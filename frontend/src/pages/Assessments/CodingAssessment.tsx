@@ -22,6 +22,13 @@ const DIFFICULTY_OPTIONS = [
     { value: "Hard", label: "Hard", color: "bg-rose-500", time: 45 },
 ];
 
+const LANGUAGES = [
+    { id: "javascript", name: "JavaScript", icon: "JS", ext: "js", template: "function solution() {\n  // Write your code here\n}" },
+    { id: "python", name: "Python", icon: "PY", ext: "py", template: "def solution():\n    # Write your code here\n    pass" },
+    { id: "java", name: "Java", icon: "☕", ext: "java", template: "public class Solution {\n    public static void main(String[] args) {\n        // Your code here\n    }\n}" },
+    { id: "cpp", name: "C++", icon: "C++", ext: "cpp", template: "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Your code here\n    return 0;\n}" },
+];
+
 type Phase = "configure" | "generating" | "coding" | "finished";
 
 export default function CodingAssessment() {
@@ -35,6 +42,7 @@ export default function CodingAssessment() {
     const [timeLeft, setTimeLeft] = useState(1800);
     const [selectedTopic, setSelectedTopic] = useState("");
     const [selectedDifficulty, setSelectedDifficulty] = useState("Medium");
+    const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES[0]);
     const [generatingProgress, setGeneratingProgress] = useState(0);
     const [showHint, setShowHint] = useState(false);
     const [currentHintIndex, setCurrentHintIndex] = useState(0);
@@ -150,12 +158,12 @@ export default function CodingAssessment() {
             <div className="text-center space-y-4">
                 <motion.div whileHover={{ scale: 1.05 }}
                     className="h-20 w-20 bg-apple-blue rounded-[30px] flex items-center justify-center mx-auto shadow-apple-hover">
-                    <Code2 className="h-10 w-10 text-white" />
+                    <Code2 className="h-10 w-10 text-slate-900" />
                 </motion.div>
                 <h1 className="text-5xl font-bold tracking-tight text-apple-gray-900">
                     AI <span className="text-apple-blue">Coding</span> Arena
                 </h1>
-                <p className="text-apple-gray-500 font-semibold uppercase tracking-widest text-[10px]">
+                <p className="text-apple-gray-500 font-semibold uppercase tracking-widest text-base">
                     Powered by Intelligence Engine v3.0
                 </p>
             </div>
@@ -179,18 +187,18 @@ export default function CodingAssessment() {
                                         : "border-apple-gray-100 bg-white hover:border-apple-gray-200")}>
                                 <div className={cn("h-1.5 w-8 rounded-full mx-auto mb-3 bg-gradient-to-r", d.color)} />
                                 <p className="font-bold text-sm text-apple-gray-900">{d.label}</p>
-                                <p className="text-[10px] text-apple-gray-400 font-medium tracking-tight mt-1">~{d.time} MINS</p>
+                                <p className="text-base text-apple-gray-400 font-medium tracking-tight mt-1">~{d.time} MINS</p>
                             </motion.button>
                         ))}
                     </div>
                 </div>
 
                 {/* Info Card */}
-                <div className="apple-card p-10 flex flex-col justify-between bg-apple-gray-900 text-white relative overflow-hidden">
+                <div className="apple-card p-10 flex flex-col justify-between bg-white text-slate-900 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-apple-blue/10 rounded-full blur-[80px]" />
                     <div className="relative z-10">
                         <div className="flex items-center gap-3 mb-8">
-                            <div className="h-10 w-10 rounded-2xl bg-white/10 flex items-center justify-center">
+                            <div className="h-10 w-10 rounded-2xl bg-slate-100 flex items-center justify-center">
                                 <Zap className="h-5 w-5 text-apple-blue" />
                             </div>
                             <h3 className="text-xl font-bold">Session Profile</h3>
@@ -199,7 +207,28 @@ export default function CodingAssessment() {
                             Your coding environment will be synthesized based on the selected domain. Test cases are dynamically generated to evaluate algorithmic complexity and edge-case handling.
                         </p>
                     </div>
-                    <p className="relative z-10 text-[11px] font-semibold text-apple-gray-500 uppercase tracking-widest mt-8">
+
+                    <div className="relative z-10 pt-6 border-t border-slate-100">
+                        <p className="text-base font-bold text-apple-gray-400 uppercase tracking-widest mb-4">Compiler Engine</p>
+                        <div className="flex flex-wrap gap-2">
+                            {LANGUAGES.map(lang => (
+                                <button key={lang.id}
+                                    onClick={() => {
+                                        setSelectedLanguage(lang);
+                                        if (code === "" || LANGUAGES.some(l => l.template === code)) setCode(lang.template);
+                                    }}
+                                    className={cn("px-4 py-2 rounded-xl text-xs font-bold transition-all border",
+                                        selectedLanguage.id === lang.id
+                                            ? "bg-apple-blue border-apple-blue text-slate-900"
+                                            : "bg-slate-50 border-slate-200 text-apple-gray-400 hover:text-slate-900")}
+                                >
+                                    {lang.name}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <p className="relative z-10 text-sm font-semibold text-apple-gray-500 uppercase tracking-widest mt-8">
                         Proctored Environment Active
                     </p>
                 </div>
@@ -217,7 +246,7 @@ export default function CodingAssessment() {
                     {selectedTopic && (
                         <motion.button initial={{ scale: 0 }} animate={{ scale: 1 }}
                             onClick={() => setSelectedTopic("")}
-                            className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-rose-500 bg-rose-50 rounded-full border border-rose-100 flex items-center gap-2">
+                            className="px-4 py-2 text-base font-bold uppercase tracking-widest text-rose-500 bg-rose-50 rounded-full border border-rose-100 flex items-center gap-2">
                             <X className="h-3 w-3" /> Clear Selection
                         </motion.button>
                     )}
@@ -226,9 +255,9 @@ export default function CodingAssessment() {
                     {CODING_TOPICS.map(t => (
                         <motion.button key={t} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                             onClick={() => setSelectedTopic(t)}
-                            className={cn("px-5 py-3 rounded-[16px] text-[12px] font-bold transition-all border",
+                            className={cn("px-5 py-3 rounded-[16px] text-lg font-bold transition-all border",
                                 selectedTopic === t
-                                    ? "border-apple-blue bg-apple-blue text-white shadow-md"
+                                    ? "border-apple-blue bg-apple-blue text-slate-900 shadow-md"
                                     : "border-apple-gray-100 bg-white text-apple-gray-500 hover:border-apple-gray-200")}>
                             {t}
                         </motion.button>
@@ -239,12 +268,12 @@ export default function CodingAssessment() {
             {/* Generate Button */}
             <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}
                 onClick={handleGenerate}
-                className="w-full py-7 bg-apple-blue text-white rounded-[30px] font-bold text-lg uppercase tracking-[0.2em] shadow-apple-hover flex items-center justify-center gap-4 group">
+                className="w-full py-7 bg-apple-blue text-slate-900 rounded-[30px] font-bold text-lg uppercase tracking-[0.2em] shadow-apple-hover flex items-center justify-center gap-4 group">
                 <Sparkles className="h-6 w-6 group-hover:animate-pulse" />
                 Initialize Neural Arena
                 <ChevronRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />
             </motion.button>
-        </motion.div>
+        </motion.div >
     );
 
     // ── GENERATING ───────────────────────────────────────────
@@ -256,7 +285,7 @@ export default function CodingAssessment() {
                     animate={{ rotate: 360 }}
                     transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                     className="h-20 w-20 bg-apple-blue rounded-[24px] flex items-center justify-center mx-auto mb-8 shadow-apple-hover">
-                    <Cpu className="h-10 w-10 text-white" />
+                    <Cpu className="h-10 w-10 text-slate-900" />
                 </motion.div>
                 <h2 className="text-3xl font-bold text-apple-gray-900 tracking-tight mb-4">
                     Synthesizing Challenge
@@ -276,7 +305,7 @@ export default function CodingAssessment() {
                     {["Initializing", "Curation", "Compiling", "Finalizing"].map((s, i) => (
                         <motion.span key={i}
                             initial={{ opacity: 0 }} animate={{ opacity: generatingProgress > i * 25 ? 1 : 0.3 }}
-                            className="text-[9px] font-bold text-apple-gray-400 uppercase tracking-widest">
+                            className="text-xs font-bold text-apple-gray-400 uppercase tracking-widest">
                             {s}
                         </motion.span>
                     ))}
@@ -290,14 +319,14 @@ export default function CodingAssessment() {
         <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}
             className="max-w-4xl mx-auto py-12 px-6 space-y-10">
             <div className="bg-white rounded-[50px] shadow-apple-card border border-apple-gray-100 overflow-hidden">
-                <div className="p-14 bg-apple-gray-900 text-white text-center relative overflow-hidden">
+                <div className="p-14 bg-white text-slate-900 text-center relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-transparent" />
                     <motion.div initial={{ scale: 0, rotate: -20 }} animate={{ scale: 1, rotate: 0 }}
-                        className="h-32 w-32 bg-emerald-500/10 rounded-[40px] flex items-center justify-center mx-auto mb-8 shadow-2xl border border-white/10 relative z-10">
+                        className="h-32 w-32 bg-emerald-500/10 rounded-[40px] flex items-center justify-center mx-auto mb-8 shadow-2xl border border-slate-200 relative z-10">
                         <Trophy className="h-14 w-14 text-emerald-500" />
                     </motion.div>
                     <h2 className="text-4xl font-bold tracking-tight mb-3 relative z-10">Deployment <span className="text-emerald-500">Successful</span></h2>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.4em] text-apple-gray-400 relative z-10">
+                    <p className="text-sm font-bold uppercase tracking-[0.4em] text-apple-gray-400 relative z-10">
                         Node verification sequence complete
                     </p>
                 </div>
@@ -306,7 +335,7 @@ export default function CodingAssessment() {
                     <div className="flex items-center justify-center gap-20 flex-wrap">
                         <div className="text-center">
                             <div className="text-8xl font-bold text-apple-gray-900 mb-2">{score}%</div>
-                            <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-apple-gray-400">Final Aggregated Score</div>
+                            <div className="text-base font-bold uppercase tracking-[0.3em] text-apple-gray-400">Final Aggregated Score</div>
                         </div>
                         <div className="w-[1px] h-24 bg-apple-gray-100 hidden md:block" />
                         <div className="space-y-8">
@@ -316,7 +345,7 @@ export default function CodingAssessment() {
                                 { label: 'Algorithmic Rank', value: score >= 80 ? 'Optimized' : score >= 50 ? 'Functional' : 'Inefficient', color: score >= 80 ? 'text-emerald-500' : 'text-amber-500' },
                             ].map((s, i) => (
                                 <motion.div key={i} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 + i * 0.1 }}>
-                                    <p className="text-[10px] font-bold uppercase tracking-widest text-apple-gray-400 mb-1">{s.label}</p>
+                                    <p className="text-base font-bold uppercase tracking-widest text-apple-gray-400 mb-1">{s.label}</p>
                                     <p className={cn("text-3xl font-bold", s.color)}>{s.value}</p>
                                 </motion.div>
                             ))}
@@ -325,11 +354,11 @@ export default function CodingAssessment() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-10 border-t border-apple-gray-50">
                         <button onClick={() => navigate('/dashboard')}
-                            className="py-5 px-8 bg-apple-gray-100 text-apple-gray-900 rounded-[20px] font-bold text-[13px] uppercase tracking-widest hover:bg-apple-gray-200 transition-all flex items-center justify-center gap-3">
+                            className="py-5 px-8 bg-apple-gray-100 text-apple-gray-900 rounded-[20px] font-bold text-base uppercase tracking-widest hover:bg-apple-gray-200 transition-all flex items-center justify-center gap-3">
                             <Home className="h-4 w-4" /> Return to Dashboard
                         </button>
                         <button onClick={() => { setPhase("configure"); setOutput(""); setTestsPassed(0); }}
-                            className="py-5 px-8 bg-apple-blue text-white rounded-[20px] font-bold text-[13px] uppercase tracking-widest shadow-apple-hover hover:scale-[1.02] transition-all flex items-center justify-center gap-3">
+                            className="py-5 px-8 bg-apple-blue text-slate-900 rounded-[20px] font-bold text-base uppercase tracking-widest shadow-apple-hover hover:scale-[1.02] transition-all flex items-center justify-center gap-3">
                             <Sparkles className="h-4 w-4" /> New Arena Session
                         </button>
                     </div>
@@ -346,14 +375,14 @@ export default function CodingAssessment() {
             <div className="h-20 bg-white/80 backdrop-blur-xl border-b border-apple-gray-100 flex items-center justify-between px-8 shrink-0 relative z-20">
                 <div className="flex items-center gap-6">
                     <div className="h-10 w-10 bg-apple-blue rounded-xl flex items-center justify-center shadow-apple-hover">
-                        <Code2 className="h-6 w-6 text-white" />
+                        <Code2 className="h-6 w-6 text-slate-900" />
                     </div>
                     <div>
                         <h2 className="text-lg font-bold tracking-tight text-apple-gray-900 flex items-center gap-3">
                             {question?.title}
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                         </h2>
-                        <div className="flex items-center gap-3 text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest">
+                        <div className="flex items-center gap-3 text-base font-bold text-apple-gray-400 uppercase tracking-widest">
                             <span>{question?.topic}</span>
                             <span className="h-1 w-1 rounded-full bg-apple-gray-200" />
                             <span>{selectedDifficulty} CHALLENGE</span>
@@ -374,7 +403,7 @@ export default function CodingAssessment() {
 
                     <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                         onClick={handleSubmit} disabled={isSubmitting}
-                        className="px-8 py-3 bg-apple-blue text-white rounded-[16px] text-xs font-bold uppercase tracking-widest shadow-apple-hover disabled:opacity-50 flex items-center gap-3">
+                        className="px-8 py-3 bg-apple-blue text-slate-900 rounded-[16px] text-xs font-bold uppercase tracking-widest shadow-apple-hover disabled:opacity-50 flex items-center gap-3">
                         {isSubmitting ? "Transmitting..." : (
                             <>
                                 <Send className="h-4 w-4" />
@@ -392,33 +421,33 @@ export default function CodingAssessment() {
                     <div className="p-10 space-y-10">
                         <div className="space-y-6">
                             <div className="flex gap-2">
-                                <span className="px-3 py-1 bg-apple-blue/5 text-apple-blue text-[9px] font-bold uppercase tracking-widest rounded-full border border-apple-blue/10">
+                                <span className="px-3 py-1 bg-apple-blue/5 text-apple-blue text-xs font-bold uppercase tracking-widest rounded-full border border-apple-blue/10">
                                     Description
                                 </span>
-                                <span className="px-3 py-1 bg-indigo-50 text-indigo-500 text-[9px] font-bold uppercase tracking-widest rounded-full border border-indigo-100">
+                                <span className="px-3 py-1 bg-indigo-50 text-indigo-500 text-xs font-bold uppercase tracking-widest rounded-full border border-indigo-100">
                                     {question?.topic}
                                 </span>
                             </div>
                             <h1 className="text-3xl font-bold text-apple-gray-900 tracking-tight leading-tight">{question?.title}</h1>
-                            <p className="text-[15px] leading-relaxed text-apple-gray-600 font-medium">{question?.description}</p>
+                            <p className="text-lg leading-relaxed text-apple-gray-600 font-medium">{question?.description}</p>
                         </div>
 
                         {/* Examples */}
                         {question?.examples?.map((ex: any, i: number) => (
                             <div key={i} className="space-y-4">
-                                <h4 className="text-[11px] font-bold uppercase tracking-widest text-apple-gray-400">Example {i + 1}</h4>
+                                <h4 className="text-sm font-bold uppercase tracking-widest text-apple-gray-400">Example {i + 1}</h4>
                                 <div className="bg-apple-gray-50/50 rounded-2xl p-6 space-y-3 border border-apple-gray-100">
                                     <div>
-                                        <p className="text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest mb-1">Input</p>
+                                        <p className="text-base font-bold text-apple-gray-400 uppercase tracking-widest mb-1">Input</p>
                                         <code className="text-xs font-mono text-apple-gray-900">{ex.input}</code>
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest mb-1">Output</p>
+                                        <p className="text-base font-bold text-apple-gray-400 uppercase tracking-widest mb-1">Output</p>
                                         <code className="text-xs font-mono text-apple-blue">{ex.output}</code>
                                     </div>
                                     {ex.explanation && (
                                         <div>
-                                            <p className="text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest mb-1">Explanation</p>
+                                            <p className="text-base font-bold text-apple-gray-400 uppercase tracking-widest mb-1">Explanation</p>
                                             <p className="text-xs text-apple-gray-500 leading-relaxed italic">{ex.explanation}</p>
                                         </div>
                                     )}
@@ -429,7 +458,7 @@ export default function CodingAssessment() {
                         {/* Constraints */}
                         {question?.constraints?.length > 0 && (
                             <div>
-                                <h4 className="text-[11px] font-bold uppercase tracking-widest text-apple-gray-400 mb-4">Constraints</h4>
+                                <h4 className="text-sm font-bold uppercase tracking-widest text-apple-gray-400 mb-4">Constraints</h4>
                                 <div className="space-y-3">
                                     {question.constraints.map((c: string, i: number) => (
                                         <div key={i} className="flex items-center gap-3 text-sm font-semibold text-apple-gray-500">
@@ -453,7 +482,7 @@ export default function CodingAssessment() {
                                         if (!showHint) { setShowHint(true); }
                                         else { setCurrentHintIndex(p => (p + 1) % (question?.hints?.length || 1)); }
                                     }}
-                                    className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 hover:text-emerald-700 transition-all bg-white px-3 py-1.5 rounded-full border border-emerald-100 shadow-sm">
+                                    className="text-base font-bold uppercase tracking-widest text-emerald-600 hover:text-emerald-700 transition-all bg-white px-3 py-1.5 rounded-full border border-emerald-100 shadow-sm">
                                     {showHint ? "Next Hint" : "Reveal Hint"}
                                 </button>
                             </div>
@@ -472,20 +501,20 @@ export default function CodingAssessment() {
 
                 {/* Editor + Console */}
                 <div className="flex-1 flex flex-col bg-[#1e1e1e]"> {/* Dark editor area for better code focus */}
-                    <div className="h-12 bg-apple-gray-900 border-b border-white/5 flex items-center px-6 justify-between shrink-0">
+                    <div className="h-12 bg-white border-b border-slate-100 flex items-center px-6 justify-between shrink-0">
                         <div className="flex items-center gap-6">
-                            <span className="text-[11px] font-bold uppercase text-white tracking-widest flex items-center gap-2">
-                                <Activity className="h-3 w-3 text-apple-blue" /> solution.js
+                            <span className="text-sm font-bold uppercase text-slate-900 tracking-widest flex items-center gap-2">
+                                <Activity className="h-3 w-3 text-apple-blue" /> solution.{selectedLanguage.ext}
                             </span>
                         </div>
                         <div className="flex items-center gap-4">
-                            <span className="text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest">Node.js 18.x</span>
+                            <span className="text-base font-bold text-apple-gray-400 uppercase tracking-widest">{selectedLanguage.name} Runtime</span>
                         </div>
                     </div>
 
                     <div className="flex-1 relative overflow-hidden">
                         <textarea
-                            className="w-full h-full bg-apple-gray-900 text-apple-gray-100 font-mono text-sm border-none focus:outline-none resize-none leading-relaxed tracking-wide p-10 placeholder-white/10"
+                            className="w-full h-full bg-white text-apple-gray-100 font-mono text-sm border-none focus:outline-none resize-none leading-relaxed tracking-wide p-10 placeholder-white/10"
                             spellCheck={false}
                             value={code}
                             onChange={e => setCode(e.target.value)}
@@ -495,12 +524,12 @@ export default function CodingAssessment() {
 
                     {/* Console */}
                     <div className="h-64 bg-apple-gray-950 border-t-2 border-apple-gray-900 flex flex-col shrink-0">
-                        <div className="h-12 bg-apple-gray-900/80 px-6 flex items-center justify-between shrink-0">
-                            <span className="text-[10px] font-bold uppercase text-white tracking-widest flex items-center gap-3">
+                        <div className="h-12 bg-white/80 px-6 flex items-center justify-between shrink-0">
+                            <span className="text-base font-bold uppercase text-slate-900 tracking-widest flex items-center gap-3">
                                 <Terminal className="h-3.5 w-3.5 text-apple-blue" /> System Output
                             </span>
                             <motion.button onClick={runCode} disabled={isRunning} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                                className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-5 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all border border-white/5 disabled:opacity-50">
+                                className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-900 px-5 py-2 rounded-xl text-base font-bold uppercase tracking-widest transition-all border border-slate-100 disabled:opacity-50">
                                 {isRunning ? (
                                     <>
                                         <RefreshCw className="h-3.5 w-3.5 animate-spin" />
@@ -530,13 +559,13 @@ export default function CodingAssessment() {
                                     {output
                                         ? output.split("\n").map((line, i) => (
                                             <span key={i} className={cn("block py-0.5",
-                                                line.includes("✓") ? "text-emerald-400" :
-                                                    line.includes("✗") ? "text-rose-400" :
+                                                line.includes("✓") ? "text-emerald-600" :
+                                                    line.includes("✗") ? "text-rose-600" :
                                                         "text-apple-gray-400")}>
                                                 {line}
                                             </span>
                                         ))
-                                        : <span className="text-white/20 italic tracking-wider">Simulation output will materialize here...</span>}
+                                        : <span className="text-slate-900/20 italic tracking-wider">Simulation output will materialize here...</span>}
                                 </pre>
                             )}
                         </div>

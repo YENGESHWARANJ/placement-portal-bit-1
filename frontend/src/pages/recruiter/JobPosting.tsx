@@ -9,6 +9,7 @@ import api from "../../services/api";
 import { Sparkles, Wand2, ArrowLeft, Target, Cpu, Activity, ShieldCheck, Zap } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { cn } from "../../utils/cn";
+import { useAuth } from "../../features/auth/AuthContext";
 
 const stagger = {
     container: { initial: { opacity: 0 }, animate: { opacity: 1, transition: { staggerChildren: 0.1 } } },
@@ -24,8 +25,11 @@ const stagger = {
 
 export default function JobPosting() {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const { jobId } = useParams();
     const isEditMode = Boolean(jobId);
+    const isAdmin = user?.role === 'admin' || user?.role === 'officer';
+    const redirectPath = isAdmin ? "/admin/jobs" : "/jobs/my";
 
     const [formData, setFormData] = useState({
         title: "",
@@ -62,7 +66,7 @@ export default function JobPosting() {
                     }
                 } catch (err) {
                     toast.error("Failed to load job details");
-                    navigate("/jobs/my");
+                    navigate(redirectPath);
                 }
             };
             fetchJob();
@@ -122,7 +126,7 @@ export default function JobPosting() {
                 await createJob(payload);
                 toast.success("Job broadcasted");
             }
-            navigate("/jobs/my");
+            navigate(redirectPath);
 
         } catch (err: any) {
             console.error(err);
@@ -148,7 +152,7 @@ export default function JobPosting() {
                     <motion.button
                         whileHover={{ scale: 1.1, backgroundColor: '#f2f2f7' }}
                         whileTap={{ scale: 0.9 }}
-                        onClick={() => navigate("/jobs/my")}
+                        onClick={() => navigate(redirectPath)}
                         className="h-14 w-14 rounded-2xl bg-white border border-apple-gray-100 flex items-center justify-center shadow-sm text-apple-gray-400 hover:text-apple-blue transition-all"
                     >
                         <ArrowLeft className="h-6 w-6" />
@@ -157,7 +161,7 @@ export default function JobPosting() {
                         <h1 className="text-4xl md:text-5xl font-black text-apple-gray-900 tracking-tight leading-none mb-4">
                             {isEditMode ? "Modify Opportunity" : "Architect Job"}
                         </h1>
-                        <p className="text-[11px] font-black text-apple-gray-300 uppercase tracking-[0.4em]">
+                        <p className="text-sm font-black text-apple-gray-300 uppercase tracking-[0.4em]">
                             Recruitment Structural Module // v2.0
                         </p>
                     </div>
@@ -168,7 +172,7 @@ export default function JobPosting() {
                     whileTap={{ scale: 0.98 }}
                     onClick={handleAIFill}
                     disabled={generating}
-                    className="flex items-center gap-3 bg-apple-gray-900 text-white px-8 py-4 rounded-[20px] text-[11px] font-black uppercase tracking-widest shadow-apple-hover disabled:opacity-50 transition-all border border-black/10"
+                    className="flex items-center gap-3 bg-white text-slate-900 px-8 py-4 rounded-[20px] text-sm font-black uppercase tracking-widest shadow-apple-hover disabled:opacity-50 transition-all border border-black/10"
                 >
                     {generating ? (
                         <>
@@ -185,7 +189,7 @@ export default function JobPosting() {
             </motion.div>
 
             {error && (
-                <div className="bg-red-50 border border-red-100 text-red-600 p-5 rounded-[24px] text-[13px] font-bold flex items-center gap-3 animate-in fade-in zoom-in duration-300">
+                <div className="bg-red-50 border border-red-100 text-red-600 p-5 rounded-[24px] text-base font-bold flex items-center gap-3 animate-in fade-in zoom-in duration-300">
                     <div className="h-2 w-2 rounded-full bg-red-500" />
                     {error}
                 </div>
@@ -200,7 +204,7 @@ export default function JobPosting() {
                     <div className="absolute top-0 left-0 w-32 h-32 bg-apple-blue/5 rounded-full blur-[60px] -ml-16 -mt-16 pointer-events-none" />
 
                     <div className="flex items-center justify-between mb-10">
-                        <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-apple-gray-400">Blueprint Declaration</h3>
+                        <h3 className="text-sm font-bold uppercase tracking-[0.4em] text-apple-gray-400">Blueprint Declaration</h3>
                         <ShieldCheck className="h-5 w-5 text-emerald-500" />
                     </div>
 
@@ -211,7 +215,7 @@ export default function JobPosting() {
                         whileTap={{ scale: 0.98 }}
                         onClick={handlePostJob}
                         disabled={loading}
-                        className="w-full mt-12 bg-apple-blue text-white py-5 rounded-[24px] font-black text-[11px] uppercase tracking-widest shadow-apple-hover border border-white/10 transition-all"
+                        className="w-full mt-12 bg-apple-blue text-slate-900 py-5 rounded-[24px] font-black text-sm uppercase tracking-widest shadow-apple-hover border border-slate-200 transition-all"
                     >
                         {loading ? "Transmitting..." : (isEditMode ? "Synchronize Blueprint" : "Broadcast Opportunity")}
                     </motion.button>
@@ -228,7 +232,7 @@ export default function JobPosting() {
                                 <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                                 <h3 className="text-xl font-black text-apple-gray-900 tracking-tight">Live Perspective</h3>
                             </div>
-                            <span className="text-[9px] font-black text-apple-gray-300 uppercase tracking-[0.2em]">Student Viewport</span>
+                            <span className="text-xs font-black text-apple-gray-300 uppercase tracking-[0.2em]">Student Viewport</span>
                         </div>
 
                         <div className="opacity-70 group-hover:opacity-100 transition-opacity duration-500">
@@ -241,8 +245,8 @@ export default function JobPosting() {
                             <Activity className="h-6 w-6 text-purple-600" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-apple-gray-900">Preview Resonance</p>
-                            <p className="text-[9px] font-bold text-apple-gray-400 uppercase tracking-tight mt-1">Real-time Synchronization Active</p>
+                            <p className="text-base font-black uppercase tracking-widest text-apple-gray-900">Preview Resonance</p>
+                            <p className="text-xs font-bold text-apple-gray-400 uppercase tracking-tight mt-1">Real-time Synchronization Active</p>
                         </div>
                         <div className="ml-auto h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
                     </div>

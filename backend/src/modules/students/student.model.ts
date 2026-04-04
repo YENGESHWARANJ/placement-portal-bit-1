@@ -8,6 +8,8 @@ export interface IStudent extends Document {
   branch: string;
   year: number;
   cgpa: number;
+  arrears: number;
+  currentArrears: number;
   status: "Placed" | "Unplaced" | "Offers Received";
   company?: string;
   skills: string[];
@@ -28,7 +30,10 @@ export interface IStudent extends Document {
   linkedin?: string;
   github?: string;
   website?: string;
+  leetcode?: string;
+  hackerrank?: string;
   profilePicture?: string;
+  location?: string;
   savedJobIds?: Types.ObjectId[];
   isActive: boolean;
   createdAt: Date;
@@ -75,6 +80,14 @@ const StudentSchema = new Schema<IStudent>(
     },
 
     cgpa: {
+      type: Number,
+      default: 0,
+    },
+    arrears: {
+      type: Number,
+      default: 0,
+    },
+    currentArrears: {
       type: Number,
       default: 0,
     },
@@ -143,9 +156,21 @@ const StudentSchema = new Schema<IStudent>(
       type: String,
       default: "",
     },
+    leetcode: {
+      type: String,
+      default: "",
+    },
+    hackerrank: {
+      type: String,
+      default: "",
+    },
     profilePicture: {
       type: String,
       default: "",
+    },
+    location: {
+      type: String,
+      default: "Sathy, Tamil Nadu",
     },
     savedJobIds: {
       type: [{ type: Schema.Types.ObjectId, ref: "Job" }],

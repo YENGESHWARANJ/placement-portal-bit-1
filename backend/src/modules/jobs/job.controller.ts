@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import axios from "axios";
 import Job from "./job.model";
+import GlobalJob from "./global-job.model";
 import { AuthRequest } from "../../middleware/auth.middleware";
 import Student from "../students/student.model";
 import Notice from "../notices/notice.model";
@@ -265,83 +266,78 @@ export const getRecommendedJobs = async (req: AuthRequest, res: Response) => {
         const student = await Student.findOne({ userId });
 
         if (!student || !student.skills || student.skills.length === 0) {
-            // No skills -> Just return recent jobs
-            const jobs = await Job.find({ active: true }).sort({ createdAt: -1 }).limit(10);
+            // No skills -> Return mixed recent jobs from both sources
+            const localJobs = await Job.find({ active: true }).sort({ createdAt: -1 }).limit(5);
+            const worldJobs = await GlobalJob.find({}).sort({ createdAt: -1 }).limit(15);
+
+            const mixed = [
+                ...localJobs.map(j => ({ ...j.toObject(), matchScore: 50, source: "Internal", apply_url: `/jobs/${j._id}` })),
+                ...worldJobs.map(j => ({ ...j.toObject(), matchScore: 50, source: j.source || "Global", requirements: j.skills, apply_url: j.apply_url }))
+            ];
+
             return res.json({
-                message: "Add skills to your profile for better recommendations",
-                jobs
+                success: true,
+                message: "Add skills to your profile for AI matching. Here are some featured jobs.",
+                jobs: mixed
             });
         }
 
-        // Find all active jobs
-        const allJobs = await Job.find({ active: true });
+        // Find all active internal jobs
+        const internalJobs = await Job.find({ active: true });
+        // Find latest global jobs
+        const globalJobs: any[] = await GlobalJob.find({}).sort({ createdAt: -1 }).limit(20);
 
-        // Prepare payload for AI Service
-        const jobsPayload = allJobs.map(job => ({
-            _id: job._id,
-            title: job.title,
-            company: job.company,
-            location: job.location,
-            type: job.type,
-            salary: job.salary,
-            skills: job.requirements || [], // Map requirements to "skills" for the AI
-            requirements: job.requirements // Keep requirements for frontend display
-        }));
+        // Prepare combined payload
+        const jobsPayload = [
+            ...internalJobs.map(j => ({
+                _id: j._id,
+                title: j.title,
+                company: j.company,
+                location: j.location,
+                type: j.type || "Full-time",
+                salary: j.salary,
+                requirements: j.requirements || [],
+                source: "Internal",
+                apply_url: `/jobs/${j._id}`
+            })),
+            ...globalJobs.map(j => ({
+                _id: j._id,
+                title: j.title,
+                company: j.company,
+                location: j.location,
+                type: "Remote/Full-time",
+                salary: j.salary,
+                requirements: j.skills || [],
+                source: j.source || "Global",
+                apply_url: j.apply_url
+            }))
+        ];
 
-        const aiGatewayUrl = ENV.AI_GATEWAY_URL;
+        // FALLBACK LOGIC (Simple JS Matching for all jobs)
+        const skillsArray = Array.isArray(student.skills) ? student.skills : [];
+        const studentSkills = new Set(skillsArray.map((s: any) => String(s).toLowerCase()));
 
-        try {
-            // Typed response for AI service
-            const { data } = await axios.post<{ ranked_jobs: any[] }>(`${aiGatewayUrl}/rank-jobs`, {
-                candidateSkills: student.skills,
-                jobs: jobsPayload
+        const rankedJobs = jobsPayload.map((job: any) => {
+            const requirements = job.requirements || [];
+            if (requirements.length === 0) return { ...job, matchScore: 30 }; // default 30% match
+
+            let matchCount = 0;
+            requirements.forEach((req: string) => {
+                if (studentSkills.has(req.toLowerCase())) {
+                    matchCount++;
+                }
             });
 
-            // AI Service returns sorted list with matchScore
-            const topJobs = data.ranked_jobs.slice(0, 10).map(job => ({
-                ...job,
-                skills: job.skills || job.requirements || []
-            }));
+            const score = Math.round((matchCount / requirements.length) * 100);
+            return { ...job, matchScore: score || 30 };
+        });
 
-            return res.json({
-                jobs: topJobs
-            });
+        rankedJobs.sort((a: any, b: any) => b.matchScore - a.matchScore);
 
-
-        } catch (aiError) {
-            console.error("AI Service Ranking Failed, falling back to basic logic", aiError);
-
-            // FALLBACK LOGIC (Simple JS Matching)
-            const skillsArray = Array.isArray(student.skills) ? student.skills : [];
-            const studentSkills = new Set(skillsArray.map((s: any) => String(s).toLowerCase()));
-
-            const rankedJobs = allJobs.map((job) => {
-                const requirements = job.requirements || [];
-                if (requirements.length === 0) return { job, score: 0 };
-
-                let matchCount = 0;
-                // Explicitly typing 'req' as string
-                requirements.forEach((req: string) => {
-                    if (studentSkills.has(req.toLowerCase())) {
-                        matchCount++;
-                    }
-                });
-
-                const score = (matchCount / requirements.length) * 100;
-                return { job, score };
-            });
-
-            rankedJobs.sort((a, b) => b.score - a.score);
-
-            const topJobs = rankedJobs.slice(0, 10).map(item => ({
-                ...item.job.toObject(),
-                matchScore: Math.round(item.score),
-                skills: item.job.requirements || []
-            }));
-
-            return res.json({ jobs: topJobs });
-
-        }
+        return res.json({
+            success: true,
+            jobs: rankedJobs.slice(0, 20)
+        });
 
     } catch (error) {
         console.error("GET RECOMMENDED JOBS ERROR:", error);
@@ -363,7 +359,11 @@ export const getJobById = async (req: Request, res: Response) => {
             return res.status(400).json({ message: "Invalid Job ID" });
         }
 
-        const job = await Job.findById(id);
+        let job: any = await Job.findById(id);
+
+        if (!job) {
+            job = await GlobalJob.findById(id);
+        }
 
         if (!job) {
             return res.status(404).json({ message: "Job not found" });

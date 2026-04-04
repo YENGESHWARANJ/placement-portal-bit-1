@@ -102,7 +102,7 @@ export default function OTPVerification() {
                 <div className="apple-card p-12">
                     <button
                         onClick={() => navigate(-1)}
-                        className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-apple-gray-300 hover:text-apple-gray-900 transition-colors mb-10 group"
+                        className="flex items-center gap-2 text-sm font-black uppercase tracking-widest text-apple-gray-300 hover:text-apple-gray-900 transition-colors mb-10 group"
                     >
                         <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
                         Retrace Step
@@ -110,10 +110,10 @@ export default function OTPVerification() {
 
                     <div className="flex flex-col items-center text-center mb-10">
                         <div className="w-16 h-16 bg-apple-blue rounded-[20px] flex items-center justify-center shadow-lg shadow-apple-blue/15 mb-6">
-                            <ShieldCheck className="h-8 w-8 text-white" />
+                            <ShieldCheck className="h-8 w-8 text-slate-900" />
                         </div>
                         <h2 className="text-4xl font-black text-apple-gray-900 tracking-tighter mb-2">Protocol Zero</h2>
-                        <p className="text-apple-blue font-black text-[9px] tracking-[0.3em] uppercase mb-4">Identity Verification v5.0</p>
+                        <p className="text-apple-blue font-black text-xs tracking-[0.3em] uppercase mb-4">Identity Verification v5.0</p>
                         <p className="text-apple-gray-400 font-bold text-sm px-4">
                             A 6-digit sequence has been dispatched to <span className="text-apple-gray-900 whitespace-nowrap">{email}</span>
                         </p>
@@ -146,7 +146,7 @@ export default function OTPVerification() {
                             <button
                                 onClick={handleVerify}
                                 disabled={loading || otp.some(d => !d)}
-                                className="apple-btn-primary w-full py-4.5 text-[15px] font-black uppercase tracking-widest flex items-center justify-center gap-3 disabled:opacity-50 disabled:grayscale"
+                                className="apple-btn-primary w-full py-4.5 text-lg font-black uppercase tracking-widest flex items-center justify-center gap-3 disabled:opacity-50 disabled:grayscale"
                             >
                                 {loading ? (
                                     <div className="h-5 w-5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
@@ -159,12 +159,12 @@ export default function OTPVerification() {
                             </button>
 
                             <div className="flex flex-col items-center gap-2">
-                                <p className="text-apple-gray-300 text-[11px] font-bold uppercase tracking-widest">Awaiting dispatch?</p>
+                                <p className="text-apple-gray-300 text-sm font-bold uppercase tracking-widest">Awaiting dispatch?</p>
                                 <button
                                     onClick={resendOTP}
                                     disabled={timer > 0}
                                     className={cn(
-                                        "flex items-center gap-2 text-[11px] font-black uppercase tracking-widest transition-all",
+                                        "flex items-center gap-2 text-sm font-black uppercase tracking-widest transition-all",
                                         timer > 0 ? "text-apple-gray-200" : "text-apple-blue hover:underline"
                                     )}
                                 >
@@ -184,7 +184,7 @@ export default function OTPVerification() {
                     <div className="mt-12 pt-8 border-t border-apple-gray-50 text-center">
                         <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-apple-gray-50 rounded-full border border-apple-gray-100">
                             <Shield className="h-4 w-4 text-apple-blue" />
-                            <span className="text-[10px] font-black text-apple-gray-400 uppercase tracking-[0.2em]">Encrypted Channel Verified</span>
+                            <span className="text-base font-black text-apple-gray-400 uppercase tracking-[0.2em]">Encrypted Channel Verified</span>
                         </div>
                     </div>
                 </div>

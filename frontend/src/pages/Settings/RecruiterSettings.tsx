@@ -24,8 +24,8 @@ export default function RecruiterSettings() {
     return (
         <div className="animate-in fade-in slide-in-from-left-4 duration-500 pb-20">
             <div className="mb-12">
-                <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter italic">Terminal Configuration</h1>
-                <p className="text-indigo-500 font-black uppercase tracking-[0.34em] text-[9px] mt-2">Partner Portal • Infrastructure Management</p>
+                <h1 className="text-4xl font-black text-slate-900 dark:text-slate-900 tracking-tighter italic">Terminal Configuration</h1>
+                <p className="text-indigo-500 font-black uppercase tracking-[0.34em] text-xs mt-2">Partner Portal • Infrastructure Management</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
@@ -34,9 +34,9 @@ export default function RecruiterSettings() {
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`w-full flex items-center gap-5 px-8 py-5 rounded-[28px] text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === tab.id
+                            className={`w-full flex items-center gap-5 px-8 py-5 rounded-[28px] text-base font-black uppercase tracking-widest transition-all ${activeTab === tab.id
                                 ? 'bg-indigo-600 text-white shadow-2xl shadow-indigo-500/30'
-                                : 'text-slate-400 hover:text-slate-900 border border-slate-100 hover:border-indigo-100'
+                                : 'text-slate-500 hover:text-slate-900 border border-slate-100 hover:border-indigo-100'
                                 }`}
                         >
                             <tab.icon className="h-5 w-5" />
@@ -51,23 +51,23 @@ export default function RecruiterSettings() {
                     {activeTab === 'company' && (
                         <div className="space-y-12 animate-in fade-in duration-500">
                             <div>
-                                <h3 className="text-2xl font-black text-white tracking-tight flex items-center gap-4">
+                                <h3 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-4">
                                     <Server className="h-6 w-6 text-indigo-500" />
                                     Enterprise Identity
                                 </h3>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-10">
                                     <div className="space-y-4">
-                                        <label className="text-[9px] font-black uppercase tracking-widest text-slate-500 ml-2">Company Legal Name</label>
-                                        <input type="text" defaultValue="Tech Giant Global Inc." className="w-full px-8 py-5 bg-slate-900 rounded-3xl border border-slate-800 outline-none focus:border-indigo-500 transition-all font-black text-white text-sm" />
+                                        <label className="text-xs font-black uppercase tracking-widest text-slate-500 ml-2">Company Legal Name</label>
+                                        <input type="text" defaultValue="Tech Giant Global Inc." className="w-full px-8 py-5 bg-slate-900 rounded-3xl border border-slate-800 outline-none focus:border-indigo-500 transition-all font-black text-slate-900 text-sm" />
                                     </div>
                                     <div className="space-y-4">
-                                        <label className="text-[9px] font-black uppercase tracking-widest text-slate-500 ml-2">Verification Domain</label>
-                                        <input type="text" defaultValue="techgiant.io" className="w-full px-8 py-5 bg-slate-900 rounded-3xl border border-slate-800 outline-none focus:border-indigo-500 transition-all font-black text-white text-sm" />
+                                        <label className="text-xs font-black uppercase tracking-widest text-slate-500 ml-2">Verification Domain</label>
+                                        <input type="text" defaultValue="techgiant.io" className="w-full px-8 py-5 bg-slate-900 rounded-3xl border border-slate-800 outline-none focus:border-indigo-500 transition-all font-black text-slate-900 text-sm" />
                                     </div>
                                     <div className="md:col-span-2 space-y-4">
-                                        <label className="text-[9px] font-black uppercase tracking-widest text-slate-500 ml-2">Hiring Mandate</label>
-                                        <textarea rows={4} defaultValue="Build the future of cloud computing by acquiring top 1% talent from premier institutions." className="w-full px-8 py-5 bg-slate-900 rounded-3xl border border-slate-800 outline-none focus:border-indigo-500 transition-all font-bold text-slate-300 text-sm resize-none"></textarea>
+                                        <label className="text-xs font-black uppercase tracking-widest text-slate-500 ml-2">Hiring Mandate</label>
+                                        <textarea rows={4} defaultValue="Build the future of cloud computing by acquiring top 1% talent from premier institutions." className="w-full px-8 py-5 bg-slate-900 rounded-3xl border border-slate-800 outline-none focus:border-indigo-500 transition-all font-bold text-slate-500 text-sm resize-none"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -75,11 +75,11 @@ export default function RecruiterSettings() {
                             <div className="bg-indigo-600/10 p-8 rounded-[35px] border border-indigo-500/20 flex items-center justify-between group/audit cursor-pointer hover:bg-indigo-600/20 transition-all">
                                 <div className="flex items-center gap-5">
                                     <div className="h-14 w-14 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-xl">
-                                        <ShieldCheck className="h-7 w-7 text-white" />
+                                        <ShieldCheck className="h-7 w-7 text-slate-900" />
                                     </div>
                                     <div>
-                                        <p className="font-black text-white text-lg tracking-tight">Enterprise Audit Trail</p>
-                                        <p className="text-indigo-300/60 text-[10px] font-black uppercase tracking-widest">Logging all recruitment activities since 2024</p>
+                                        <p className="font-black text-slate-900 text-lg tracking-tight">Enterprise Audit Trail</p>
+                                        <p className="text-indigo-300/60 text-base font-black uppercase tracking-widest">Logging all recruitment activities since 2024</p>
                                     </div>
                                 </div>
                                 <Terminal className="h-6 w-6 text-indigo-500 group-hover/audit:translate-x-2 transition-transform" />

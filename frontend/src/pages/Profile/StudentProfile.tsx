@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import {
     User, Mail, Phone, MapPin, Edit, Camera, Linkedin, Github, Globe,
     Award, BookOpen, Briefcase, Share2, Check, X, GraduationCap, Database, Plus,
-    Calendar, Sparkles
+    Calendar, Sparkles, Code2, Terminal
 } from 'lucide-react';
 import api from '../../services/api';
 import { cn } from '../../utils/cn';
@@ -37,6 +37,8 @@ export default function StudentProfile() {
         linkedin: '',
         github: '',
         website: '',
+        leetcode: '',
+        hackerrank: '',
         profilePicture: ''
     });
 
@@ -59,6 +61,8 @@ export default function StudentProfile() {
                         linkedin: data.linkedin || '',
                         github: data.github || '',
                         website: data.website || '',
+                        leetcode: data.leetcode || '',
+                        hackerrank: data.hackerrank || '',
                         profilePicture: data.profilePicture || ''
                     });
                 }
@@ -117,7 +121,7 @@ export default function StudentProfile() {
         return (
             <div className="h-[80vh] flex flex-col items-center justify-center space-y-6">
                 <div className="h-12 w-12 border-4 border-apple-blue/10 border-t-apple-blue rounded-full animate-spin" />
-                <p className="text-[11px] font-bold text-apple-gray-400 uppercase tracking-widest">Synchronizing Identity...</p>
+                <p className="text-sm font-bold text-apple-gray-400 uppercase tracking-widest">Synchronizing Identity...</p>
             </div>
         );
     }
@@ -131,7 +135,7 @@ export default function StudentProfile() {
         >
             {/* Header & Hero */}
             <motion.div variants={stagger.item} className="relative">
-                <div className="h-64 w-full bg-apple-gray-900 rounded-[40px] relative overflow-hidden shadow-2xl">
+                <div className="h-64 w-full bg-white rounded-[40px] relative overflow-hidden shadow-2xl">
                     <div className="absolute inset-0 bg-gradient-to-br from-apple-blue/20 via-transparent to-transparent opacity-50" />
                     <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/20 to-transparent" />
                     {/* Floating accents */}
@@ -158,12 +162,12 @@ export default function StudentProfile() {
                                     className="h-full w-full rounded-[38px] bg-apple-gray-50 object-cover"
                                 />
                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-[38px]">
-                                    <Camera className="h-8 w-8 text-white" />
+                                    <Camera className="h-8 w-8 text-slate-900" />
                                 </div>
                             </div>
                             <button
                                 onClick={() => fileInputRef.current?.click()}
-                                className="absolute bottom-2 right-2 p-3 bg-apple-blue text-white rounded-2xl shadow-xl hover:scale-110 active:scale-95 transition-all border-4 border-white"
+                                className="absolute bottom-2 right-2 p-3 bg-apple-blue text-slate-900 rounded-2xl shadow-xl hover:scale-110 active:scale-95 transition-all border-4 border-white"
                             >
                                 <Camera className="h-5 w-5" />
                             </button>
@@ -171,10 +175,10 @@ export default function StudentProfile() {
                         <div className="text-center md:text-left">
                             <h1 className="text-5xl font-bold text-apple-gray-900 tracking-tight mb-3">{formData.name || user?.name}</h1>
                             <div className="flex flex-wrap items-center gap-4 justify-center md:justify-start">
-                                <span className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-apple-blue bg-apple-blue/5 px-4 py-2 rounded-xl border border-apple-blue/10">
+                                <span className="flex items-center gap-2 text-base font-bold uppercase tracking-widest text-apple-blue bg-apple-blue/5 px-4 py-2 rounded-xl border border-apple-blue/10">
                                     <GraduationCap className="h-3 w-3" /> {formData.branch || 'General'} • {formData.year || '2025'}
                                 </span>
-                                <span className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-emerald-600 bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-100/50">
+                                <span className="flex items-center gap-2 text-base font-bold uppercase tracking-widest text-emerald-600 bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-100/50">
                                     <Database className="h-3 w-3" /> CGPA: {formData.cgpa || '0.0'}
                                 </span>
                             </div>
@@ -185,8 +189,8 @@ export default function StudentProfile() {
                         <button
                             onClick={() => isEditing ? handleSave() : setIsEditing(true)}
                             className={cn(
-                                "px-10 py-4 rounded-2xl font-bold uppercase tracking-widest text-[10px] transition-all flex items-center gap-3 shadow-xl hover:scale-[1.02] active:scale-95",
-                                isEditing ? "bg-emerald-600 text-white" : "bg-apple-gray-900 text-white"
+                                "px-10 py-4 rounded-2xl font-bold uppercase tracking-widest text-base transition-all flex items-center gap-3 shadow-xl hover:scale-[1.02] active:scale-95",
+                                isEditing ? "bg-emerald-600 text-white" : "bg-white text-slate-900"
                             )}
                         >
                             {isEditing ? <Check className="h-4 w-4" /> : <Edit className="h-4 w-4" />}
@@ -210,13 +214,13 @@ export default function StudentProfile() {
                             <div className="h-10 w-10 bg-apple-blue/5 rounded-xl flex items-center justify-center text-apple-blue">
                                 <User className="h-5 w-5" />
                             </div>
-                            <h3 className="font-bold text-apple-gray-900 uppercase tracking-widest text-[11px]">Core Biography</h3>
+                            <h3 className="font-bold text-apple-gray-900 uppercase tracking-widest text-sm">Core Biography</h3>
                         </div>
 
                         {isEditing ? (
                             <div className="space-y-6">
                                 <div>
-                                    <label className="text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest block mb-2">Display Name</label>
+                                    <label className="text-base font-bold text-apple-gray-400 uppercase tracking-widest block mb-2">Display Name</label>
                                     <input
                                         type="text"
                                         className="apple-input w-full"
@@ -225,7 +229,7 @@ export default function StudentProfile() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest block mb-2">Professional Summary</label>
+                                    <label className="text-base font-bold text-apple-gray-400 uppercase tracking-widest block mb-2">Professional Summary</label>
                                     <textarea
                                         rows={4}
                                         className="apple-input w-full py-4 resize-none"
@@ -265,11 +269,31 @@ export default function StudentProfile() {
                                             placeholder="your-portfolio.com"
                                         />
                                     </div>
+                                    <div className="relative">
+                                        <Code2 className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-amber-500" />
+                                        <input
+                                            type="text"
+                                            className="apple-input w-full pl-12 h-12 text-xs"
+                                            value={formData.leetcode}
+                                            onChange={(e) => setFormData({ ...formData, leetcode: e.target.value })}
+                                            placeholder="leetcode.com/username"
+                                        />
+                                    </div>
+                                    <div className="relative">
+                                        <Terminal className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-500" />
+                                        <input
+                                            type="text"
+                                            className="apple-input w-full pl-12 h-12 text-xs"
+                                            value={formData.hackerrank}
+                                            onChange={(e) => setFormData({ ...formData, hackerrank: e.target.value })}
+                                            placeholder="hackerrank.com/username"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         ) : (
                             <div>
-                                <p className="text-apple-gray-500 text-[14px] leading-relaxed font-medium">
+                                <p className="text-apple-gray-500 text-[16.5px] leading-relaxed font-medium">
                                     {formData.about || "Initialize your biography to help recruiters understand your professional vision."}
                                 </p>
                                 <div className="flex gap-6 mt-10">
@@ -282,6 +306,12 @@ export default function StudentProfile() {
                                     <a href={formData.website ? (formData.website.startsWith('http') ? formData.website : `https://${formData.website}`) : '#'} target="_blank" rel="noopener noreferrer" className={cn("transition-transform hover:scale-125", !formData.website && "opacity-20 pointer-events-none")}>
                                         <Globe className="h-6 w-6 text-indigo-600" />
                                     </a>
+                                    <a href={formData.leetcode ? (formData.leetcode.startsWith('http') ? formData.leetcode : `https://${formData.leetcode}`) : '#'} target="_blank" rel="noopener noreferrer" className={cn("transition-transform hover:scale-125", !formData.leetcode && "opacity-20 pointer-events-none")}>
+                                        <Code2 className="h-6 w-6 text-amber-500" />
+                                    </a>
+                                    <a href={formData.hackerrank ? (formData.hackerrank.startsWith('http') ? formData.hackerrank : `https://${formData.hackerrank}`) : '#'} target="_blank" rel="noopener noreferrer" className={cn("transition-transform hover:scale-125", !formData.hackerrank && "opacity-20 pointer-events-none")}>
+                                        <Terminal className="h-6 w-6 text-emerald-600" />
+                                    </a>
                                 </div>
                             </div>
                         )}
@@ -293,7 +323,7 @@ export default function StudentProfile() {
                                 <div className="h-10 w-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600">
                                     <Database className="h-5 w-5" />
                                 </div>
-                                <h3 className="font-bold text-apple-gray-900 uppercase tracking-widest text-[11px]">Skill Matrix</h3>
+                                <h3 className="font-bold text-apple-gray-900 uppercase tracking-widest text-sm">Skill Matrix</h3>
                             </div>
                             {isEditing && <Sparkles className="h-4 w-4 text-emerald-500 animate-pulse" />}
                         </div>
@@ -319,7 +349,7 @@ export default function StudentProfile() {
                                             addSkill(input.value);
                                             input.value = '';
                                         }}
-                                        className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 bg-apple-gray-900 text-white rounded-xl hover:bg-apple-blue transition-colors flex items-center justify-center"
+                                        className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 bg-white text-slate-900 rounded-xl hover:bg-apple-blue transition-colors flex items-center justify-center"
                                     >
                                         <Plus className="h-5 w-5" />
                                     </button>
@@ -329,7 +359,7 @@ export default function StudentProfile() {
 
                         <div className="flex flex-wrap gap-3">
                             {formData.skills.map((skill, i) => (
-                                <span key={i} className="group px-4 py-2 bg-apple-gray-50 text-apple-gray-600 rounded-xl text-[10px] font-bold uppercase tracking-widest border border-apple-gray-100 flex items-center gap-2 hover:border-apple-blue/30 transition-all">
+                                <span key={i} className="group px-4 py-2 bg-apple-gray-50 text-apple-gray-600 rounded-xl text-base font-bold uppercase tracking-widest border border-apple-gray-100 flex items-center gap-2 hover:border-apple-blue/30 transition-all">
                                     {skill}
                                     {isEditing && (
                                         <button onClick={() => removeSkill(skill)} className="text-apple-gray-300 group-hover:text-rose-500 transition-colors">
@@ -338,7 +368,7 @@ export default function StudentProfile() {
                                     )}
                                 </span>
                             ))}
-                            {formData.skills.length === 0 && <p className="text-apple-gray-300 text-[10px] font-bold uppercase tracking-widest">No technology tags added.</p>}
+                            {formData.skills.length === 0 && <p className="text-apple-gray-300 text-base font-bold uppercase tracking-widest">No technology tags added.</p>}
                         </div>
                     </motion.div>
                 </div>
@@ -353,13 +383,13 @@ export default function StudentProfile() {
                                 </div>
                                 <div>
                                     <h3 className="text-2xl font-bold text-apple-gray-900 tracking-tight">Academic Credentials</h3>
-                                    <p className="text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest">Verification data for recruiters</p>
+                                    <p className="text-base font-bold text-apple-gray-400 uppercase tracking-widest">Verification data for recruiters</p>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div>
-                                    <label className="text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest block mb-3">University Serial Number (USN)</label>
+                                    <label className="text-base font-bold text-apple-gray-400 uppercase tracking-widest block mb-3">University Serial Number (USN)</label>
                                     <input
                                         type="text"
                                         className="apple-input w-full h-14"
@@ -369,7 +399,7 @@ export default function StudentProfile() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest block mb-3">Branch / Specialization</label>
+                                    <label className="text-base font-bold text-apple-gray-400 uppercase tracking-widest block mb-3">Branch / Specialization</label>
                                     <input
                                         type="text"
                                         className="apple-input w-full h-14"
@@ -379,7 +409,7 @@ export default function StudentProfile() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest block mb-3">Graduation Year</label>
+                                    <label className="text-base font-bold text-apple-gray-400 uppercase tracking-widest block mb-3">Graduation Year</label>
                                     <input
                                         type="number"
                                         className="apple-input w-full h-14"
@@ -388,7 +418,7 @@ export default function StudentProfile() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest block mb-3">Current CGPA</label>
+                                    <label className="text-base font-bold text-apple-gray-400 uppercase tracking-widest block mb-3">Current CGPA</label>
                                     <input
                                         type="number"
                                         step="0.01"
@@ -400,8 +430,8 @@ export default function StudentProfile() {
                             </div>
 
                             <div className="pt-10 border-t border-apple-gray-50 flex justify-end gap-6">
-                                <button onClick={() => setIsEditing(false)} className="px-8 py-4 text-[11px] font-bold uppercase tracking-widest text-apple-gray-400 hover:text-apple-gray-900 transition-all">Discard Changes</button>
-                                <button onClick={handleSave} className="px-12 py-4 bg-apple-blue text-white rounded-2xl font-bold uppercase tracking-widest text-[11px] shadow-[0_15px_30px_-5px_rgba(0,113,227,0.3)] hover:scale-[1.02] transition-all">Save Changes</button>
+                                <button onClick={() => setIsEditing(false)} className="px-8 py-4 text-sm font-bold uppercase tracking-widest text-apple-gray-400 hover:text-apple-gray-900 transition-all">Discard Changes</button>
+                                <button onClick={handleSave} className="px-12 py-4 bg-apple-blue text-slate-900 rounded-2xl font-bold uppercase tracking-widest text-sm shadow-[0_15px_30px_-5px_rgba(0,113,227,0.3)] hover:scale-[1.02] transition-all">Save Changes</button>
                             </div>
                         </motion.div>
                     ) : (
@@ -441,12 +471,12 @@ export default function StudentProfile() {
                                         <Share2 className="h-8 w-8 text-apple-gray-200 group-hover:text-apple-blue transition-colors" />
                                     </div>
                                     <h4 className="text-lg font-bold text-apple-gray-900 mb-3">Professional Experience</h4>
-                                    <p className="text-apple-gray-400 text-[14px] font-medium max-w-md mx-auto mb-8 cursor-default">
+                                    <p className="text-apple-gray-400 text-[16.5px] font-medium max-w-md mx-auto mb-8 cursor-default">
                                         Your professional timeline is currently empty. Start documenting internships or research projects to increase your visibility.
                                     </p>
                                     <button
                                         onClick={() => setIsEditing(true)}
-                                        className="px-10 py-3.5 bg-white text-apple-gray-900 border border-apple-gray-200 rounded-2xl text-[11px] font-bold uppercase tracking-widest shadow-sm hover:shadow-apple-hover hover:border-apple-blue/30 transition-all"
+                                        className="px-10 py-3.5 bg-white text-apple-gray-900 border border-apple-gray-200 rounded-2xl text-sm font-bold uppercase tracking-widest shadow-sm hover:shadow-apple-hover hover:border-apple-blue/30 transition-all"
                                     >
                                         Initialize Timeline
                                     </button>
@@ -468,8 +498,8 @@ function TimelineItem({ icon: Icon, title, subtitle, date, color, bgColor }: any
             </div>
             <div>
                 <h4 className="text-lg font-bold text-apple-gray-900 leading-none mb-1">{title}</h4>
-                <p className="text-[14px] text-apple-gray-500 font-medium mb-2">{subtitle}</p>
-                <div className="flex items-center gap-2 text-[10px] font-bold text-apple-gray-400 uppercase tracking-[0.2em]">
+                <p className="text-[16.5px] text-apple-gray-500 font-medium mb-2">{subtitle}</p>
+                <div className="flex items-center gap-2 text-base font-bold text-apple-gray-400 uppercase tracking-[0.2em]">
                     <Calendar className="h-3 w-3" />
                     {date}
                 </div>

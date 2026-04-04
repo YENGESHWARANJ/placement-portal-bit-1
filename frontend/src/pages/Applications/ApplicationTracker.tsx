@@ -113,7 +113,7 @@ export default function ApplicationTracker() {
             {/* Header */}
             <motion.div variants={stagger.item} className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <span className="text-[11px] font-bold text-apple-blue uppercase tracking-[0.2em] mb-2 block">Track</span>
+                    <span className="text-sm font-bold text-apple-blue uppercase tracking-[0.2em] mb-2 block">Track</span>
                     <h1 className="text-4xl font-bold text-apple-gray-900 tracking-tight">Applications</h1>
                     <p className="text-apple-gray-400 mt-2 font-medium">Monitor your recruitment progress in real-time.</p>
                 </div>
@@ -127,15 +127,15 @@ export default function ApplicationTracker() {
             </motion.div>
 
             {/* Metrics */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {metrics.map((m, i) => (
-                    <motion.div key={i} variants={stagger.item} className="apple-card p-6 flex flex-col justify-between hover:shadow-apple-hover transition-all duration-500">
-                        <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center mb-4", m.bgColor)}>
-                            <m.icon className={cn("h-5 w-5", m.color)} />
+                    <motion.div key={i} variants={stagger.item} className="apple-card p-4 sm:p-6 flex flex-col justify-between hover:shadow-apple-hover transition-all duration-500">
+                        <div className={cn("h-8 w-8 sm:h-10 sm:w-10 rounded-xl flex items-center justify-center mb-3 sm:mb-4", m.bgColor)}>
+                            <m.icon className={cn("h-4 w-4 sm:h-5 sm:w-5", m.color)} />
                         </div>
                         <div>
-                            <h3 className="text-2xl font-bold text-apple-gray-900 tracking-tight">{m.value}</h3>
-                            <p className="text-[11px] font-bold text-apple-gray-400 uppercase tracking-widest mt-1">{m.label}</p>
+                            <h3 className="text-xl sm:text-2xl font-bold text-apple-gray-900 tracking-tight">{m.value}</h3>
+                            <p className="text-[10px] sm:text-sm font-bold text-apple-gray-400 uppercase tracking-widest mt-1">{m.label}</p>
                         </div>
                     </motion.div>
                 ))}
@@ -160,15 +160,15 @@ export default function ApplicationTracker() {
                             key={f}
                             onClick={() => setFilterStatus(f)}
                             className={cn(
-                                "px-5 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
+                                "px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-wider transition-all whitespace-nowrap",
                                 filterStatus === f
-                                    ? "bg-apple-gray-900 text-white shadow-lg"
+                                    ? "bg-white text-slate-900 shadow-lg"
                                     : "bg-white text-apple-gray-400 border border-apple-gray-100 hover:border-apple-blue/30 hover:text-apple-blue"
                             )}
                         >
                             {f}
                             {f !== "All" && (
-                                <span className="ml-2 opacity-50 text-[10px]">
+                                <span className="ml-2 opacity-50 text-base">
                                     {applications.filter(a => a.status === f).length}
                                 </span>
                             )}
@@ -192,7 +192,7 @@ export default function ApplicationTracker() {
                     {loading ? (
                         <div className="col-span-full py-32 text-center bg-white rounded-[40px] border border-apple-gray-50 shadow-sm animate-pulse">
                             <div className="h-10 w-10 border-4 border-apple-blue/10 border-t-apple-blue rounded-full animate-spin mx-auto mb-4" />
-                            <p className="text-[12px] font-bold text-apple-gray-400 uppercase tracking-widest">Loading Telemetry...</p>
+                            <p className="text-lg font-bold text-apple-gray-400 uppercase tracking-widest">Loading Telemetry...</p>
                         </div>
                     ) : filtered.length === 0 ? (
                         <motion.div
@@ -220,21 +220,21 @@ export default function ApplicationTracker() {
                                     <div className="flex flex-col gap-8">
                                         <div className="flex items-start justify-between gap-6">
                                             <div className="flex items-start gap-6">
-                                                <div className="h-16 w-16 rounded-[22px] bg-apple-gray-900 flex items-center justify-center text-white font-bold text-2xl shadow-xl group-hover:bg-apple-blue transition-all duration-700">
+                                                <div className="h-16 w-16 rounded-[22px] bg-white flex items-center justify-center text-slate-900 font-bold text-2xl shadow-xl group-hover:bg-apple-blue transition-all duration-700">
                                                     {app.jobId.company.charAt(0)}
                                                 </div>
                                                 <div>
                                                     <h3 className="text-2xl font-bold text-apple-gray-900 tracking-tight group-hover:text-apple-blue transition-colors">
                                                         {app.jobId.title}
                                                     </h3>
-                                                    <p className="text-[13px] font-bold text-apple-gray-400 uppercase tracking-wider mt-1.5 flex items-center gap-2">
+                                                    <p className="text-base font-bold text-apple-gray-400 uppercase tracking-wider mt-1.5 flex items-center gap-2">
                                                         <Building2 className="h-3.5 w-3.5" /> {app.jobId.company}
                                                     </p>
                                                     <div className="flex items-center gap-4 mt-4">
-                                                        <div className={cn("flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-full border", cfg.color, cfg.bgColor, "border-transparent")}>
+                                                        <div className={cn("flex items-center gap-2 text-base font-bold uppercase tracking-wider px-4 py-1.5 rounded-full border", cfg.color, cfg.bgColor, "border-transparent")}>
                                                             <Icon className="h-3.5 w-3.5" /> {cfg.label}
                                                         </div>
-                                                        <div className="text-[11px] font-semibold text-apple-gray-400 flex items-center gap-1.5">
+                                                        <div className="text-sm font-semibold text-apple-gray-400 flex items-center gap-1.5">
                                                             <Clock className="h-3.5 w-3.5" /> {new Date(app.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                                                         </div>
                                                     </div>
@@ -260,7 +260,7 @@ export default function ApplicationTracker() {
                                                             >
                                                                 <button
                                                                     onClick={() => { navigate(`/jobs/${app.jobId._id}`); setOpenMenuId(null); }}
-                                                                    className="w-full px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-apple-gray-600 hover:text-apple-blue hover:bg-apple-blue/5 rounded-2xl flex items-center gap-3 transition-all"
+                                                                    className="w-full px-4 py-3 text-left text-sm font-bold uppercase tracking-wider text-apple-gray-600 hover:text-apple-blue hover:bg-apple-blue/5 rounded-2xl flex items-center gap-3 transition-all"
                                                                 >
                                                                     <ArrowUpRight className="h-4 w-4" />
                                                                     View Details
@@ -269,7 +269,7 @@ export default function ApplicationTracker() {
                                                                 <button
                                                                     onClick={() => handleWithdraw(app._id)}
                                                                     disabled={withdrawingId === app._id}
-                                                                    className="w-full px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-rose-500 hover:bg-rose-50 rounded-2xl flex items-center gap-3 transition-all"
+                                                                    className="w-full px-4 py-3 text-left text-sm font-bold uppercase tracking-wider text-rose-500 hover:bg-rose-50 rounded-2xl flex items-center gap-3 transition-all"
                                                                 >
                                                                     <Trash2 className="h-4 w-4" />
                                                                     {withdrawingId === app._id ? "Processing..." : "Withdraw"}
@@ -283,7 +283,7 @@ export default function ApplicationTracker() {
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
                                             <div className="space-y-4">
-                                                <div className="flex items-center justify-between text-[11px] font-bold text-apple-gray-400 uppercase tracking-widest">
+                                                <div className="flex items-center justify-between text-sm font-bold text-apple-gray-400 uppercase tracking-widest">
                                                     <span>Profile Match</span>
                                                     <span className="text-apple-blue">{matchPct}%</span>
                                                 </div>
@@ -295,7 +295,7 @@ export default function ApplicationTracker() {
                                                         className="h-full bg-apple-blue rounded-full shadow-lg shadow-apple-blue/20"
                                                     />
                                                 </div>
-                                                <p className="text-[12px] text-apple-gray-400 font-medium leading-relaxed italic">
+                                                <p className="text-lg text-apple-gray-400 font-medium leading-relaxed italic">
                                                     Status: {cfg.description}
                                                 </p>
                                             </div>
@@ -303,7 +303,7 @@ export default function ApplicationTracker() {
                                             <div className="flex justify-end gap-3">
                                                 <button
                                                     onClick={() => navigate(`/jobs/${app.jobId._id}`)}
-                                                    className="apple-btn-primary px-8 py-3.5 text-[11px] flex items-center gap-3 transition-all"
+                                                    className="apple-btn-primary px-8 py-3.5 text-sm flex items-center gap-3 transition-all"
                                                 >
                                                     View Role
                                                     <ChevronRight className="h-4 w-4" />

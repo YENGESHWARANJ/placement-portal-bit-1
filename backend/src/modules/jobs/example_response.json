@@ -1,0 +1,30 @@
+{
+    "success": true,
+    "count": 20,
+    "totalCount": 150,
+    "page": 1,
+    "jobs": [
+        {
+            "title": "Senior Frontend Developer",
+            "company": "TechGlobal Solutions",
+            "location": "Berlin, Germany",
+            "country": "Germany",
+            "description": "We are looking for an experienced React developer to join our team...",
+            "apply_url": "https://www.arbeitnow.com/jobs/senior-frontend-developer-123",
+            "salary": "€70,000 - €90,000",
+            "posted_at": "2024-03-05T08:00:00.000Z",
+            "source": "Arbeitnow"
+        },
+        {
+            "title": "Software Engineer Intern",
+            "company": "Adzuna Tech",
+            "location": "Mumbai, India",
+            "country": "india",
+            "description": "Join our engineering team as an intern and work on exciting projects...",
+            "apply_url": "https://www.adzuna.com/jobs/12345678",
+            "salary": "₹30,000 - ₹50,000",
+            "posted_at": "2024-03-04T12:00:00.000Z",
+            "source": "Adzuna"
+        }
+    ]
+}

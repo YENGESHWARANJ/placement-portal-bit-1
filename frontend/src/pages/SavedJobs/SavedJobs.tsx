@@ -57,14 +57,14 @@ export default function SavedJobs() {
             {/* Header */}
             <motion.div variants={stagger.item} className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                 <div>
-                    <span className="text-[11px] font-bold text-apple-blue uppercase tracking-[0.2em] mb-2 block">Favorites</span>
+                    <span className="text-sm font-bold text-apple-blue uppercase tracking-[0.2em] mb-2 block">Favorites</span>
                     <h1 className="text-4xl font-bold text-apple-gray-900 tracking-tight">Saved Jobs</h1>
                     <p className="text-apple-gray-400 mt-2 font-medium">Keep track of the roles you're most interested in.</p>
                 </div>
                 <div className="flex gap-4">
                     <div className="flex items-center gap-2 px-4 py-2 bg-apple-blue/5 text-apple-blue rounded-xl border border-apple-blue/10">
                         <Bookmark className="h-4 w-4 fill-apple-blue" />
-                        <span className="text-[11px] font-bold uppercase tracking-wider">{savedItems.length} Saved</span>
+                        <span className="text-sm font-bold uppercase tracking-wider">{savedItems.length} Saved</span>
                     </div>
                 </div>
             </motion.div>
@@ -128,10 +128,10 @@ export default function SavedJobs() {
                                         </p>
 
                                         <div className="flex flex-wrap gap-2 mt-6">
-                                            <span className="text-[10px] font-bold px-3 py-1 bg-apple-gray-50 text-apple-gray-500 rounded-full border border-apple-gray-100 uppercase tracking-widest">
+                                            <span className="text-base font-bold px-3 py-1 bg-apple-gray-50 text-apple-gray-500 rounded-full border border-apple-gray-100 uppercase tracking-widest">
                                                 {job.location || "Remote"}
                                             </span>
-                                            <span className="text-[10px] font-bold px-3 py-1 bg-apple-blue/10 text-apple-blue rounded-full border border-apple-blue/10 uppercase tracking-widest">
+                                            <span className="text-base font-bold px-3 py-1 bg-apple-blue/10 text-apple-blue rounded-full border border-apple-blue/10 uppercase tracking-widest">
                                                 {job.type || "Full Time"}
                                             </span>
                                         </div>
@@ -139,12 +139,12 @@ export default function SavedJobs() {
 
                                     <div className="mt-8 pt-6 border-t border-apple-gray-50 flex items-center justify-between">
                                         <div className="flex flex-col">
-                                            <span className="text-[10px] font-bold text-apple-gray-300 uppercase tracking-widest">Salary Estimate</span>
-                                            <span className="text-[13px] font-bold text-apple-gray-900 tracking-tight">{job.salary || "$120k - $150k"}</span>
+                                            <span className="text-base font-bold text-apple-gray-300 uppercase tracking-widest">Salary Estimate</span>
+                                            <span className="text-base font-bold text-apple-gray-900 tracking-tight">{job.salary || "$120k - $150k"}</span>
                                         </div>
                                         <Link
                                             to={`/jobs/${job.id}`}
-                                            className="h-11 w-11 bg-apple-gray-50 border border-apple-gray-100 rounded-xl flex items-center justify-center text-apple-gray-400 hover:bg-apple-blue hover:text-white hover:border-apple-blue transition-all group/btn"
+                                            className="h-11 w-11 bg-apple-gray-50 border border-apple-gray-100 rounded-xl flex items-center justify-center text-apple-gray-400 hover:bg-apple-blue hover:text-slate-900 hover:border-apple-blue transition-all group/btn"
                                         >
                                             <ArrowUpRight className="h-5 w-5 group-hover/btn:scale-110 transition-transform" />
                                         </Link>
@@ -159,11 +159,11 @@ export default function SavedJobs() {
             {/* Bottom Recommendation Banner */}
             {savedItems.length > 0 && (
                 <motion.div variants={stagger.item} className="apple-card p-10 bg-apple-blue relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32" />
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-slate-100 rounded-full blur-3xl -mr-32 -mt-32" />
                     <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                         <div className="text-center md:text-left">
-                            <h3 className="text-2xl font-bold text-white tracking-tight">Looking for more matches?</h3>
-                            <p className="text-white/70 font-medium mt-1">Our AI engine has identified 5 new roles that match your skills.</p>
+                            <h3 className="text-2xl font-bold text-slate-900 tracking-tight">Looking for more matches?</h3>
+                            <p className="text-slate-900/70 font-medium mt-1">Our AI engine has identified 5 new roles that match your skills.</p>
                         </div>
                         <Link
                             to="/job-recommendations"

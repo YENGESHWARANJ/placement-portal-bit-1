@@ -1,0 +1,69 @@
+
+> placement-frontend@1.0.0 dev
+> vite
+
+
+  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m441[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+
+[1m[33mwarn[39m[22m - The class `duration-[2000ms]` is ambiguous and matches multiple utilities.
+[1m[33mwarn[39m[22m - If this is content and not a class, replace it with `duration-&lsqb;2000ms&rsqb;` to silence this warning.
+
+[1m[33mwarn[39m[22m - The class `duration-[3000ms]` is ambiguous and matches multiple utilities.
+[1m[33mwarn[39m[22m - If this is content and not a class, replace it with `duration-&lsqb;3000ms&rsqb;` to silence this warning.
+
+[1m[33mwarn[39m[22m - The class `duration-[4000ms]` is ambiguous and matches multiple utilities.
+[1m[33mwarn[39m[22m - If this is content and not a class, replace it with `duration-&lsqb;4000ms&rsqb;` to silence this warning.
+[2m8:57:44 PM[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
+[2m8:57:44 PM[22m [36m[1m[vite][22m[39m server restarted.
+[2m9:01:54 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/layouts/RecruiterLayout.tsx, /src/styles/globals.css[22m
+[2m9:01:54 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Dashboard/RecruiterDashboard.tsx, /src/styles/globals.css[22m
+[2m9:01:54 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/AdminDashboard.tsx, /src/styles/globals.css[22m
+[2m9:01:54 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/layouts/AdminLayout.tsx, /src/styles/globals.css[22m
+[2m9:02:14 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/features/auth/Login.tsx, /src/styles/globals.css[22m
+[2m9:02:23 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/features/auth/AdminLogin.tsx, /src/styles/globals.css[22m
+[2m9:02:32 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/app/Router.tsx, /src/styles/globals.css[22m
+[2m9:02:45 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/app/Router.tsx, /src/styles/globals.css[22m
+[2m9:08:40 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/features/auth/Register.tsx, /src/styles/globals.css[22m
+[2m9:09:09 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/layouts/AdminLayout.tsx, /src/styles/globals.css[22m
+[2m9:09:09 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/AdminDashboard.tsx, /src/styles/globals.css[22m
+[2m9:09:09 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/features/auth/Login.tsx, /src/styles/globals.css[22m
+[2m9:09:09 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/features/auth/AdminLogin.tsx, /src/styles/globals.css[22m
+[2m9:19:07 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/app/Router.tsx, /src/styles/globals.css[22m
+[2m9:19:18 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/layouts/AdminLayout.tsx, /src/styles/globals.css[22m
+[2m9:19:36 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/recruiter/JobPosting.tsx, /src/styles/globals.css[22m
+[2m9:19:45 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/recruiter/JobPosting.tsx, /src/styles/globals.css[22m
+[2m9:23:33 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/layouts/AdminLayout.tsx, /src/styles/globals.css[22m
+[2m9:23:53 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/layouts/AdminLayout.tsx, /src/styles/globals.css[22m
+[2m9:24:15 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/layouts/AdminLayout.tsx, /src/styles/globals.css[22m
+[2m9:24:27 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/layouts/RecruiterLayout.tsx, /src/styles/globals.css[22m
+[2m9:24:36 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/layouts/RecruiterLayout.tsx, /src/styles/globals.css[22m
+[2m9:29:52 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/PlacementDriveManager.tsx, /src/styles/globals.css[22m
+[2m9:32:33 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/CompanyManager.tsx, /src/styles/globals.css[22m
+[2m9:32:46 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/CompanyManager.tsx, /src/styles/globals.css[22m
+[2m9:37:36 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/StudentManager.tsx, /src/styles/globals.css[22m
+[2m9:37:44 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/StudentManager.tsx, /src/styles/globals.css[22m
+[2m9:38:10 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/StudentManager.tsx, /src/styles/globals.css[22m
+[2m9:38:18 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/StudentManager.tsx, /src/styles/globals.css[22m
+[2m9:38:27 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/StudentManager.tsx, /src/styles/globals.css[22m
+[2m9:38:36 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/StudentManager.tsx, /src/styles/globals.css[22m
+[2m10:55:46 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/AdminDashboard.tsx, /src/styles/globals.css[22m
+[2m10:55:54 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/AdminDashboard.tsx, /src/styles/globals.css[22m
+[2m10:56:13 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/PlacementDriveManager.tsx, /src/styles/globals.css[22m
+[2m10:57:01 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/PlacementDriveManager.tsx, /src/styles/globals.css[22m
+[2m10:57:09 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/PlacementDriveManager.tsx, /src/styles/globals.css[22m
+[2m10:57:28 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/PlacementDriveManager.tsx, /src/styles/globals.css[22m
+[2m10:57:49 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/StudentManager.tsx, /src/styles/globals.css[22m
+[2m10:58:25 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/app/Router.tsx, /src/styles/globals.css[22m
+[2m10:58:32 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/app/Router.tsx, /src/styles/globals.css[22m
+[2m10:58:45 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/PlacementDriveManager.tsx, /src/styles/globals.css[22m
+[2m10:58:51 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/PlacementDriveManager.tsx, /src/styles/globals.css[22m
+[2m10:58:58 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/PlacementDriveManager.tsx, /src/styles/globals.css[22m
+[2m11:04:14 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/app/Router.tsx, /src/styles/globals.css[22m
+[2m11:04:22 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/app/Router.tsx, /src/styles/globals.css[22m
+[2m11:04:40 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/layouts/StudentLayout.tsx, /src/styles/globals.css[22m
+[2m11:04:50 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/layouts/StudentLayout.tsx, /src/styles/globals.css[22m
+[2m11:05:27 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin/PlacementDriveManager.tsx, /src/styles/globals.css[22m

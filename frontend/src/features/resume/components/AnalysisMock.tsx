@@ -40,8 +40,8 @@ export default function AnalysisMock() {
 
             <div className="mb-12">
                 <div className="flex justify-between items-end mb-4">
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500">Neural Progress</span>
-                    <span className="text-xl font-black text-slate-900 dark:text-white">{Math.round(progress)}%</span>
+                    <span className="text-base font-black uppercase tracking-[0.3em] text-blue-500">Neural Progress</span>
+                    <span className="text-xl font-black text-slate-900 dark:text-slate-900">{Math.round(progress)}%</span>
                 </div>
                 <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-50 dark:border-slate-800">
                     <div
@@ -63,15 +63,15 @@ export default function AnalysisMock() {
                         )}>
                             <div className="relative">
                                 {step.status === "completed" ? (
-                                    <div className="h-12 w-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 animate-in zoom-in duration-300">
+                                    <div className="h-12 w-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-slate-900 shadow-lg shadow-emerald-500/20 animate-in zoom-in duration-300">
                                         <CheckCircle2 className="h-6 w-6" />
                                     </div>
                                 ) : step.status === "processing" ? (
-                                    <div className="h-12 w-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+                                    <div className="h-12 w-12 bg-blue-600 rounded-2xl flex items-center justify-center text-slate-900 shadow-lg shadow-blue-500/20">
                                         <Loader2 className="h-6 w-6 animate-spin" />
                                     </div>
                                 ) : (
-                                    <div className="h-12 w-12 bg-slate-200 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400">
+                                    <div className="h-12 w-12 bg-slate-200 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-500">
                                         <Icon className="h-6 w-6" />
                                     </div>
                                 )}
@@ -80,13 +80,13 @@ export default function AnalysisMock() {
                             <div className="flex flex-col text-left">
                                 <span className={cn(
                                     "text-sm font-black uppercase tracking-tight italic",
-                                    step.status === "pending" ? "text-slate-400" :
-                                        step.status === "processing" ? "text-blue-600 dark:text-blue-400" :
-                                            "text-emerald-700 dark:text-emerald-400"
+                                    step.status === "pending" ? "text-slate-500" :
+                                        step.status === "processing" ? "text-blue-600 dark:text-blue-600" :
+                                            "text-emerald-700 dark:text-emerald-600"
                                 )}>
                                     {step.label}
                                 </span>
-                                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+                                <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-0.5">
                                     {step.status === "completed" ? "Successfully Processed" :
                                         step.status === "processing" ? "Active Execution" :
                                             "Waiting for sequence"}

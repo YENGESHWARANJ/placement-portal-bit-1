@@ -47,7 +47,7 @@ export default function StudentTable({ students }: StudentTableProps) {
                                                 student.status === "Unplaced" &&
                                                 "bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800",
                                                 student.status === "Offers Received" &&
-                                                "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800"
+                                                "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-600 dark:border-blue-800"
                                             )}
                                         >
                                             {student.status}

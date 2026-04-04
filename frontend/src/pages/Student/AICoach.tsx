@@ -62,7 +62,7 @@ export default function AICoach() {
             desc: "Practice with AI",
             link: "/interview",
             color: "bg-apple-blue",
-            textColor: "text-white"
+            textColor: "text-slate-900"
         },
         {
             icon: Search,
@@ -70,7 +70,7 @@ export default function AICoach() {
             desc: "ATS optimization",
             link: "/resume-upload",
             color: "bg-indigo-500",
-            textColor: "text-white"
+            textColor: "text-slate-900"
         },
         {
             icon: BookOpen,
@@ -78,7 +78,7 @@ export default function AICoach() {
             desc: "Personalized roadmap",
             link: "/roadmap",
             color: "bg-emerald-500",
-            textColor: "text-white"
+            textColor: "text-slate-900"
         }
     ];
 
@@ -95,13 +95,13 @@ export default function AICoach() {
                 <div className="p-6 border-b border-apple-gray-50 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20">
                     <div className="flex items-center gap-4">
                         <div className="h-10 w-10 bg-apple-blue rounded-xl flex items-center justify-center shadow-lg shadow-apple-blue/20">
-                            <Bot className="h-6 w-6 text-white" />
+                            <Bot className="h-6 w-6 text-slate-900" />
                         </div>
                         <div>
                             <h2 className="text-lg font-bold text-apple-gray-900 tracking-tight">AI Placement Coach</h2>
                             <div className="flex items-center gap-1.5">
                                 <span className="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                                <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Active Intelligence</span>
+                                <span className="text-base font-bold text-emerald-600 uppercase tracking-widest">Active Intelligence</span>
                             </div>
                         </div>
                     </div>
@@ -121,9 +121,9 @@ export default function AICoach() {
                                 className={cn("flex w-full", msg.role === 'user' ? "justify-end" : "justify-start")}
                             >
                                 <div className={cn(
-                                    "max-w-[85%] p-6 rounded-[24px] text-[14px] font-medium leading-relaxed relative shadow-sm",
+                                    "max-w-[85%] p-6 rounded-[24px] text-[16.5px] font-medium leading-relaxed relative shadow-sm",
                                     msg.role === 'user'
-                                        ? "bg-apple-gray-900 text-white rounded-tr-none"
+                                        ? "bg-white text-slate-900 rounded-tr-none"
                                         : "bg-white text-apple-gray-700 rounded-tl-none border border-apple-gray-100"
                                 )}>
                                     {msg.text}
@@ -155,7 +155,7 @@ export default function AICoach() {
                         <button
                             type="submit"
                             disabled={!message.trim() || loading}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 bg-apple-blue text-white rounded-xl flex items-center justify-center hover:bg-apple-blue-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-apple-blue/20"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 bg-apple-blue text-slate-900 rounded-xl flex items-center justify-center hover:bg-apple-blue-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-apple-blue/20"
                         >
                             <Send className="h-4 w-4" />
                         </button>
@@ -166,17 +166,17 @@ export default function AICoach() {
             {/* Right Column: Context & Actions */}
             <div className="lg:col-span-4 flex flex-col gap-8">
                 {/* Insights Card */}
-                <motion.div variants={stagger.item} className="apple-card p-8 bg-apple-gray-900 text-white relative overflow-hidden group">
+                <motion.div variants={stagger.item} className="apple-card p-8 bg-white text-slate-900 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-48 h-48 bg-apple-blue/20 rounded-full blur-[60px] -mr-24 -mt-24 pointer-events-none" />
                     <div className="relative z-10">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="h-8 w-8 bg-apple-blue/20 rounded-lg flex items-center justify-center">
                                 <Sparkles className="h-4 w-4 text-apple-blue" />
                             </div>
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-apple-blue">Daily Insight</span>
+                            <span className="text-base font-bold uppercase tracking-[0.2em] text-apple-blue">Daily Insight</span>
                         </div>
                         <p className="text-xl font-bold leading-snug mb-4 italic tracking-tight">"Focus on System Design for your upcoming fintech interview. Scalability is their core metric."</p>
-                        <p className="text-[11px] font-bold text-apple-gray-500 uppercase tracking-widest">Calculated by Neural Engine</p>
+                        <p className="text-sm font-bold text-apple-gray-500 uppercase tracking-widest">Calculated by Neural Engine</p>
                     </div>
                 </motion.div>
 
@@ -192,8 +192,8 @@ export default function AICoach() {
                                     <action.icon className="h-5 w-5" />
                                 </div>
                                 <div className="flex-1">
-                                    <h4 className="font-bold text-apple-gray-900 text-[14px] tracking-tight">{action.label}</h4>
-                                    <p className="text-[10px] font-bold text-apple-gray-400 border border-apple-gray-100 rounded-full px-2 py-0.5 w-fit uppercase tracking-widest mt-1.5">{action.desc}</p>
+                                    <h4 className="font-bold text-apple-gray-900 text-[16.5px] tracking-tight">{action.label}</h4>
+                                    <p className="text-base font-bold text-apple-gray-400 border border-apple-gray-100 rounded-full px-2 py-0.5 w-fit uppercase tracking-widest mt-1.5">{action.desc}</p>
                                 </div>
                                 <ArrowRight className="h-4 w-4 text-apple-gray-300 group-hover:text-apple-blue transition-all" />
                             </Link>
@@ -209,7 +209,7 @@ export default function AICoach() {
                             <Trophy className="h-6 w-6 text-orange-500" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest">Market Readiness</p>
+                            <p className="text-base font-bold text-apple-gray-400 uppercase tracking-widest">Market Readiness</p>
                             <p className="text-3xl font-bold text-apple-gray-900 tracking-tighter">85<span className="text-sm font-bold text-apple-gray-400 ml-1">/ 100</span></p>
                         </div>
                     </div>
@@ -221,7 +221,7 @@ export default function AICoach() {
                             className="h-full bg-apple-blue rounded-full shadow-lg shadow-apple-blue/20"
                         />
                     </div>
-                    <p className="text-[11px] font-bold text-apple-gray-500 mt-6 leading-relaxed relative z-10 uppercase tracking-tight">
+                    <p className="text-sm font-bold text-apple-gray-500 mt-6 leading-relaxed relative z-10 uppercase tracking-tight">
                         Excellent progress. Complete your <span className="text-apple-blue">mock interview</span> to reach the 90th percentile.
                     </p>
                 </motion.div>

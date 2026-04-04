@@ -1,7 +1,8 @@
 import { Schema, model, Document, Types, models } from "mongoose";
 
 export interface IApplication extends Document {
-    jobId: Types.ObjectId;
+    jobId?: Types.ObjectId;
+    driveId?: Types.ObjectId;
     studentId: Types.ObjectId;
     status: "Applied" | "Shortlisted" | "Interviewing" | "Rejected" | "Selected";
     resumeUrl?: string;
@@ -15,7 +16,12 @@ const ApplicationSchema = new Schema<IApplication>(
         jobId: {
             type: Schema.Types.ObjectId,
             ref: "Job",
-            required: true,
+            required: false,
+        },
+        driveId: {
+            type: Schema.Types.ObjectId,
+            ref: "PlacementDrive",
+            required: false,
         },
         studentId: {
             type: Schema.Types.ObjectId,
@@ -49,7 +55,10 @@ const ApplicationSchema = new Schema<IApplication>(
 );
 
 // Prevent duplicate applications
-ApplicationSchema.index({ jobId: 1, studentId: 1 }, { unique: true });
+// Prevent duplicate applications for Jobs
+ApplicationSchema.index({ jobId: 1, studentId: 1 }, { unique: true, sparse: true });
+// Prevent duplicate applications for Drives
+ApplicationSchema.index({ driveId: 1, studentId: 1 }, { unique: true, sparse: true });
 
 const Application = models.Application || model<IApplication>("Application", ApplicationSchema);
 

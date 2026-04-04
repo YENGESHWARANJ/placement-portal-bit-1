@@ -22,7 +22,7 @@ export default function ProtectedRoute({ children, roles, redirectTo }: Props) {
       <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
         <div className="flex flex-col items-center gap-3">
           <div className="h-10 w-10 rounded-full border-4 border-slate-200 dark:border-slate-700 border-t-blue-500 animate-spin" />
-          <p className="text-sm text-slate-500 dark:text-slate-400">Authenticating...</p>
+          <p className="text-sm text-slate-500 dark:text-slate-500">Authenticating...</p>
         </div>
       </div>
     );

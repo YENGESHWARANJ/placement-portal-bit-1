@@ -76,46 +76,46 @@ export default function GoalsPage() {
             {/* Header */}
             <motion.div variants={stagger.item} className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                 <div>
-                    <span className="text-[11px] font-bold text-apple-blue uppercase tracking-[0.2em] mb-2 block">Tracking</span>
+                    <span className="text-sm font-bold text-apple-blue uppercase tracking-[0.2em] mb-2 block">Tracking</span>
                     <h1 className="text-4xl font-bold text-apple-gray-900 tracking-tight">Objective Tracker</h1>
                     <p className="text-apple-gray-400 mt-2 font-medium">Define your milestones and track your placement journey.</p>
                 </div>
                 <div className="flex gap-3">
                     <div className="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-xl border border-indigo-100/50">
                         <Activity className="h-4 w-4 animate-pulse" />
-                        <span className="text-[10px] font-bold uppercase tracking-wider">Metrics Synchronized</span>
+                        <span className="text-base font-bold uppercase tracking-wider">Metrics Synchronized</span>
                     </div>
                 </div>
             </motion.div>
 
             {/* Featured Banner */}
-            <motion.div variants={stagger.item} className="apple-card p-10 bg-apple-gray-900 relative overflow-hidden group">
+            <motion.div variants={stagger.item} className="apple-card p-10 bg-white relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl -mr-48 -mt-48 pointer-events-none group-hover:bg-indigo-500/20 transition-all duration-700" />
-                <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-slate-50 rounded-full blur-3xl pointer-events-none" />
 
                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
                     <div className="flex items-center gap-8 text-center md:text-left">
-                        <div className="h-20 w-20 bg-white/10 backdrop-blur-md rounded-3xl flex items-center justify-center border border-white/10 shadow-2xl group-hover:rotate-12 transition-transform duration-500">
-                            <TargetIcon className="h-10 w-10 text-indigo-400" />
+                        <div className="h-20 w-20 bg-slate-100 backdrop-blur-md rounded-3xl flex items-center justify-center border border-slate-200 shadow-2xl group-hover:rotate-12 transition-transform duration-500">
+                            <TargetIcon className="h-10 w-10 text-indigo-600" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.3em] mb-2">Sync Status</p>
-                            <h2 className="text-3xl font-bold text-white tracking-tight">Operational Targets Calibrated</h2>
+                            <p className="text-base font-bold text-indigo-600 uppercase tracking-[0.3em] mb-2">Sync Status</p>
+                            <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Operational Targets Calibrated</h2>
                         </div>
                     </div>
 
                     <div className="flex gap-6 items-center">
                         <div className="text-right">
-                            <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1 italic">Average Delta</p>
+                            <p className="text-base font-bold text-slate-900/40 uppercase tracking-widest mb-1 italic">Average Delta</p>
                             <div className="flex items-center gap-2 justify-end">
                                 <div className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
-                                <p className="text-lg font-bold text-emerald-400">{Math.round((appProgress + savedProgress) / 2)}% SYNCED</p>
+                                <p className="text-lg font-bold text-emerald-600">{Math.round((appProgress + savedProgress) / 2)}% SYNCED</p>
                             </div>
                         </div>
-                        <div className="h-10 w-px bg-white/10" />
-                        <div className="bg-white/5 border border-white/10 px-6 py-3 rounded-2xl backdrop-blur-md">
-                            <p className="text-[11px] font-bold text-white tracking-wide">
-                                <span className="text-indigo-400">{applicationsCount}</span> Committed Nodes
+                        <div className="h-10 w-px bg-slate-100" />
+                        <div className="bg-slate-50 border border-slate-200 px-6 py-3 rounded-2xl backdrop-blur-md">
+                            <p className="text-sm font-bold text-slate-900 tracking-wide">
+                                <span className="text-indigo-600">{applicationsCount}</span> Committed Nodes
                             </p>
                         </div>
                     </div>
@@ -135,7 +135,7 @@ export default function GoalsPage() {
                             </div>
                             <div>
                                 <h3 className="text-2xl font-bold text-apple-gray-900 tracking-tight">Applications</h3>
-                                <p className="text-[11px] font-semibold text-apple-gray-400 uppercase tracking-widest">Target Saturation</p>
+                                <p className="text-sm font-semibold text-apple-gray-400 uppercase tracking-widest">Target Saturation</p>
                             </div>
                         </div>
                         <div className="text-right">
@@ -143,13 +143,13 @@ export default function GoalsPage() {
                                 <Sparkles className="h-4 w-4 text-indigo-500" />
                                 <span className="text-3xl font-bold text-apple-gray-900 tracking-tight">{applicationsCount ?? "0"}</span>
                             </div>
-                            <p className="text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest italic">Current Uplinks</p>
+                            <p className="text-base font-bold text-apple-gray-400 uppercase tracking-widest italic">Current Uplinks</p>
                         </div>
                     </div>
 
                     <div className="space-y-8 relative z-10">
                         <div className="bg-apple-gray-50 border border-apple-gray-100 p-8 rounded-3xl">
-                            <label className="text-[11px] font-bold text-indigo-500 uppercase tracking-widest block mb-4 italic">Set Saturation Target</label>
+                            <label className="text-sm font-bold text-indigo-500 uppercase tracking-widest block mb-4 italic">Set Saturation Target</label>
                             <input
                                 type="number"
                                 min={0}
@@ -161,7 +161,7 @@ export default function GoalsPage() {
 
                         <div className="space-y-4">
                             <div className="flex justify-between items-end px-1">
-                                <span className="text-[11px] font-bold text-apple-gray-400 uppercase tracking-widest">Progress Density</span>
+                                <span className="text-sm font-bold text-apple-gray-400 uppercase tracking-widest">Progress Density</span>
                                 <span className="text-lg font-bold text-indigo-600">{Math.round(appProgress)}%</span>
                             </div>
                             <div className="h-3 bg-apple-gray-100 rounded-full overflow-hidden">
@@ -184,7 +184,7 @@ export default function GoalsPage() {
                                     <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
                                         <Award className="h-5 w-5 text-emerald-500" />
                                     </div>
-                                    <p className="text-[11px] font-bold text-emerald-600 uppercase tracking-widest italic">Target Saturation Achieved</p>
+                                    <p className="text-sm font-bold text-emerald-600 uppercase tracking-widest italic">Target Saturation Achieved</p>
                                 </motion.div>
                             )}
                         </AnimatePresence>
@@ -202,7 +202,7 @@ export default function GoalsPage() {
                             </div>
                             <div>
                                 <h3 className="text-2xl font-bold text-apple-gray-900 tracking-tight">Market Radar</h3>
-                                <p className="text-[11px] font-semibold text-apple-gray-400 uppercase tracking-widest">Identification Target</p>
+                                <p className="text-sm font-semibold text-apple-gray-400 uppercase tracking-widest">Identification Target</p>
                             </div>
                         </div>
                         <div className="text-right">
@@ -210,13 +210,13 @@ export default function GoalsPage() {
                                 <Zap className="h-4 w-4 text-apple-blue" />
                                 <span className="text-3xl font-bold text-apple-gray-900 tracking-tight">{savedItems.length}</span>
                             </div>
-                            <p className="text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest italic">Nodes Tracked</p>
+                            <p className="text-base font-bold text-apple-gray-400 uppercase tracking-widest italic">Nodes Tracked</p>
                         </div>
                     </div>
 
                     <div className="space-y-8 relative z-10">
                         <div className="bg-apple-gray-50 border border-apple-gray-100 p-8 rounded-3xl">
-                            <label className="text-[11px] font-bold text-apple-blue uppercase tracking-widest block mb-4 italic">Set Identification Goal</label>
+                            <label className="text-sm font-bold text-apple-blue uppercase tracking-widest block mb-4 italic">Set Identification Goal</label>
                             <input
                                 type="number"
                                 min={0}
@@ -228,7 +228,7 @@ export default function GoalsPage() {
 
                         <div className="space-y-4">
                             <div className="flex justify-between items-end px-1">
-                                <span className="text-[11px] font-bold text-apple-gray-400 uppercase tracking-widest">Radar Density</span>
+                                <span className="text-sm font-bold text-apple-gray-400 uppercase tracking-widest">Radar Density</span>
                                 <span className="text-lg font-bold text-apple-blue">{Math.round(savedProgress)}%</span>
                             </div>
                             <div className="h-3 bg-apple-gray-100 rounded-full overflow-hidden">
@@ -251,7 +251,7 @@ export default function GoalsPage() {
                                     <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
                                         <CheckCircle2 className="h-5 w-5 text-emerald-500" />
                                     </div>
-                                    <p className="text-[11px] font-bold text-emerald-600 uppercase tracking-widest italic">High Resonance Identified</p>
+                                    <p className="text-sm font-bold text-emerald-600 uppercase tracking-widest italic">High Resonance Identified</p>
                                 </motion.div>
                             )}
                         </AnimatePresence>

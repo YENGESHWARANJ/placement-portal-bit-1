@@ -57,11 +57,6 @@ export default function Register() {
   const [showRequirements, setShowRequirements] = useState(false);
   const [focused, setFocused] = useState<string | null>(null);
 
-  // OTP State
-  const [showOTP, setShowOTP] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [verifying, setVerifying] = useState(false);
-
   // Captcha State
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
@@ -72,6 +67,14 @@ export default function Register() {
   const handleRegister = async () => {
     if (!name.trim()) { toast.error("Please provide your legal name."); return; }
     if (!email.includes("@")) { toast.error("Invalid digital address."); return; }
+
+    // ── BIT domain Restriction ──────────────────────────────────
+    if (!email.toLowerCase().endsWith("@bitsathy.ac.in")) {
+      toast.error("🚫 Only @bitsathy.ac.in email addresses are allowed for BIT Placement Portal.", { duration: 6000 });
+      return;
+    }
+    // ────────────────────────────────────────────────────────────
+
     if (password.length < 8) { toast.error("Security key too short."); return; }
     if (password !== confirmPassword) { toast.error("Protocols do not match."); return; }
     if (!captchaToken) { toast.error("Please verify that you are human."); return; }
@@ -80,8 +83,8 @@ export default function Register() {
     const tid = toast.loading("Establishing new dossier...");
     try {
       const { data } = await api.post<{ message: string; email?: string }>("/auth/register", { name, email, password, role, captchaToken });
-      toast.success(data.message || "Dossier established. Please verify email.", { id: tid });
-      setShowOTP(true);
+      toast.success(data.message || "Dossier established. You can now login.", { id: tid });
+      navigate(role === "student" ? "/login" : "/recruiter-portal");
     } catch (err: any) {
       const errorData = err?.response?.data;
       const msg = errorData?.errors?.[0] || errorData?.message || "Registration failed.";
@@ -90,35 +93,30 @@ export default function Register() {
       setLoading(false);
     }
   };
-
-  const handleVerifyOTP = async () => {
-    if (otp.length !== 6) { toast.error("Security code must be 6 digits."); return; }
-    setVerifying(true);
-    const tid = toast.loading("Verifying identity code...");
-    try {
-      await api.post("/auth/verify-otp", { email, otp });
-      toast.success("Identity verified! Welcome to the nexus.", { id: tid });
-      setShowOTP(false);
-      navigate("/login");
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Verification failed.", { id: tid });
-    } finally {
-      setVerifying(false);
-    }
-  };
-
   const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
     const idToken = credentialResponse.credential;
     if (!idToken) { toast.error("Google handshake failed."); return; }
+
+    // ── BIT domain Check (client-side fast-fail) ──────────────────
+    try {
+      const tokenPayload = JSON.parse(atob(idToken.split(".")[1]));
+      const tokenEmail: string = tokenPayload.email || "";
+      if (!tokenEmail.toLowerCase().endsWith("@bitsathy.ac.in")) {
+        toast.error(`🚫 Access Denied. Only @bitsathy.ac.in accounts allowed.\n(Detected: ${tokenEmail})`, { duration: 6000 });
+        return;
+      }
+    } catch { /* let server validate */ }
+    // ─────────────────────────────────────────────────────────────
+
     setLoading(true);
-    const tid = toast.loading("Syncing with Google...");
+    const tid = toast.loading("Syncing with BIT Google account...");
     try {
       const { data } = await api.post<{ token: string; user: any; redirectTo?: string; requiresOnboarding?: boolean }>("/auth/google", { idToken, role });
       login(data.token, data.user);
-      toast.success("Identity established! ✨", { id: tid });
+      toast.success("BIT Identity established! ✨", { id: tid });
       navigate(data.requiresOnboarding ? "/onboarding" : (data.redirectTo || getRoleRedirect(data.user.role)), { replace: true });
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Google sync failed.", { id: tid });
+      toast.error(err?.response?.data?.message || "Google sync failed.", { id: tid, duration: 6000 });
     } finally {
       setLoading(false);
     }
@@ -143,180 +141,152 @@ export default function Register() {
           <div className="flex flex-col items-center mb-10">
             <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }}
               className="w-14 h-14 bg-apple-blue rounded-[18px] flex items-center justify-center shadow-lg shadow-apple-blue/15 mb-6">
-              <GraduationCap className="h-7 w-7 text-white" />
+              <GraduationCap className="h-7 w-7 text-slate-900" />
             </motion.div>
             <div className="text-center">
               <h1 className="text-4xl font-black text-apple-gray-900 tracking-tighter mb-2">Establish Identity</h1>
-              <p className="text-apple-blue font-black text-[9px] tracking-[0.3em] uppercase">Intelligence Nexus v5.0</p>
+              <p className="text-apple-blue font-black text-xs tracking-[0.2em] uppercase">Bannari Amman Institute of Technology</p>
             </div>
           </div>
 
-          {/* Role Selection */}
           <div className="flex bg-apple-gray-50 p-1.5 rounded-[22px] mb-10">
-            {(["student", "recruiter"] as const).map(r => (
-              <button key={r} onClick={() => setRole(r)}
+            {([
+              { id: "student", label: "Student", icon: UserCheck },
+              { id: "recruiter", label: "Mentor", icon: Briefcase }
+            ] as const).map(r => (
+              <button key={r.id} onClick={() => setRole(r.id)}
                 className={cn(
-                  "flex-1 flex items-center justify-center gap-2.5 py-3 rounded-[18px] text-[12px] font-black uppercase tracking-widest transition-all duration-500",
-                  role === r ? "bg-white shadow-apple-soft text-apple-blue" : "text-apple-gray-300 hover:text-apple-gray-400"
+                  "flex-1 flex items-center justify-center gap-2.5 py-3 rounded-[18px] text-lg font-black uppercase tracking-widest transition-all duration-500",
+                  role === r.id ? "bg-white shadow-apple-soft text-apple-blue" : "text-apple-gray-300 hover:text-apple-gray-400"
                 )}>
-                {r === "student" ? <UserCheck className="h-3.5 w-3.5" /> : <Briefcase className="h-3.5 w-3.5" />}
-                <span>{r}</span>
+                <r.icon className="h-3.5 w-3.5" />
+                <span>{r.label}</span>
               </button>
             ))}
           </div>
 
-          {!showOTP ? (
-            <>
-              {/* Registration Form */}
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black text-apple-gray-300 uppercase tracking-[0.2em] ml-1">Full Name</label>
-                  <div className="relative">
-                    <User className={cn("absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 transition-colors duration-300", focused === "name" ? "text-apple-blue" : "text-apple-gray-200")} />
-                    <input type="text" value={name} onChange={e => setName(e.target.value)} onFocus={() => setFocused("name")} onBlur={() => setFocused(null)}
-                      placeholder="Yengeshwaran J" className="apple-input pl-12" required />
-                  </div>
+          <>
+            {/* Registration Form */}
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-sm font-black text-apple-gray-300 uppercase tracking-[0.2em] ml-1">Full Name</label>
+                <div className="relative">
+                  <User className={cn("absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 transition-colors duration-300", focused === "name" ? "text-apple-blue" : "text-apple-gray-200")} />
+                  <input type="text" value={name} onChange={e => setName(e.target.value)} onFocus={() => setFocused("name")} onBlur={() => setFocused(null)}
+                    placeholder="Yengeshwaran J" className="apple-input pl-12" required />
                 </div>
-
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black text-apple-gray-300 uppercase tracking-[0.2em] ml-1">Digital Address</label>
-                  <div className="relative">
-                    <Mail className={cn("absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 transition-colors duration-300", focused === "email" ? "text-apple-blue" : "text-apple-gray-200")} />
-                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} onFocus={() => setFocused("email")} onBlur={() => setFocused(null)}
-                      placeholder={role === "student" ? "student@uni.edu" : "hr@corp.com"} className="apple-input pl-12" required />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black text-apple-gray-300 uppercase tracking-[0.2em] ml-1">Vault Key</label>
-                  <div className="relative">
-                    <Lock className={cn("absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 transition-colors duration-300", focused === "pw" ? "text-apple-blue" : "text-apple-gray-200")} />
-                    <input type={showPw ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} onFocus={() => { setFocused("pw"); setShowRequirements(true); }} onBlur={() => setFocused(null)}
-                      placeholder="••••••••" className="apple-input pl-12 pr-12 font-mono" required />
-                    <button type="button" onClick={() => setShowPw(p => !p)} className="absolute right-4 top-1/2 -translate-y-1/2 text-apple-gray-200 hover:text-apple-gray-400">
-                      {showPw ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
-                    </button>
-                  </div>
-
-                  {/* Strength Meter */}
-                  {password && (
-                    <div className="mt-4 space-y-2 px-1">
-                      <div className="flex gap-1.5">
-                        {[1, 2, 3, 4, 5].map(i => (
-                          <div key={i} className={`flex-1 h-1 rounded-full transition-all duration-700 ${i <= strength.score ? strength.color : "bg-apple-gray-50"}`} />
-                        ))}
-                      </div>
-                      <p className={cn("text-[10px] font-black uppercase tracking-widest", strength.score <= 1 ? "text-rose-500" : strength.score <= 3 ? "text-amber-500" : "text-emerald-500")}>
-                        Security Index: {strength.label}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Requirements */}
-                  <AnimatePresence>
-                    {showRequirements && password && (
-                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
-                        className="mt-4 p-5 bg-apple-gray-50 rounded-[24px] border border-apple-gray-100 space-y-3">
-                        {REQUIREMENTS.map(r => (
-                          <div key={r.label} className={cn("flex items-center gap-3 text-[11px] font-bold", r.test(password) ? "text-emerald-600" : "text-apple-gray-300")}>
-                            {r.test(password) ? <CheckCircle2 className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
-                            <span className="uppercase tracking-wide">{r.label}</span>
-                          </div>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black text-apple-gray-300 uppercase tracking-[0.2em] ml-1">Confirm Identity Key</label>
-                  <div className="relative">
-                    <Shield className={cn("absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 transition-colors duration-300", confirmPassword && password === confirmPassword ? "text-emerald-500" : "text-apple-gray-200")} />
-                    <input type={showCpw ? "text" : "password"} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
-                      placeholder="••••••••" className={cn("apple-input pl-12 pr-12 font-mono", confirmPassword && password !== confirmPassword ? "border-rose-200" : "")} required />
-                  </div>
-                </div>
-
-                <div className="flex justify-center mt-6">
-                  <ReCAPTCHA
-                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"}
-                    onChange={(token) => setCaptchaToken(token)}
-                    theme="light"
-                  />
-                </div>
-
-                <button id="register-submit" onClick={handleRegister} disabled={loading}
-                  className="apple-btn-primary w-full py-4.5 text-[15px] font-black uppercase tracking-widest mt-6 group">
-                  {loading ? (
-                    <div className="h-5 w-5 rounded-full border-2 border-white/30 border-t-white animate-spin mx-auto" />
-                  ) : (
-                    <div className="flex items-center justify-center gap-3">
-                      <span>Establish Dossier</span>
-                      <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  )}
-                </button>
-              </div>
-
-              {/* Alternate Entry */}
-              {hasGoogleClientId && (
-                <>
-                  <div className="flex items-center gap-5 my-10">
-                    <div className="flex-1 h-px bg-apple-gray-50" />
-                    <span className="text-[10px] font-black text-apple-gray-200 uppercase tracking-[0.3em]">Alternate</span>
-                    <div className="flex-1 h-px bg-apple-gray-50" />
-                  </div>
-
-                  <div className="flex justify-center">
-                    <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => toast.error("Handshake failed.")}
-                      shape="pill" size="large" width="384" text="signup_with" />
-                  </div>
-                </>
-              )}
-
-              {/* Login Redirect */}
-              <div className="mt-10 pt-8 border-t border-apple-gray-50 text-center">
-                <p className="text-[12px] font-bold text-apple-gray-400 uppercase tracking-widest flex items-center justify-center gap-2">
-                  Registered Identity?
-                  <button onClick={() => navigate("/login")} className="text-apple-blue hover:underline">Verify Identity →</button>
-                </p>
-              </div>
-            </>
-          ) : (
-            <div className="space-y-6 animate-in slide-in-from-right-8 duration-500">
-              <div className="text-center space-y-2 mb-8">
-                <div className="mx-auto w-12 h-12 bg-apple-blue/10 rounded-full flex items-center justify-center mb-4">
-                  <Key className="h-6 w-6 text-apple-blue" />
-                </div>
-                <h2 className="text-xl font-black text-apple-gray-900 tracking-tight">Verify Identity</h2>
-                <p className="text-xs text-apple-gray-400 font-medium">
-                  A 6-digit transmission has been sent to <br />
-                  <span className="text-sm font-bold text-apple-blue">{email}</span>
-                </p>
               </div>
 
               <div className="space-y-2">
-                <label className="text-[11px] font-black text-apple-gray-300 uppercase tracking-[0.2em] ml-1">Security Code</label>
+                <label className="text-sm font-black text-apple-gray-300 uppercase tracking-[0.2em] ml-1">Digital Address</label>
                 <div className="relative">
-                  <ShieldCheck className={cn("absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 transition-colors duration-300", focused === "otp" ? "text-apple-blue" : "text-apple-gray-200")} />
-                  <input type="text" value={otp} onChange={e => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))} onFocus={() => setFocused("otp")} onBlur={() => setFocused(null)}
-                    placeholder="• • • • • •" className="apple-input pl-12 font-mono tracking-widest text-center text-lg" required />
+                  <Mail className={cn("absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 transition-colors duration-300", focused === "email" ? "text-apple-blue" : "text-apple-gray-200")} />
+                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} onFocus={() => setFocused("email")} onBlur={() => setFocused(null)}
+                    placeholder="yourname@bitsathy.ac.in" className="apple-input pl-12" required />
                 </div>
               </div>
 
-              <button onClick={handleVerifyOTP} disabled={verifying || otp.length !== 6}
-                className="apple-btn-primary w-full py-4.5 text-[15px] font-black uppercase tracking-widest mt-6 group">
-                {verifying ? (
+              <div className="space-y-2">
+                <label className="text-sm font-black text-apple-gray-300 uppercase tracking-[0.2em] ml-1">Vault Key</label>
+                <div className="relative">
+                  <Lock className={cn("absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 transition-colors duration-300", focused === "pw" ? "text-apple-blue" : "text-apple-gray-200")} />
+                  <input type={showPw ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} onFocus={() => { setFocused("pw"); setShowRequirements(true); }} onBlur={() => setFocused(null)}
+                    placeholder="••••••••" className="apple-input pl-12 pr-12 font-mono" required />
+                  <button type="button" onClick={() => setShowPw(p => !p)} className="absolute right-4 top-1/2 -translate-y-1/2 text-apple-gray-200 hover:text-apple-gray-400">
+                    {showPw ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
+                  </button>
+                </div>
+
+                {/* Strength Meter */}
+                {password && (
+                  <div className="mt-4 space-y-2 px-1">
+                    <div className="flex gap-1.5">
+                      {[1, 2, 3, 4, 5].map(i => (
+                        <div key={i} className={`flex-1 h-1 rounded-full transition-all duration-700 ${i <= strength.score ? strength.color : "bg-apple-gray-50"}`} />
+                      ))}
+                    </div>
+                    <p className={cn("text-base font-black uppercase tracking-widest", strength.score <= 1 ? "text-rose-500" : strength.score <= 3 ? "text-amber-500" : "text-emerald-500")}>
+                      Security Index: {strength.label}
+                    </p>
+                  </div>
+                )}
+
+                {/* Requirements */}
+                <AnimatePresence>
+                  {showRequirements && password && (
+                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+                      className="mt-4 p-5 bg-apple-gray-50 rounded-[24px] border border-apple-gray-100 space-y-3">
+                      {REQUIREMENTS.map(r => (
+                        <div key={r.label} className={cn("flex items-center gap-3 text-sm font-bold", r.test(password) ? "text-emerald-600" : "text-apple-gray-300")}>
+                          {r.test(password) ? <CheckCircle2 className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
+                          <span className="uppercase tracking-wide">{r.label}</span>
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-black text-apple-gray-300 uppercase tracking-[0.2em] ml-1">Confirm Identity Key</label>
+                <div className="relative">
+                  <Shield className={cn("absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 transition-colors duration-300", confirmPassword && password === confirmPassword ? "text-emerald-500" : "text-apple-gray-200")} />
+                  <input type={showCpw ? "text" : "password"} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
+                    placeholder="••••••••" className={cn("apple-input pl-12 pr-12 font-mono", confirmPassword && password !== confirmPassword ? "border-rose-200" : "")} required />
+                </div>
+              </div>
+
+              <div className="flex justify-center mt-6">
+                <ReCAPTCHA
+                  sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"}
+                  onChange={(token) => setCaptchaToken(token)}
+                  theme="light"
+                />
+              </div>
+
+              <button id="register-submit" onClick={handleRegister} disabled={loading}
+                className="apple-btn-primary w-full py-4.5 text-lg font-black uppercase tracking-widest mt-6 group">
+                {loading ? (
                   <div className="h-5 w-5 rounded-full border-2 border-white/30 border-t-white animate-spin mx-auto" />
                 ) : (
                   <div className="flex items-center justify-center gap-3">
-                    <span>Confirm Code</span>
+                    <span>Establish Dossier</span>
                     <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 )}
               </button>
             </div>
-          )}
+
+            {/* Alternate Entry */}
+            {hasGoogleClientId && (
+              <>
+                <div className="flex items-center gap-5 my-10">
+                  <div className="flex-1 h-px bg-apple-gray-50" />
+                  <span className="text-base font-black text-apple-gray-200 uppercase tracking-[0.3em]">Alternate</span>
+                  <div className="flex-1 h-px bg-apple-gray-50" />
+                </div>
+
+                <div className="flex justify-center">
+                  <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => toast.error("Handshake failed.")}
+                    shape="pill" size="large" width="384" text="signup_with" />
+                </div>
+                {/* BIT domain Notice */}
+                <div className="flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-50 border border-apple-blue/20 rounded-2xl mt-3">
+                  <span className="text-[10px] text-apple-blue font-black uppercase tracking-widest text-center">
+                    🔒 Only @bitsathy.ac.in accounts permitted
+                  </span>
+                </div>
+              </>
+            )}
+
+            {/* Login Redirect */}
+            <div className="mt-10 pt-8 border-t border-apple-gray-50 text-center">
+              <p className="text-lg font-bold text-apple-gray-400 uppercase tracking-widest flex items-center justify-center gap-2">
+                Registered Identity?
+                <button onClick={() => navigate("/login")} className="text-apple-blue hover:underline">Verify Identity →</button>
+              </p>
+            </div>
+          </>
         </div>
       </motion.div>
     </div>

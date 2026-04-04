@@ -76,7 +76,7 @@ export default function MyJobs() {
     if (loading) return (
         <div className="p-20 flex flex-col items-center justify-center space-y-4">
             <div className="h-10 w-10 border-4 border-apple-blue/20 border-t-apple-blue rounded-full animate-spin" />
-            <p className="text-apple-gray-400 font-bold uppercase tracking-widest text-[10px]">Accessing Market Ledger...</p>
+            <p className="text-apple-gray-400 font-bold uppercase tracking-widest text-base">Accessing Market Ledger...</p>
         </div>
     );
 
@@ -87,7 +87,7 @@ export default function MyJobs() {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                 <div>
                     <h2 className="text-4xl font-black text-apple-gray-900 tracking-tight leading-none mb-3">Active Listings</h2>
-                    <p className="text-[11px] font-black text-apple-gray-300 uppercase tracking-[0.4em]">Enterprise Opportunity Matrix</p>
+                    <p className="text-sm font-black text-apple-gray-300 uppercase tracking-[0.4em]">Enterprise Opportunity Matrix</p>
                 </div>
                 <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
                     <div className="relative group w-full md:w-[320px]">
@@ -96,12 +96,12 @@ export default function MyJobs() {
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder="Filter opportunities..."
-                            className="bg-apple-gray-50 border border-apple-gray-100 pl-11 pr-5 py-4 rounded-2xl shadow-sm text-[11px] font-bold tracking-tight text-apple-gray-900 placeholder:text-apple-gray-300 outline-none w-full focus:ring-4 focus:ring-apple-blue/10 focus:bg-white transition-all"
+                            className="bg-apple-gray-50 border border-apple-gray-100 pl-11 pr-5 py-4 rounded-2xl shadow-sm text-sm font-bold tracking-tight text-apple-gray-900 placeholder:text-apple-gray-300 outline-none w-full focus:ring-4 focus:ring-apple-blue/10 focus:bg-white transition-all"
                         />
                     </div>
                     <Link
                         to="/jobs/create"
-                        className="h-[52px] px-6 bg-apple-blue text-white rounded-2xl flex items-center justify-center gap-2 text-[11px] font-black uppercase tracking-widest hover:bg-apple-blue-dark transition-all shadow-apple-hover w-full sm:w-auto"
+                        className="h-[52px] px-6 bg-apple-blue text-slate-900 rounded-2xl flex items-center justify-center gap-2 text-sm font-black uppercase tracking-widest hover:bg-apple-blue-dark transition-all shadow-apple-hover w-full sm:w-auto"
                     >
                         <Plus className="h-4 w-4" /> New Listing
                     </Link>
@@ -113,10 +113,10 @@ export default function MyJobs() {
                     <div className="h-20 w-20 bg-apple-gray-50 rounded-[28px] flex items-center justify-center mb-8">
                         <Briefcase className="h-10 w-10 text-apple-gray-200" />
                     </div>
-                    <p className="text-[11px] font-black text-apple-gray-400 uppercase tracking-[0.4em] mb-8">No active listings detected</p>
+                    <p className="text-sm font-black text-apple-gray-400 uppercase tracking-[0.4em] mb-8">No active listings detected</p>
                     <Link
                         to="/jobs/create"
-                        className="px-8 py-4 bg-apple-gray-900 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-black transition-all shadow-xl"
+                        className="px-8 py-4 bg-white text-slate-900 rounded-2xl font-black uppercase tracking-widest text-base hover:bg-black transition-all shadow-xl"
                     >
                         Initialize First Listing
                     </Link>
@@ -148,7 +148,7 @@ export default function MyJobs() {
                             <div className="p-8 pb-0">
                                 <div className="flex justify-between items-start mb-8">
                                     <div className={cn(
-                                        "px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border",
+                                        "px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border",
                                         job.active ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-apple-gray-50 text-apple-gray-400 border-apple-gray-100"
                                     )}>
                                         {job.active ? "Active Node" : "Decoupled"}
@@ -166,10 +166,10 @@ export default function MyJobs() {
                                 <div className="flex-1 mb-8">
                                     <h3 className="text-xl font-black text-apple-gray-900 tracking-tight mb-3 line-clamp-2 leading-tight group-hover:text-apple-blue transition-colors">{job.title}</h3>
                                     <div className="flex flex-wrap gap-5">
-                                        <div className="flex items-center gap-2 text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest">
+                                        <div className="flex items-center gap-2 text-base font-bold text-apple-gray-400 uppercase tracking-widest">
                                             <MapPin className="h-3 w-3" /> {job.location}
                                         </div>
-                                        <div className="flex items-center gap-2 text-[10px] font-bold text-apple-gray-400 uppercase tracking-widest">
+                                        <div className="flex items-center gap-2 text-base font-bold text-apple-gray-400 uppercase tracking-widest">
                                             <Calendar className="h-3 w-3" /> {new Date(job.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                                         </div>
                                     </div>
@@ -178,11 +178,11 @@ export default function MyJobs() {
                                 <div className="grid grid-cols-2 gap-4 mb-4">
                                     <div className="bg-apple-gray-50/50 p-5 rounded-3xl border border-apple-gray-100 text-center transition-colors group-hover:bg-white overflow-hidden">
                                         <p className="text-2xl font-black text-apple-gray-900 tracking-tighter mb-1">{job.applicantsCount}</p>
-                                        <p className="text-[9px] font-black text-apple-gray-300 uppercase tracking-widest leading-none">Applicants</p>
+                                        <p className="text-xs font-black text-apple-gray-300 uppercase tracking-widest leading-none">Applicants</p>
                                     </div>
                                     <div className="bg-apple-gray-50/50 p-5 rounded-3xl border border-apple-gray-100 text-center transition-colors group-hover:bg-white overflow-hidden">
                                         <p className="text-2xl font-black text-apple-gray-900 tracking-tighter mb-1">{job.viewsCount}</p>
-                                        <p className="text-[9px] font-black text-apple-gray-300 uppercase tracking-widest leading-none">Views</p>
+                                        <p className="text-xs font-black text-apple-gray-300 uppercase tracking-widest leading-none">Views</p>
                                     </div>
                                 </div>
                             </div>
@@ -190,7 +190,7 @@ export default function MyJobs() {
                             <div className="p-4 mt-auto">
                                 <Link
                                     to={`/jobs/${job._id}/applicants`}
-                                    className="w-full py-5 bg-apple-gray-900 text-white rounded-[24px] flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg"
+                                    className="w-full py-5 bg-white text-slate-900 rounded-[24px] flex items-center justify-center gap-3 text-base font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg"
                                 >
                                     Access Pipeline <ArrowUpRight className="h-4 w-4" />
                                 </Link>
@@ -209,7 +209,7 @@ export default function MyJobs() {
                     >
                         <ChevronRight className="w-5 h-5 rotate-180" />
                     </button>
-                    <span className="text-[12px] font-bold text-apple-gray-900 px-4">
+                    <span className="text-lg font-bold text-apple-gray-900 px-4">
                         Page {page} of {totalPages}
                     </span>
                     <button

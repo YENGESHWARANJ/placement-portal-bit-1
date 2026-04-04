@@ -18,8 +18,8 @@ const SECTIONS = [
     {
         id: "interview",
         icon: MessageSquare,
-        title: "Interview Mastery",
-        subtitle: "Verbal Synthesis & Persona Alignment",
+        title: "Professional Skills",
+        subtitle: "Soft Skills & Interview Persona",
         color: "blue",
         tips: [
             "Research the company and role before the interview.",
@@ -32,8 +32,8 @@ const SECTIONS = [
     {
         id: "resume",
         icon: FileCheck,
-        title: "Resume & Profile",
-        subtitle: "ATS Resonance & Optimization",
+        title: "Resume & Portfolio",
+        subtitle: "Resume Verification & Impact",
         color: "indigo",
         tips: [
             "Tailor your resume to each role; highlight relevant skills and projects.",
@@ -46,8 +46,8 @@ const SECTIONS = [
     {
         id: "day-before",
         icon: Calendar,
-        title: "Strategic Readiness",
-        subtitle: "Mental Recovery & Preparation",
+        title: "Placement Readiness",
+        subtitle: "Checklist & Stress Management",
         color: "amber",
         tips: [
             "Get 7–8 hours of sleep; avoid last-minute cramming.",
@@ -60,8 +60,8 @@ const SECTIONS = [
     {
         id: "aptitude",
         icon: TargetIcon,
-        title: "Technical Foundation",
-        subtitle: "Computational Speed & Logic",
+        title: "Aptitude Coaching",
+        subtitle: "Logical & Quantitative Training",
         color: "rose",
         tips: [
             "Practice timed mock tests to build speed and accuracy.",
@@ -94,38 +94,38 @@ export default function PrepTips() {
             {/* Header */}
             <motion.div variants={stagger.item} className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                 <div>
-                    <span className="text-[11px] font-bold text-apple-blue uppercase tracking-[0.2em] mb-2 block">Preparation</span>
-                    <h1 className="text-4xl font-bold text-apple-gray-900 tracking-tight">Intelligence Hub</h1>
-                    <p className="text-apple-gray-400 mt-2 font-medium">Curated strategies for placement excellence.</p>
+                    <span className="text-sm font-bold text-apple-blue uppercase tracking-[0.2em] mb-2 block">BIT Placement Cell</span>
+                    <h1 className="text-4xl font-bold text-apple-gray-900 tracking-tight">Placement Preparation Hub</h1>
+                    <p className="text-apple-gray-400 mt-2 font-medium">Curated strategies for BIT students' excellence.</p>
                 </div>
                 <div className="flex gap-3">
                     <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100/50">
                         <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-[10px] font-bold uppercase tracking-wider">Knowledge Sync Active</span>
+                        <span className="text-base font-bold uppercase tracking-wider">Placement Data Synced</span>
                     </div>
                 </div>
             </motion.div>
 
             {/* Featured Banner */}
             <motion.div variants={stagger.item} className="apple-card p-10 bg-apple-blue relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32 group-hover:bg-white/20 transition-all duration-700" />
+                <div className="absolute top-0 right-0 w-64 h-64 bg-slate-100 rounded-full blur-3xl -mr-32 -mt-32 group-hover:bg-slate-200 transition-all duration-700" />
                 <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-black/5 rounded-full blur-3xl" />
 
                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
                     <div className="flex items-center gap-8 text-center md:text-left">
-                        <div className="h-20 w-20 bg-white/10 backdrop-blur-md rounded-3xl flex items-center justify-center border border-white/20 shadow-2xl group-hover:rotate-12 transition-transform duration-500">
-                            <Lightbulb className="h-10 w-10 text-white" />
+                        <div className="h-20 w-20 bg-slate-100 backdrop-blur-md rounded-3xl flex items-center justify-center border border-slate-200 shadow-2xl group-hover:rotate-12 transition-transform duration-500">
+                            <Lightbulb className="h-10 w-10 text-slate-900" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-bold text-white/60 uppercase tracking-[0.3em] mb-2">Cognitive Index</p>
-                            <h2 className="text-3xl font-bold text-white tracking-tight">Placement Performance Optimized</h2>
+                            <p className="text-base font-bold text-slate-900/60 uppercase tracking-[0.3em] mb-2">BIT Training Score</p>
+                            <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Student Training Progress Tracked</h2>
                         </div>
                     </div>
 
                     <div className="flex gap-4 items-center">
-                        <div className="bg-white/10 backdrop-blur-md border border-white/10 px-6 py-4 rounded-2xl">
-                            <p className="text-[10px] font-bold text-white/60 uppercase tracking-widest mb-1">Status</p>
-                            <p className="text-lg font-bold text-white">READY_TARGET</p>
+                        <div className="bg-slate-100 backdrop-blur-md border border-slate-200 px-6 py-4 rounded-2xl">
+                            <p className="text-base font-bold text-slate-900/60 uppercase tracking-widest mb-1">Status</p>
+                            <p className="text-lg font-bold text-slate-900">READY_TARGET</p>
                         </div>
                     </div>
                 </div>
@@ -166,7 +166,7 @@ export default function PrepTips() {
                                             <h3 className="text-xl font-bold text-apple-gray-900 tracking-tight mb-1">
                                                 {section.title}
                                             </h3>
-                                            <p className="text-[11px] font-semibold text-apple-gray-400 uppercase tracking-widest">{section.subtitle}</p>
+                                            <p className="text-sm font-semibold text-apple-gray-400 uppercase tracking-widest">{section.subtitle}</p>
                                         </div>
                                     </div>
                                     <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center bg-apple-gray-50 text-apple-gray-400 transition-all", isOpen && "rotate-180 bg-apple-blue/5 text-apple-blue")}>
@@ -195,7 +195,7 @@ export default function PrepTips() {
                                                             <div className={cn("h-6 w-6 rounded-lg flex items-center justify-center shrink-0 mt-0.5", colors)}>
                                                                 <CheckCircle2 className="h-3.5 w-3.5" />
                                                             </div>
-                                                            <p className="text-[13px] font-medium text-apple-gray-500 leading-relaxed">
+                                                            <p className="text-base font-medium text-apple-gray-500 leading-relaxed">
                                                                 {tip}
                                                             </p>
                                                         </motion.div>
@@ -207,9 +207,9 @@ export default function PrepTips() {
                                                         <div className="h-8 w-8 bg-emerald-100/80 rounded-lg flex items-center justify-center">
                                                             <Zap className="h-4 w-4 text-emerald-600" />
                                                         </div>
-                                                        <p className="text-[10px] font-bold uppercase tracking-wider text-apple-gray-400">Strategy Verified</p>
+                                                        <p className="text-base font-bold uppercase tracking-wider text-apple-gray-400">Strategy Verified</p>
                                                     </div>
-                                                    <button className="apple-btn-secondary px-5 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+                                                    <button className="apple-btn-secondary px-5 py-2 text-base font-bold uppercase tracking-widest flex items-center gap-2">
                                                         <span>Download Guide</span>
                                                     </button>
                                                 </div>
@@ -230,14 +230,14 @@ export default function PrepTips() {
                         <Bot className="h-8 w-8" />
                     </div>
                     <h4 className="text-xl font-bold text-apple-gray-900 tracking-tight mb-2">AI Prep Mentor</h4>
-                    <p className="text-[13px] font-medium text-apple-gray-400 leading-relaxed">Get personalized feedback based on your recent mock assessments.</p>
+                    <p className="text-base font-medium text-apple-gray-400 leading-relaxed">Get personalized feedback based on your recent mock assessments.</p>
                 </motion.div>
                 <motion.div variants={stagger.item} className="apple-card p-10 flex flex-col items-center text-center">
                     <div className="h-16 w-16 bg-amber-50 rounded-3xl flex items-center justify-center text-amber-500 mb-6">
                         <Sparkles className="h-8 w-8" />
                     </div>
                     <h4 className="text-xl font-bold text-apple-gray-900 tracking-tight mb-2">Dynamic Drills</h4>
-                    <p className="text-[13px] font-medium text-apple-gray-400 leading-relaxed">Daily challenges tailored to the companies visiting this month.</p>
+                    <p className="text-base font-medium text-apple-gray-400 leading-relaxed">Daily challenges tailored to the companies visiting this month.</p>
                 </motion.div>
             </div>
         </motion.div>

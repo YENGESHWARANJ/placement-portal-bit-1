@@ -1,3 +1,5 @@
+import colors from "tailwindcss/colors";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: "class",
@@ -83,6 +85,20 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      fontFamily: {
+        sans: ["Plus Jakarta Sans", "sans-serif"],
+        display: ["Plus Jakarta Sans", "sans-serif"],
+      },
+      fontWeight: {
+        thin: "200",
+        light: "300",
+        normal: "700",
+        medium: "900",
+        semibold: "900",
+        bold: "900",
+        extrabold: "900",
+        black: "900",
       },
     },
   },

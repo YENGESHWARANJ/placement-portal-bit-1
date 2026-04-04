@@ -113,7 +113,7 @@ export default function Resources() {
             {/* Header */}
             <motion.div variants={stagger.item} className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                 <div>
-                    <span className="text-[11px] font-bold text-apple-blue uppercase tracking-[0.2em] mb-2 block">Knowledge</span>
+                    <span className="text-sm font-bold text-apple-blue uppercase tracking-[0.2em] mb-2 block">Knowledge</span>
                     <h1 className="text-4xl font-bold text-apple-gray-900 tracking-tight">Learning Resources</h1>
                     <p className="text-apple-gray-400 mt-2 font-medium">Curated content to sharpen your professional edge.</p>
                 </div>
@@ -131,28 +131,28 @@ export default function Resources() {
 
             {/* Featured Section */}
             <motion.div variants={stagger.item} className="apple-card p-10 bg-apple-blue relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-[100px] -mr-40 -mt-40 pointer-events-none" />
+                <div className="absolute top-0 right-0 w-80 h-80 bg-slate-100 rounded-full blur-[100px] -mr-40 -mt-40 pointer-events-none" />
                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
                     <div className="max-w-xl text-center md:text-left">
                         <div className="flex items-center justify-center md:justify-start gap-3 mb-6">
-                            <div className="h-8 w-8 bg-white/20 rounded-xl flex items-center justify-center">
-                                <Sparkles className="h-4 w-4 text-white" />
+                            <div className="h-8 w-8 bg-slate-200 rounded-xl flex items-center justify-center">
+                                <Sparkles className="h-4 w-4 text-slate-900" />
                             </div>
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80">Skill Mastery</span>
+                            <span className="text-base font-bold uppercase tracking-[0.2em] text-slate-900/80">Skill Mastery</span>
                         </div>
-                        <h2 className="text-3xl font-bold text-white tracking-tight leading-tight mb-4">
+                        <h2 className="text-3xl font-bold text-slate-900 tracking-tight leading-tight mb-4">
                             Optimize your <span className="underline decoration-white/30 underline-offset-8">career trajectory</span> with targetted intelligence.
                         </h2>
-                        <p className="text-white/70 font-medium">Access the latest interview strategies and technical playbooks designed for high-growth companies.</p>
+                        <p className="text-slate-900/70 font-medium">Access the latest interview strategies and technical playbooks designed for high-growth companies.</p>
                     </div>
                     <div className="flex gap-4">
-                        <div className="bg-white/10 backdrop-blur-xl p-6 rounded-[32px] border border-white/10 text-center min-w-[120px]">
-                            <p className="text-3xl font-bold text-white leading-none mb-1">{resources.length}</p>
-                            <p className="text-[10px] font-bold text-white/50 uppercase tracking-widest">Active Nodes</p>
+                        <div className="bg-slate-100 backdrop-blur-xl p-6 rounded-[32px] border border-slate-200 text-center min-w-[120px]">
+                            <p className="text-3xl font-bold text-slate-900 leading-none mb-1">{resources.length}</p>
+                            <p className="text-base font-bold text-slate-900/50 uppercase tracking-widest">Active Nodes</p>
                         </div>
-                        <div className="bg-white/10 backdrop-blur-xl p-6 rounded-[32px] border border-white/10 text-center min-w-[120px]">
-                            <p className="text-3xl font-bold text-white leading-none mb-1">{categories.length}</p>
-                            <p className="text-[10px] font-bold text-white/50 uppercase tracking-widest">Sectors</p>
+                        <div className="bg-slate-100 backdrop-blur-xl p-6 rounded-[32px] border border-slate-200 text-center min-w-[120px]">
+                            <p className="text-3xl font-bold text-slate-900 leading-none mb-1">{categories.length}</p>
+                            <p className="text-base font-bold text-slate-900/50 uppercase tracking-widest">Sectors</p>
                         </div>
                     </div>
                 </div>
@@ -163,9 +163,9 @@ export default function Resources() {
                 <button
                     onClick={() => setSelectedCategory(null)}
                     className={cn(
-                        "px-6 py-3 rounded-2xl text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
+                        "px-6 py-3 rounded-2xl text-sm font-bold uppercase tracking-wider transition-all whitespace-nowrap",
                         !selectedCategory
-                            ? "bg-apple-gray-900 text-white shadow-lg shadow-apple-gray-900/10"
+                            ? "bg-white text-slate-900 shadow-lg shadow-apple-gray-900/10"
                             : "bg-white text-apple-gray-400 border border-apple-gray-100 hover:bg-apple-gray-50"
                     )}
                 >
@@ -176,9 +176,9 @@ export default function Resources() {
                         key={cat}
                         onClick={() => setSelectedCategory(cat)}
                         className={cn(
-                            "px-6 py-3 rounded-2xl text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
+                            "px-6 py-3 rounded-2xl text-sm font-bold uppercase tracking-wider transition-all whitespace-nowrap",
                             selectedCategory === cat
-                                ? "bg-apple-blue text-white shadow-lg shadow-apple-blue/20"
+                                ? "bg-apple-blue text-slate-900 shadow-lg shadow-apple-blue/20"
                                 : "bg-white text-apple-gray-400 border border-apple-gray-100 hover:bg-apple-gray-50"
                         )}
                     >
@@ -219,13 +219,13 @@ export default function Resources() {
                                 className="apple-card p-8 group hover:shadow-apple-hover transition-all duration-500 flex flex-col h-full"
                             >
                                 <div className="flex justify-between items-start mb-6">
-                                    <div className="h-12 w-12 rounded-2xl bg-apple-gray-50 text-apple-gray-400 group-hover:bg-apple-blue group-hover:text-white flex items-center justify-center transition-all duration-500">
+                                    <div className="h-12 w-12 rounded-2xl bg-apple-gray-50 text-apple-gray-400 group-hover:bg-apple-blue group-hover:text-slate-900 flex items-center justify-center transition-all duration-500">
                                         {res.category?.toLowerCase().includes("video") ? <Video className="h-6 w-6" /> : <BookOpen className="h-6 w-6" />}
                                     </div>
                                     {res.rating && (
                                         <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-50 rounded-full border border-amber-100">
                                             <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
-                                            <span className="text-[10px] font-bold text-amber-700">{res.rating}</span>
+                                            <span className="text-base font-bold text-amber-700">{res.rating}</span>
                                         </div>
                                     )}
                                 </div>
@@ -234,13 +234,13 @@ export default function Resources() {
                                     {res.title}
                                 </h3>
 
-                                <p className="text-[13px] font-medium text-apple-gray-400 leading-relaxed mb-6 line-clamp-2">
+                                <p className="text-base font-medium text-apple-gray-400 leading-relaxed mb-6 line-clamp-2">
                                     {res.description}
                                 </p>
 
                                 <div className="flex flex-wrap gap-2 mb-8 mt-auto">
                                     {res.tags?.slice(0, 3).map((tag: string) => (
-                                        <span key={tag} className="text-[9px] font-bold text-apple-gray-400 bg-apple-gray-50 px-3 py-1.5 rounded-lg border border-apple-gray-100 uppercase tracking-widest whitespace-nowrap">
+                                        <span key={tag} className="text-xs font-bold text-apple-gray-400 bg-apple-gray-50 px-3 py-1.5 rounded-lg border border-apple-gray-100 uppercase tracking-widest whitespace-nowrap">
                                             #{tag}
                                         </span>
                                     ))}
@@ -249,13 +249,13 @@ export default function Resources() {
                                 <div className="flex items-center gap-3 pt-6 border-t border-apple-gray-50">
                                     <button
                                         onClick={() => handleAccess(res.title, res.url)}
-                                        className="flex-1 apple-btn-secondary py-3 text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2"
+                                        className="flex-1 apple-btn-secondary py-3 text-base font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2"
                                     >
                                         Access <ArrowUpRight className="h-3.5 w-3.5" />
                                     </button>
                                     <button
                                         onClick={() => handleDownload(res.title)}
-                                        className="h-10 w-10 rounded-xl bg-apple-gray-50 border border-apple-gray-100 flex items-center justify-center text-apple-gray-400 hover:bg-apple-blue hover:text-white hover:border-apple-blue transition-all"
+                                        className="h-10 w-10 rounded-xl bg-apple-gray-50 border border-apple-gray-100 flex items-center justify-center text-apple-gray-400 hover:bg-apple-blue hover:text-slate-900 hover:border-apple-blue transition-all"
                                     >
                                         <Download className="h-4 w-4" />
                                     </button>

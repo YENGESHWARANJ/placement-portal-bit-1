@@ -107,12 +107,12 @@ export default function NotificationsCenter() {
     };
 
     const iconColorClass: Record<NotificationType, string> = {
-        job: "text-blue-400",
+        job: "text-blue-600",
         application: "text-purple-400",
-        interview: "text-emerald-400",
+        interview: "text-emerald-600",
         message: "text-orange-400",
         achievement: "text-yellow-400",
-        system: "text-slate-400",
+        system: "text-slate-500",
     };
 
     const markAsRead = (id: string) => {
@@ -177,16 +177,16 @@ export default function NotificationsCenter() {
             {/* 1. ELITE COMMAND HEADER */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                 <div>
-                    <h2 className="text-4xl font-black italic text-slate-800 dark:text-white uppercase tracking-tighter leading-none">Signal Intelligence Center</h2>
-                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.4em] mt-3 italic">Real-Time Event Stream Monitoring</p>
+                    <h2 className="text-4xl font-black italic text-slate-800 dark:text-slate-900 uppercase tracking-tighter leading-none">Signal Intelligence Center</h2>
+                    <p className="text-base font-bold text-slate-500 dark:text-slate-500 uppercase tracking-[0.4em] mt-3 italic">Real-Time Event Stream Monitoring</p>
                 </div>
                 <div className="flex gap-4">
                     <button
                         onClick={markAllAsRead}
-                        className="flex items-center gap-3 px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl shadow-lg transition-all active:scale-95 group"
+                        className="flex items-center gap-3 px-6 py-4 bg-blue-600 hover:bg-blue-700 text-slate-900 rounded-2xl shadow-lg transition-all active:scale-95 group"
                     >
                         <ShieldCheck className="h-4 w-4" />
-                        <span className="text-[10px] font-black uppercase tracking-widest italic group-hover:translate-x-1 transition-transform">Synchronize All</span>
+                        <span className="text-base font-black uppercase tracking-widest italic group-hover:translate-x-1 transition-transform">Synchronize All</span>
                     </button>
                 </div>
             </div>
@@ -195,20 +195,20 @@ export default function NotificationsCenter() {
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-gradient-to-br from-[#0D0F1F] via-[#1E2342] to-[#0D0F1F] p-10 rounded-[60px] text-white flex flex-col md:flex-row items-center justify-between gap-10 relative overflow-hidden group shadow-[0_40px_100px_rgba(30,35,66,0.3)] border border-white/5"
+                className="bg-gradient-to-br from-[#0D0F1F] via-[#1E2342] to-[#0D0F1F] p-10 rounded-[60px] text-slate-900 flex flex-col md:flex-row items-center justify-between gap-10 relative overflow-hidden group shadow-[0_40px_100px_rgba(30,35,66,0.3)] border border-slate-100"
             >
                 <div className="relative z-10 space-y-6 max-w-xl text-center md:text-left">
                     <div className="flex items-center justify-center md:justify-start gap-4">
-                        <div className="h-16 w-16 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-[28px] flex items-center justify-center border border-white/10 shadow-2xl relative">
-                            <BellRing className="h-8 w-8 text-blue-400 animate-bounce" />
+                        <div className="h-16 w-16 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-[28px] flex items-center justify-center border border-slate-200 shadow-2xl relative">
+                            <BellRing className="h-8 w-8 text-blue-600 animate-bounce" />
                             {unreadCount > 0 && (
                                 <div className="absolute -top-1 -right-1 h-6 w-6 bg-rose-600 rounded-full flex items-center justify-center border-2 border-[#1E2342]">
-                                    <span className="text-[10px] font-black">{unreadCount}</span>
+                                    <span className="text-base font-black">{unreadCount}</span>
                                 </div>
                             )}
                         </div>
                         <div className="text-left">
-                            <span className="text-[10px] font-black uppercase tracking-[0.4em] italic text-blue-400">Security & Alerts Terminal</span>
+                            <span className="text-base font-black uppercase tracking-[0.4em] italic text-blue-600">Security & Alerts Terminal</span>
                             <h3 className="text-3xl font-black italic uppercase tracking-tighter leading-none mt-1">
                                 {unreadCount > 0 ? "Pending Signal Alerts" : "All Signals Synchronized"}
                             </h3>
@@ -217,10 +217,10 @@ export default function NotificationsCenter() {
                 </div>
 
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 relative z-10 w-full lg:w-auto">
-                    <StatItem label="Job Signals" value={stats.job} color="text-blue-400" />
+                    <StatItem label="Job Signals" value={stats.job} color="text-blue-600" />
                     <StatItem label="Apps" value={stats.application} color="text-purple-400" />
-                    <StatItem label="Interview" value={stats.interview} color="text-emerald-400" />
-                    <StatItem label="Notice" value={stats.system} color="text-slate-400" />
+                    <StatItem label="Interview" value={stats.interview} color="text-emerald-600" />
+                    <StatItem label="Notice" value={stats.system} color="text-slate-500" />
                 </div>
 
                 {/* Decorative Elements */}
@@ -231,11 +231,11 @@ export default function NotificationsCenter() {
             {/* Neural Controls - Search & Filters */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
                 <div className="lg:col-span-4 relative group">
-                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500 group-focus-within:text-blue-400 transition-colors" />
+                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500 group-focus-within:text-blue-600 transition-colors" />
                     <input
                         type="text"
                         placeholder="Scan Signal Cache..."
-                        className="w-full pl-16 pr-8 py-5 bg-white/5 border border-white/10 rounded-3xl outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/30 text-xs font-black uppercase tracking-[0.2em] transition-all italic text-white placeholder:text-slate-600"
+                        className="w-full pl-16 pr-8 py-5 bg-slate-50 border border-slate-200 rounded-3xl outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/30 text-xs font-black uppercase tracking-[0.2em] transition-all italic text-slate-900 placeholder:text-slate-600"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
@@ -249,10 +249,10 @@ export default function NotificationsCenter() {
                             whileTap={{ scale: 0.95 }}
                             onClick={() => setFilter(f as any)}
                             className={cn(
-                                "px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all",
+                                "px-6 py-4 rounded-2xl text-base font-black uppercase tracking-widest transition-all",
                                 filter === f
                                     ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
-                                    : "bg-white/5 text-slate-400 border border-white/5 hover:bg-white/10"
+                                    : "bg-slate-50 text-slate-500 border border-slate-100 hover:bg-slate-100"
                             )}
                         >
                             {f}
@@ -265,19 +265,19 @@ export default function NotificationsCenter() {
             <div className="space-y-4">
                 <AnimatePresence mode="popLayout">
                     {loading ? (
-                        <div className="py-40 text-center glass-premium rounded-[60px] border border-white/5">
+                        <div className="py-40 text-center bg-white border border-slate-100 rounded-[60px] border border-slate-100">
                             <div className="h-10 w-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mx-auto mb-4" />
-                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest animate-pulse">Scanning Frequency...</p>
+                            <p className="text-base font-black text-slate-500 uppercase tracking-widest animate-pulse">Scanning Frequency...</p>
                         </div>
                     ) : filteredNotifications.length === 0 ? (
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="py-40 text-center glass-premium rounded-[60px] border border-white/5"
+                            className="py-40 text-center bg-white border border-slate-100 rounded-[60px] border border-slate-100"
                         >
                             <Activity className="h-16 w-16 text-slate-700 mx-auto mb-6 opacity-30" />
-                            <h3 className="text-2xl font-black text-slate-400 uppercase tracking-[0.2em] italic">No Signals Detected</h3>
-                            <p className="text-slate-600 mt-2 font-black uppercase tracking-widest text-[10px]">Frequency clear. No events currently being processed.</p>
+                            <h3 className="text-2xl font-black text-slate-500 uppercase tracking-[0.2em] italic">No Signals Detected</h3>
+                            <p className="text-slate-600 mt-2 font-black uppercase tracking-widest text-base">Frequency clear. No events currently being processed.</p>
                         </motion.div>
                     ) : (
                         filteredNotifications.map((n, i) => {
@@ -293,13 +293,13 @@ export default function NotificationsCenter() {
                                     exit={{ opacity: 0, x: -20 }}
                                     transition={{ delay: i * 0.05 }}
                                     className={cn(
-                                        "glass-premium p-6 rounded-[35px] border border-white/5 shadow-xl group transition-all relative overflow-hidden",
+                                        "bg-white border border-slate-100 p-6 rounded-[35px] border border-slate-100 shadow-xl group transition-all relative overflow-hidden",
                                         !isRead && "border-blue-500/30 bg-blue-500/[0.03]"
                                     )}
                                 >
                                     <div className="flex items-center gap-6 relative z-10">
                                         <div className={cn(
-                                            "h-14 w-14 rounded-2xl bg-gradient-to-br flex items-center justify-center border border-white/10 shadow-2xl relative group-hover:scale-110 transition-transform duration-500",
+                                            "h-14 w-14 rounded-2xl bg-gradient-to-br flex items-center justify-center border border-slate-200 shadow-2xl relative group-hover:scale-110 transition-transform duration-500",
                                             iconBgClass[n.type]
                                         )}>
                                             <Icon className={cn("h-6 w-6", iconColorClass[n.type])} />
@@ -312,8 +312,8 @@ export default function NotificationsCenter() {
                                             <div className="flex items-start justify-between gap-4">
                                                 <div>
                                                     <h3 className={cn(
-                                                        "text-[15px] font-black uppercase tracking-tighter italic transition-colors",
-                                                        isRead ? "text-slate-400 group-hover:text-white" : "text-white"
+                                                        "text-lg font-black uppercase tracking-tighter italic transition-colors",
+                                                        isRead ? "text-slate-500 group-hover:text-slate-900" : "text-slate-900"
                                                     )}>
                                                         {n.title}
                                                     </h3>
@@ -325,14 +325,14 @@ export default function NotificationsCenter() {
                                                     {!isRead && (
                                                         <button
                                                             onClick={() => markAsRead(n.id)}
-                                                            className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all"
+                                                            className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 flex items-center justify-center hover:bg-emerald-500 hover:text-slate-900 transition-all"
                                                         >
                                                             <Check className="h-4 w-4" />
                                                         </button>
                                                     )}
                                                     <button
                                                         onClick={() => deleteNotification(n.id)}
-                                                        className="h-10 w-10 rounded-xl bg-rose-500/10 text-rose-500 border border-rose-500/20 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all"
+                                                        className="h-10 w-10 rounded-xl bg-rose-500/10 text-rose-500 border border-rose-500/20 flex items-center justify-center hover:bg-rose-500 hover:text-slate-900 transition-all"
                                                     >
                                                         <Trash2 className="h-4 w-4" />
                                                     </button>
@@ -341,12 +341,12 @@ export default function NotificationsCenter() {
 
                                             <div className="flex items-center justify-between mt-4">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="flex items-center gap-2 text-[8px] font-black text-slate-600 uppercase tracking-widest italic font-mono">
+                                                    <div className="flex items-center gap-2 text-sm font-black text-slate-600 uppercase tracking-widest italic font-mono">
                                                         <Clock className="h-3 w-3" />
                                                         {n.timestamp.toLocaleString()}
                                                     </div>
                                                     {n.priority === "high" && (
-                                                        <div className="flex items-center gap-1 text-[8px] font-black text-rose-500 uppercase tracking-widest italic bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20">
+                                                        <div className="flex items-center gap-1 text-sm font-black text-rose-500 uppercase tracking-widest italic bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20">
                                                             <Zap className="h-2 w-2" /> High Intensity
                                                         </div>
                                                     )}
@@ -355,7 +355,7 @@ export default function NotificationsCenter() {
                                                 {n.actionUrl && (
                                                     <button
                                                         onClick={() => navigate(n.actionUrl!)}
-                                                        className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.2em] text-blue-400 hover:text-white transition-all group/btn"
+                                                        className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-blue-600 hover:text-slate-900 transition-all group/btn"
                                                     >
                                                         Execute Command <ChevronRight className="h-3 w-3 group-hover/btn:translate-x-1 transition-transform" />
                                                     </button>
@@ -367,7 +367,7 @@ export default function NotificationsCenter() {
                                     {/* Left Status Bar */}
                                     <div className={cn(
                                         "absolute top-0 left-0 w-1 h-full transition-all",
-                                        !isRead ? "bg-blue-600" : "bg-transparent group-hover:bg-white/10"
+                                        !isRead ? "bg-blue-600" : "bg-transparent group-hover:bg-slate-100"
                                     )} />
                                 </motion.div>
                             );
@@ -381,8 +381,8 @@ export default function NotificationsCenter() {
 
 // Internal Stat Item
 const StatItem = ({ label, value, color }: any) => (
-    <div className="bg-white/5 backdrop-blur-3xl p-4 rounded-[28px] border border-white/5 text-center min-w-[100px] flex flex-col justify-center">
+    <div className="bg-slate-50 backdrop-blur-3xl p-4 rounded-[28px] border border-slate-100 text-center min-w-[100px] flex flex-col justify-center">
         <p className={cn("text-2xl font-black italic leading-none mb-1", color)}>{value}</p>
-        <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest leading-none opacity-60">{label}</p>
+        <p className="text-sm font-black text-slate-500 uppercase tracking-widest leading-none opacity-60">{label}</p>
     </div>
 );

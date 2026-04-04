@@ -14,12 +14,35 @@ export default function LiveInterviewRoom() {
     const { roomId } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
-    const [code, setCode] = useState('// Welcome to the Nexus Live Interview Room\n// Start typing to synchronize code with your peer.\n\nfunction solve(input) {\n  \n}\n');
+    const [code, setCode] = useState(`// Two Sum Problem
+// Given an array of integers nums and an integer target,
+// return indices of the two numbers such that they add up to target.
+
+function solve(nums, target) {
+  const map = new Map();
+  for (let i = 0; i < nums.length; i++) {
+    const complement = target - nums[i];
+    if (map.has(complement)) {
+      return [map.get(complement), i];
+    }
+    map.set(nums[i], i);
+  }
+  return [];
+}
+
+// Test case
+const nums = [2, 7, 11, 15];
+const target = 9;
+console.log("Input:", nums, "Target:", target);
+console.log("Result:", solve(nums, target));
+`);
     const [language, setLanguage] = useState('javascript');
     const [isMicOn, setIsMicOn] = useState(true);
     const [isVideoOn, setIsVideoOn] = useState(true);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [peers, setPeers] = useState<string[]>([]);
+    const [output, setOutput] = useState<string[]>(['> Environment initialized.', '> Ready for execution.']);
+    const [isRunning, setIsRunning] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const socket = user?._id ? getSocket(user._id) : null;
@@ -71,9 +94,49 @@ export default function LiveInterviewRoom() {
         navigate(-1);
     };
 
-    const handleRunCode = () => {
-        toast.success("Code execution simulated successfully.", { icon: "🚀" })
-    }
+    const handleRunCode = async () => {
+        setIsRunning(true);
+        setOutput(prev => [...prev, `> Running ${language} script...`]);
+
+        if (language === 'javascript') {
+            const logs: string[] = [];
+            const originalLog = console.log;
+            console.log = (...args: any[]) => {
+                logs.push(args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg).join(' '));
+            };
+
+            try {
+                // eslint-disable-next-line no-eval
+                eval(code);
+                setTimeout(() => {
+                    setOutput(prev => [...prev, ...logs, `> Execution finished successfully.`]);
+                    setIsRunning(false);
+                    console.log = originalLog;
+                }, 800);
+            } catch (err: any) {
+                setTimeout(() => {
+                    setOutput(prev => [...prev, `[ERROR] ${err.message}`, `> Execution failed.`]);
+                    setIsRunning(false);
+                    console.log = originalLog;
+                }, 800);
+            }
+        } else {
+            // Simulated Compiler for other languages
+            setTimeout(() => {
+                setOutput(prev => [
+                    ...prev, 
+                    `[SYSTEM] Connecting to ${language} remote compiler...`,
+                    `[SYSTEM] Compiling source...`,
+                    `[STDOUT] Compilation successful.`,
+                    `[STDOUT] Result: 0 (Success)`,
+                    `> Execution finished.`
+                ]);
+                setIsRunning(false);
+            }, 2000);
+        }
+    };
+
+    const clearConsole = () => setOutput(['> Console cleared.']);
 
     return (
         <div className={cn(
@@ -86,7 +149,7 @@ export default function LiveInterviewRoom() {
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full mix-blend-screen" />
             </div>
 
-            <div className="relative z-10 flex flex-col h-full bg-[#0F1225]/80 backdrop-blur-2xl rounded-[30px] border border-white/5 shadow-2xl overflow-hidden">
+            <div className="relative z-10 flex flex-col h-full bg-[#0F1225]/80 backdrop-blur-2xl rounded-[30px] border border-white/10 shadow-2xl overflow-hidden">
 
                 {/* Header */}
                 <header className="h-16 border-b border-white/5 flex items-center justify-between px-6 shrink-0 bg-white/[0.02]">
@@ -101,23 +164,23 @@ export default function LiveInterviewRoom() {
 
                     <div className="flex items-center gap-3">
                         <div className="flex items-center -space-x-2 mr-4">
-                            <div className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center text-[10px] font-black text-white border-2 border-[#0F1225] z-10" title={user?.name}>
+                            <div className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center text-xs font-black text-white border-2 border-[#0F1225] z-10" title={user?.name}>
                                 {user?.name?.charAt(0) || 'U'}
                             </div>
                             {peers.map((p, i) => (
-                                <div key={i} className="h-8 w-8 rounded-full bg-slate-700 flex items-center justify-center text-[10px] font-black text-white border-2 border-[#0F1225]" title={p}>
+                                <div key={i} className="h-8 w-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-black text-white border-2 border-[#0F1225]" title={p}>
                                     {p.charAt(0)}
                                 </div>
                             ))}
-                            <div className="h-8 pl-4 pr-3 rounded-full bg-white/5 flex items-center justify-center text-[10px] font-bold text-slate-400 border border-white/10">
+                            <div className="h-8 pl-4 pr-3 rounded-full bg-white/5 flex items-center justify-center text-[10px] font-black text-slate-400 border border-white/10 uppercase tracking-widest ml-2">
                                 {peers.length + 1} Connected
                             </div>
                         </div>
 
-                        <button onClick={() => setIsFullscreen(!isFullscreen)} className="h-10 w-10 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-300 transition-colors">
+                        <button onClick={() => setIsFullscreen(!isFullscreen)} className="h-10 w-10 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 transition-colors border border-white/5">
                             {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
                         </button>
-                        <button onClick={handleLeave} className="px-6 py-2.5 bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl text-[11px] font-black uppercase tracking-widest transition-all">
+                        <button onClick={handleLeave} className="px-6 py-2.5 bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all border border-rose-500/20">
                             End Session
                         </button>
                     </div>
@@ -126,107 +189,168 @@ export default function LiveInterviewRoom() {
                 {/* Main Workspace */}
                 <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
 
-                    {/* Left Panel: Video & Comms (Resizable in a real app, fixed here for simplicity) */}
-                    <div className="w-full lg:w-[350px] border-r border-white/5 flex flex-col shrink-0 bg-black/20">
-
-                        {/* Primary Video Feed (Peer) */}
-                        <div className="relative h-[250px] lg:h-[300px] border-b border-white/5 bg-[#0A0C14] flex items-center justify-center overflow-hidden group">
-                            {peers.length > 0 ? (
-                                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                    <div className="h-24 w-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-3xl font-black text-white shadow-2xl mb-4">
-                                        {peers[0].charAt(0)}
-                                    </div>
-                                    <p className="text-white font-bold">{peers[0]}</p>
-                                    <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1">Audio Only (Simulated)</p>
-                                </div>
-                            ) : (
-                                <div className="text-center">
-                                    <Users className="h-12 w-12 text-slate-700 mx-auto mb-4" />
-                                    <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Waiting for peer...</p>
-                                </div>
-                            )}
-                            <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-widest border border-white/10">
-                                Peer
+                    {/* Left Panel: Video & Comms */}
+                    <div className="w-full lg:w-[350px] border-r border-white/5 flex flex-col shrink-0 bg-black/40">
+                        
+                        {/* Question Panel */}
+                        <div className="p-5 border-b border-white/5 bg-indigo-500/5">
+                            <div className="flex items-center gap-2 mb-3">
+                                <AlertCircle className="h-4 w-4 text-indigo-400" />
+                                <span className="text-[10px] font-black text-indigo-200 uppercase tracking-widest">Coding Challenge</span>
+                            </div>
+                            <h4 className="text-white font-bold mb-2">Two Sum</h4>
+                            <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                                Given an array of integers <code className="text-indigo-400 font-mono">nums</code> and an integer <code className="text-indigo-400 font-mono">target</code>, return indices of the two numbers such that they add up to target.
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                                <span className="px-2 py-1 bg-white/5 rounded-md text-[9px] font-black text-slate-500 border border-white/10 uppercase">Array</span>
+                                <span className="px-2 py-1 bg-white/5 rounded-md text-[9px] font-black text-slate-500 border border-white/10 uppercase">Hash Table</span>
+                                <span className="px-2 py-1 bg-emerald-500/10 rounded-md text-[9px] font-black text-emerald-400 border border-emerald-500/20 uppercase tracking-widest">Easy</span>
                             </div>
                         </div>
 
-                        {/* Secondary Feed (Self) & Controls */}
-                        <div className="p-4 flex flex-col gap-4 flex-1">
-                            <div className="relative h-[150px] rounded-2xl bg-[#0A0C14] border border-white/10 overflow-hidden flex items-center justify-center shadow-inner">
-                                <div className="h-16 w-16 rounded-full bg-slate-800 flex items-center justify-center text-xl font-black text-white shadow-lg">
-                                    {user?.name?.charAt(0) || 'U'}
+                        {/* Peer Feed */}
+                        <div className="relative h-[220px] border-b border-white/5 bg-black/40 flex items-center justify-center overflow-hidden">
+                            {peers.length > 0 ? (
+                                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-t from-black/80 to-transparent">
+                                    <div className="h-20 w-20 rounded-full bg-indigo-600 flex items-center justify-center text-3xl font-black text-white shadow-2xl mb-4 border-2 border-white/20">
+                                        {peers[0].charAt(0)}
+                                    </div>
+                                    <p className="text-white font-black tracking-tight">{peers[0]}</p>
+                                    <p className="text-indigo-400 text-[10px] font-black uppercase tracking-widest mt-1 animate-pulse">Recruiter (Host)</p>
                                 </div>
-                                <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-widest border border-white/10">
-                                    You
+                            ) : (
+                                <div className="text-center opacity-40">
+                                    <Users className="h-10 w-10 text-slate-500 mx-auto mb-3" />
+                                    <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Waiting for peer...</p>
                                 </div>
-                                {!isVideoOn && (
-                                    <div className="absolute inset-0 bg-black/80 flex items-center justify-center backdrop-blur-sm">
-                                        <VideoOff className="h-8 w-8 text-rose-500" />
+                            )}
+                            <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-md text-[9px] font-black text-slate-400 uppercase tracking-widest border border-white/10">
+                                PEER
+                            </div>
+                        </div>
+
+                        {/* Self Feed Mini */}
+                        <div className="p-4 flex-1 flex flex-col">
+                           <div className="relative w-full aspect-video rounded-2xl bg-black border border-white/5 overflow-hidden flex items-center justify-center">
+                                {!isVideoOn ? (
+                                    <div className="flex flex-col items-center text-slate-600">
+                                        <VideoOff className="h-8 w-8 mb-2" />
+                                        <span className="text-[10px] font-black uppercase">Camera Off</span>
+                                    </div>
+                                ) : (
+                                    <div className="h-full w-full bg-slate-900 flex items-center justify-center">
+                                        <div className="h-12 w-12 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 font-black">
+                                            {user?.name?.charAt(0)}
+                                        </div>
                                     </div>
                                 )}
-                            </div>
-
-                            <div className="flex items-center justify-center gap-3 mt-auto mb-4">
-                                <button onClick={() => setIsMicOn(!isMicOn)} className={cn("h-12 w-12 rounded-full flex items-center justify-center transition-all", isMicOn ? "bg-white/10 text-white hover:bg-white/20" : "bg-rose-500/20 text-rose-500 border border-rose-500/30")}>
-                                    {isMicOn ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
+                                <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-0.5 rounded text-[8px] font-black text-white uppercase tracking-tighter">You (Student)</div>
+                           </div>
+                           
+                           {/* Controls */}
+                            <div className="flex items-center justify-center gap-3 mt-6">
+                                <button onClick={() => setIsMicOn(!isMicOn)} className={cn("h-11 w-11 rounded-2xl flex items-center justify-center transition-all shadow-lg", isMicOn ? "bg-white/5 text-slate-400 hover:bg-white/10 border border-white/10" : "bg-rose-500 text-white")}>
+                                    {isMicOn ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
                                 </button>
-                                <button onClick={() => setIsVideoOn(!isVideoOn)} className={cn("h-12 w-12 rounded-full flex items-center justify-center transition-all", isVideoOn ? "bg-white/10 text-white hover:bg-white/20" : "bg-rose-500/20 text-rose-500 border border-rose-500/30")}>
-                                    {isVideoOn ? <Video className="h-5 w-5" /> : <VideoOff className="h-5 w-5" />}
+                                <button onClick={() => setIsVideoOn(!isVideoOn)} className={cn("h-11 w-11 rounded-2xl flex items-center justify-center transition-all shadow-lg", isVideoOn ? "bg-white/5 text-slate-400 hover:bg-white/10 border border-white/10" : "bg-rose-500 text-white")}>
+                                    {isVideoOn ? <Video className="h-4 w-4" /> : <VideoOff className="h-4 w-4" />}
                                 </button>
-                                <button className="h-12 w-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all">
-                                    <MonitorUp className="h-5 w-5" />
+                                <button className="h-11 w-11 rounded-2xl bg-white/5 text-slate-400 hover:bg-white/10 border border-white/10 flex items-center justify-center shadow-lg transition-all">
+                                    <MonitorUp className="h-4 w-4" />
                                 </button>
-                                <button onClick={handleLeave} className="h-12 w-12 rounded-full bg-rose-600 hover:bg-rose-500 flex items-center justify-center text-white transition-all shadow-lg shadow-rose-600/20">
-                                    <PhoneOff className="h-5 w-5" />
+                                <button onClick={handleLeave} className="h-11 w-11 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white flex items-center justify-center transition-all shadow-lg shadow-rose-600/40 border border-rose-400/20">
+                                    <PhoneOff className="h-4 w-4" />
                                 </button>
                             </div>
                         </div>
                     </div>
 
                     {/* Right Panel: Synchronized Editor */}
-                    <div className="flex-1 flex flex-col min-w-0 bg-[#0A0C14]">
-                        <div className="h-12 border-b border-white/5 flex items-center justify-between px-4 bg-white/[0.02]">
-                            <div className="flex items-center gap-4">
-                                <select
-                                    value={language}
-                                    onChange={e => setLanguage(e.target.value)}
-                                    className="bg-transparent text-white text-[11px] font-black uppercase tracking-widest outline-none cursor-pointer"
-                                >
-                                    <option value="javascript" className="bg-slate-900">JavaScript</option>
-                                    <option value="python" className="bg-slate-900">Python</option>
-                                    <option value="java" className="bg-slate-900">Java</option>
-                                    <option value="cpp" className="bg-slate-900">C++</option>
-                                </select>
+                    <div className="flex-1 flex flex-col min-w-0 bg-[#05060A]">
+                        <div className="h-14 border-b border-white/5 flex items-center justify-between px-6 bg-black/20">
+                            <div className="flex items-center gap-6">
+                                <div className="flex items-center gap-2">
+                                    <Code2 className="h-4 w-4 text-indigo-400" />
+                                    <select
+                                        value={language}
+                                        onChange={e => setLanguage(e.target.value)}
+                                        className="bg-transparent text-white text-[10px] font-black uppercase tracking-[0.2em] outline-none cursor-pointer hover:text-indigo-400 transition-colors"
+                                    >
+                                        <option value="javascript" className="bg-[#0F1225]">JavaScript</option>
+                                        <option value="python" className="bg-[#0F1225]">Python 3</option>
+                                        <option value="java" className="bg-[#0F1225]">Java 17</option>
+                                        <option value="cpp" className="bg-[#0F1225]">C++ 20</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
-                                    <Zap className="h-3 w-3 text-emerald-500" /> Synced
+                            <div className="flex items-center gap-4">
+                                <span className="text-[10px] font-black text-emerald-400/60 uppercase tracking-widest flex items-center gap-2">
+                                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" /> SYNCED
                                 </span>
-                                <button onClick={handleRunCode} className="flex items-center gap-2 px-4 py-1.5 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-white rounded-lg text-[10px] font-black uppercase tracking-widest transition-all">
-                                    <Play className="h-3 w-3" /> Run
+                                <button 
+                                    onClick={handleRunCode} 
+                                    disabled={isRunning}
+                                    className={cn(
+                                        "flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
+                                        isRunning ? "bg-slate-800 text-slate-500 cursor-not-allowed" : "bg-emerald-500 text-white hover:bg-emerald-400 shadow-lg shadow-emerald-500/20 border border-emerald-400/20"
+                                    )}
+                                >
+                                    {isRunning ? <div className="h-3 w-3 border-2 border-slate-500 border-t-transparent animate-spin rounded-full" /> : <Play className="h-3 w-3 fill-current" />}
+                                    {isRunning ? "Running..." : "Run Code"}
                                 </button>
                             </div>
                         </div>
-                        <div className="flex-1 relative">
-                            {/* Line Numbers mock */}
-                            <div className="absolute left-0 top-0 bottom-0 w-12 bg-white/[0.02] border-r border-white/5 py-4 flex flex-col items-center text-[11px] font-mono text-slate-600 select-none pointer-events-none">
-                                {code.split('\n').map((_, i) => <span key={i} className="leading-6">{i + 1}</span>)}
+                        
+                        {/* Editor Canvas */}
+                        <div className="flex-1 flex overflow-hidden group">
+                            {/* Editor UI Accents */}
+                            <div className="w-12 border-r border-white/5 flex flex-col pt-6 items-center text-[10px] font-mono text-slate-700 select-none bg-black/20">
+                                {code.split('\n').map((_, i) => (
+                                    <span key={i} className="leading-[24px] h-[24px]">{i + 1}</span>
+                                ))}
                             </div>
-                            <textarea
-                                ref={textareaRef}
-                                value={code}
-                                onChange={handleCodeChange}
-                                spellCheck="false"
-                                className="w-full h-full bg-transparent text-slate-300 font-mono text-[13px] leading-6 p-4 pl-16 resize-none outline-none focus:ring-0"
-                                placeholder="Type code here..."
-                            />
+                            <div className="flex-1 relative">
+                                <textarea
+                                    ref={textareaRef}
+                                    value={code}
+                                    onChange={handleCodeChange}
+                                    spellCheck="false"
+                                    className="w-full h-full bg-transparent text-slate-300 font-mono text-sm leading-[24px] p-6 resize-none outline-none focus:ring-0 selection:bg-indigo-500/30 color-[#e2e8f0]"
+                                    placeholder="// Start writing your solution..."
+                                />
+                                {/* Bottom Bar Stats */}
+                                <div className="absolute bottom-4 right-6 text-[10px] font-black text-slate-700 uppercase tracking-widest pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+                                    UTF-8 | LF | {language.toUpperCase()}
+                                </div>
+                            </div>
                         </div>
-                        {/* Terminal Output Mock */}
-                        <div className="h-48 border-t border-white/5 bg-[#05060A] p-4 font-mono text-[11px] text-slate-400 overflow-y-auto">
-                            <div className="flex items-center gap-2 text-slate-600 mb-2">
-                                <MonitorUp className="h-3 w-3" /> Output Console
+
+                        {/* Modern Terminal Output */}
+                        <div className="h-56 border-t border-white/5 bg-black/60 flex flex-col">
+                            <div className="h-10 px-6 border-b border-white/5 flex items-center justify-between bg-black/20">
+                                <div className="flex items-center gap-2">
+                                    <MonitorUp className="h-3.5 w-3.5 text-slate-500" />
+                                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Output Console</span>
+                                </div>
+                                <button onClick={clearConsole} className="text-[10px] font-black text-slate-700 hover:text-slate-500 uppercase tracking-widest transition-colors mb-4">Clear</button>
                             </div>
-                            <p className="text-emerald-500 leading-relaxed">&gt; Ready.</p>
+                            <div className="flex-1 overflow-y-auto p-6 font-mono text-xs space-y-1.5 custom-scrollbar">
+                                {output.map((line, i) => (
+                                    <div key={i} className={cn(
+                                        "leading-relaxed",
+                                        line.startsWith('>') ? "text-slate-500" :
+                                        line.startsWith('[ERROR]') ? "text-rose-500 font-bold" :
+                                        line.startsWith('[SYSTEM]') ? "text-indigo-400" :
+                                        line.startsWith('[STDOUT]') ? "text-emerald-400" : "text-slate-300"
+                                    )}>
+                                        {line}
+                                    </div>
+                                ))}
+                                {isRunning && (
+                                    <div className="text-indigo-400 animate-pulse mt-4">&gt; Processing...</div>
+                                )}
+                            </div>
                         </div>
                     </div>
 

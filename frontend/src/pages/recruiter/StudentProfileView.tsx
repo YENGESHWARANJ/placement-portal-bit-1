@@ -41,7 +41,7 @@ export default function StudentProfileView() {
     if (loading) return (
         <div className="p-20 flex flex-col items-center justify-center space-y-4">
             <div className="h-10 w-10 border-4 border-apple-blue/20 border-t-apple-blue rounded-full animate-spin" />
-            <p className="text-apple-gray-400 font-bold uppercase tracking-widest text-[10px]">Decoding Dossier...</p>
+            <p className="text-apple-gray-400 font-bold uppercase tracking-widest text-base">Decoding Dossier...</p>
         </div>
     );
     if (!student) return null;
@@ -57,7 +57,7 @@ export default function StudentProfileView() {
             <motion.button
                 variants={stagger.item}
                 onClick={() => navigate(-1)}
-                className="mb-10 flex items-center gap-3 text-apple-gray-400 hover:text-apple-blue transition-all font-black uppercase tracking-widest text-[10px] group"
+                className="mb-10 flex items-center gap-3 text-apple-gray-400 hover:text-apple-blue transition-all font-black uppercase tracking-widest text-base group"
             >
                 <div className="h-10 w-10 rounded-2xl bg-white border border-apple-gray-100 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                     <ArrowLeft className="h-4 w-4" />
@@ -87,14 +87,14 @@ export default function StudentProfileView() {
                         </div>
 
                         <h1 className="text-3xl font-black text-apple-gray-900 tracking-tight mb-2">{student.name}</h1>
-                        <p className="text-[11px] font-black text-apple-blue uppercase tracking-widest mb-10">{student.branch} • Batch {student.year}</p>
+                        <p className="text-sm font-black text-apple-blue uppercase tracking-widest mb-10">{student.branch} • Batch {student.year}</p>
 
                         <div className="flex justify-center gap-4 mb-10">
                             {student.linkedin && (
                                 <motion.a
                                     whileHover={{ scale: 1.1, y: -2 }}
                                     href={student.linkedin} target="_blank" rel="noopener noreferrer"
-                                    className="p-3.5 bg-blue-50 text-[#0077b5] rounded-2xl border border-blue-100/50 hover:bg-[#0077b5] hover:text-white transition-all shadow-sm"
+                                    className="p-3.5 bg-blue-50 text-[#0077b5] rounded-2xl border border-blue-100/50 hover:bg-[#0077b5] hover:text-slate-900 transition-all shadow-sm"
                                 >
                                     <Linkedin className="h-4 w-4" />
                                 </motion.a>
@@ -103,7 +103,7 @@ export default function StudentProfileView() {
                                 <motion.a
                                     whileHover={{ scale: 1.1, y: -2 }}
                                     href={student.github} target="_blank" rel="noopener noreferrer"
-                                    className="p-3.5 bg-apple-gray-50 text-apple-gray-900 rounded-2xl border border-apple-gray-100 hover:bg-black hover:text-white transition-all shadow-sm"
+                                    className="p-3.5 bg-apple-gray-50 text-apple-gray-900 rounded-2xl border border-apple-gray-100 hover:bg-black hover:text-slate-900 transition-all shadow-sm"
                                 >
                                     <Github className="h-4 w-4" />
                                 </motion.a>
@@ -112,7 +112,7 @@ export default function StudentProfileView() {
                                 <motion.a
                                     whileHover={{ scale: 1.1, y: -2 }}
                                     href={student.website} target="_blank" rel="noopener noreferrer"
-                                    className="p-3.5 bg-purple-50 text-purple-600 rounded-2xl border border-purple-100/50 hover:bg-purple-600 hover:text-white transition-all shadow-sm"
+                                    className="p-3.5 bg-purple-50 text-purple-600 rounded-2xl border border-purple-100/50 hover:bg-purple-600 hover:text-slate-900 transition-all shadow-sm"
                                 >
                                     <Globe className="h-4 w-4" />
                                 </motion.a>
@@ -123,15 +123,15 @@ export default function StudentProfileView() {
                             <div className="flex items-center gap-4">
                                 <div className="h-10 w-10 rounded-xl bg-white flex items-center justify-center text-apple-gray-400 shadow-sm border border-apple-gray-100"><Mail className="h-4 w-4" /></div>
                                 <div className="overflow-hidden">
-                                    <p className="text-[9px] font-black text-apple-gray-300 uppercase tracking-widest">Digital Address</p>
-                                    <p className="text-[12px] font-bold text-apple-gray-700 truncate">{student.userId?.email || "Restricted access"}</p>
+                                    <p className="text-xs font-black text-apple-gray-300 uppercase tracking-widest">Digital Address</p>
+                                    <p className="text-lg font-bold text-apple-gray-700 truncate">{student.userId?.email || "Restricted access"}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
                                 <div className="h-10 w-10 rounded-xl bg-white flex items-center justify-center text-apple-gray-400 shadow-sm border border-apple-gray-100"><FileText className="h-4 w-4" /></div>
                                 <div>
-                                    <p className="text-[9px] font-black text-apple-gray-300 uppercase tracking-widest">Identification</p>
-                                    <p className="text-[12px] font-bold text-apple-gray-700 uppercase tracking-widest">{student.usn}</p>
+                                    <p className="text-xs font-black text-apple-gray-300 uppercase tracking-widest">Identification</p>
+                                    <p className="text-lg font-bold text-apple-gray-700 uppercase tracking-widest">{student.usn}</p>
                                 </div>
                             </div>
                         </div>
@@ -140,13 +140,13 @@ export default function StudentProfileView() {
                     {/* Resume Action */}
                     <motion.div
                         whileHover={{ scale: 1.02, y: -4 }}
-                        className="bg-apple-gray-900 p-8 rounded-[40px] text-white flex items-center justify-between shadow-apple-hover group cursor-pointer border border-white/5"
+                        className="bg-white p-8 rounded-[40px] text-slate-900 flex items-center justify-between shadow-apple-hover group cursor-pointer border border-slate-100"
                     >
                         <div>
-                            <p className="text-[10px] font-black text-apple-gray-400 uppercase tracking-widest mb-1">Dossier Repository</p>
+                            <p className="text-base font-black text-apple-gray-400 uppercase tracking-widest mb-1">Dossier Repository</p>
                             <h3 className="text-xl font-black tracking-tight">Access Curriculum</h3>
                         </div>
-                        <div className="h-14 w-14 bg-white/10 rounded-2xl flex items-center justify-center group-hover:bg-white group-hover:text-apple-gray-900 transition-all shadow-inner border border-white/10">
+                        <div className="h-14 w-14 bg-slate-100 rounded-2xl flex items-center justify-center group-hover:bg-white group-hover:text-apple-gray-900 transition-all shadow-inner border border-slate-200">
                             <FileText className="h-6 w-6" />
                         </div>
                     </motion.div>
@@ -167,7 +167,7 @@ export default function StudentProfileView() {
                         ].map((stat, i) => (
                             <div key={i} className="apple-card p-6 bg-white border border-apple-gray-50 text-center shadow-sm hover:shadow-apple-hover transition-all">
                                 <p className={cn("text-3xl font-black tracking-tighter mb-2", stat.color)}>{stat.value}</p>
-                                <p className="text-[9px] font-black text-apple-gray-400 uppercase tracking-[0.2em]">{stat.label}</p>
+                                <p className="text-xs font-black text-apple-gray-400 uppercase tracking-[0.2em]">{stat.label}</p>
                             </div>
                         ))}
                     </div>
@@ -179,17 +179,17 @@ export default function StudentProfileView() {
                             <h3 className="text-xl font-black text-apple-gray-900 tracking-tight mb-8 flex items-center gap-3">
                                 <BookOpen className="h-5 w-5 text-apple-blue" /> Manifest Intelligence
                             </h3>
-                            <p className="text-apple-gray-600 font-bold leading-relaxed text-[15px] mb-12">
+                            <p className="text-apple-gray-600 font-bold leading-relaxed text-lg mb-12">
                                 {student.about || "Candidate documentation pending initial intake session."}
                             </p>
 
                             <div className="pt-10 border-t border-apple-gray-50">
-                                <h3 className="text-[11px] font-black text-apple-gray-300 uppercase tracking-[0.4em] mb-6 flex items-center gap-3">
+                                <h3 className="text-sm font-black text-apple-gray-300 uppercase tracking-[0.4em] mb-6 flex items-center gap-3">
                                     <Award className="h-4 w-4" /> Strategic Arsenal
                                 </h3>
                                 <div className="flex flex-wrap gap-3">
                                     {student.skills?.map((skill: string, i: number) => (
-                                        <span key={i} className="px-5 py-2.5 bg-apple-gray-50/50 text-apple-gray-500 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-apple-gray-100 hover:border-apple-blue/20 hover:bg-white transition-all">
+                                        <span key={i} className="px-5 py-2.5 bg-apple-gray-50/50 text-apple-gray-500 rounded-2xl text-base font-black uppercase tracking-widest border border-apple-gray-100 hover:border-apple-blue/20 hover:bg-white transition-all">
                                             {skill}
                                         </span>
                                     ))}
@@ -215,7 +215,7 @@ export default function StudentProfileView() {
                                         toast.error("Protocol error");
                                     }
                                 }}
-                                className="py-5 bg-white border border-rose-100 text-rose-500 rounded-[30px] font-black uppercase tracking-widest text-[11px] hover:bg-rose-50 transition-all flex items-center justify-center gap-3 shadow-sm"
+                                className="py-5 bg-white border border-rose-100 text-rose-500 rounded-[30px] font-black uppercase tracking-widest text-sm hover:bg-rose-50 transition-all flex items-center justify-center gap-3 shadow-sm"
                             >
                                 <XCircle className="h-5 w-5" /> Archive Candidate
                             </motion.button>
@@ -233,7 +233,7 @@ export default function StudentProfileView() {
                                         toast.error("Protocol error");
                                     }
                                 }}
-                                className="py-5 bg-apple-blue text-white rounded-[30px] font-black uppercase tracking-widest text-[11px] hover:bg-apple-blue-dark transition-all flex items-center justify-center gap-3 shadow-apple-hover border border-white/10"
+                                className="py-5 bg-apple-blue text-slate-900 rounded-[30px] font-black uppercase tracking-widest text-sm hover:bg-apple-blue-dark transition-all flex items-center justify-center gap-3 shadow-apple-hover border border-slate-200"
                             >
                                 <CheckCircle2 className="h-5 w-5" /> Execute Shortlist
                             </motion.button>
@@ -245,7 +245,7 @@ export default function StudentProfileView() {
                         <motion.button
                             whileHover={{ scale: 1.02, y: -2 }}
                             onClick={() => navigate(`/interviews/live/${student._id}`)}
-                            className="w-full py-5 bg-gradient-to-r from-indigo-600 flex-1 to-purple-600 text-white rounded-[30px] font-black uppercase tracking-widest text-[12px] shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all flex items-center justify-center gap-3 border border-white/10"
+                            className="w-full py-5 bg-gradient-to-r from-indigo-600 flex-1 to-purple-600 text-slate-900 rounded-[30px] font-black uppercase tracking-widest text-lg shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all flex items-center justify-center gap-3 border border-slate-200"
                         >
                             <Video className="h-5 w-5" /> Launch Live Interview Session
                         </motion.button>

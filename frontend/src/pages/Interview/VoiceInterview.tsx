@@ -201,7 +201,7 @@ export default function VoiceInterview() {
     };
 
     return (
-        <div className="min-h-screen bg-[#05070A] p-6 lg:p-12 relative overflow-hidden flex flex-col">
+        <div className="min-h-screen bg-white p-6 lg:p-12 relative overflow-hidden flex flex-col">
             {/* Background Effects */}
             <div className="absolute top-1/4 left-1/4 h-[500px] w-[500px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute bottom-1/4 right-1/4 h-[400px] w-[400px] bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
@@ -210,12 +210,12 @@ export default function VoiceInterview() {
             <div className="relative z-10 flex items-center justify-between mb-12">
                 <button
                     onClick={() => navigate(-1)}
-                    className="h-12 w-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all font-black uppercase tracking-widest text-xs"
+                    className="h-12 w-12 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all font-black uppercase tracking-widest text-xs"
                 >
                     <ArrowLeft className="h-5 w-5" />
                 </button>
-                <h1 className="text-2xl font-black text-white uppercase tracking-[0.3em] flex items-center gap-4">
-                    Neural Voice <span className="text-emerald-400 italic">Interviewer</span>
+                <h1 className="text-2xl font-black text-slate-900 uppercase tracking-[0.3em] flex items-center gap-4">
+                    Neural Voice <span className="text-emerald-600 italic">Interviewer</span>
                 </h1>
                 <div className={cn("h-3 w-3 rounded-full shadow-[0_0_15px]", interviewActive ? "bg-emerald-500 shadow-emerald-500/50 animate-pulse" : "bg-slate-700")} />
             </div>
@@ -226,12 +226,12 @@ export default function VoiceInterview() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="flex-1 flex items-center justify-center relative z-10"
                 >
-                    <div className="glass-premium p-16 rounded-[60px] max-w-2xl w-full text-center border border-white/10 shadow-3xl">
+                    <div className="bg-white border border-slate-100 p-16 rounded-[60px] max-w-2xl w-full text-center border border-slate-200 shadow-md shadow-slate-200/40">
                         <div className="h-24 w-24 mx-auto bg-gradient-to-br from-emerald-500 to-cyan-600 rounded-[30px] flex items-center justify-center mb-8 shadow-[0_20px_50px_rgba(16,185,129,0.3)]">
-                            <Mic className="h-10 w-10 text-white" />
+                            <Mic className="h-10 w-10 text-slate-900" />
                         </div>
-                        <h2 className="text-4xl font-black text-white italic uppercase tracking-tighter mb-4">Start Session</h2>
-                        <p className="text-slate-400 font-bold leading-relaxed mb-12 text-sm uppercase tracking-widest">
+                        <h2 className="text-4xl font-black text-slate-900 italic uppercase tracking-tighter mb-4">Start Session</h2>
+                        <p className="text-slate-500 font-bold leading-relaxed mb-12 text-sm uppercase tracking-widest">
                             You are about to enter a live conversational AI interview. Ensure your microphone is connected and your environment is quiet. The AI will evaluate your responses in real-time.
                         </p>
                         <button
@@ -248,11 +248,11 @@ export default function VoiceInterview() {
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="flex flex-col items-center justify-center gap-16 glass-premium rounded-[60px] p-12 border border-white/5"
+                        className="flex flex-col items-center justify-center gap-16 bg-white border border-slate-100 rounded-[60px] p-12 border border-slate-100"
                     >
                         {/* AI Visualizer */}
                         <div className="flex flex-col items-center gap-6">
-                            <div className="text-[10px] font-black uppercase tracking-[0.4em] text-cyan-400 italic flex items-center gap-3">
+                            <div className="text-base font-black uppercase tracking-[0.4em] text-cyan-600 italic flex items-center gap-3">
                                 <Volume2 className="h-4 w-4" /> AI Interviewer
                             </div>
                             <div className="h-32 w-32 rounded-full border border-cyan-500/30 flex items-center justify-center relative bg-cyan-500/5 shadow-[0_0_50px_rgba(6,182,212,0.2)]">
@@ -261,9 +261,9 @@ export default function VoiceInterview() {
                         </div>
 
                         {/* Status Display */}
-                        <div className="h-20 flex items-center justify-center px-10 glass-premium rounded-full border border-white/10 w-full max-w-md">
+                        <div className="h-20 flex items-center justify-center px-10 bg-white border border-slate-100 rounded-full border border-slate-200 w-full max-w-md">
                             {isProcessing ? (
-                                <div className="flex items-center gap-3 text-emerald-400 font-black uppercase tracking-[0.2em] text-xs">
+                                <div className="flex items-center gap-3 text-emerald-600 font-black uppercase tracking-[0.2em] text-xs">
                                     <Loader2 className="h-5 w-5 animate-spin" /> Processing Neural Data...
                                 </div>
                             ) : isRecording ? (
@@ -271,7 +271,7 @@ export default function VoiceInterview() {
                                     <div className="h-3 w-3 rounded-full bg-rose-500 animate-pulse" /> Recording Audio...
                                 </div>
                             ) : (
-                                <div className="flex items-center gap-3 text-slate-400 font-black uppercase tracking-[0.2em] text-xs">
+                                <div className="flex items-center gap-3 text-slate-500 font-black uppercase tracking-[0.2em] text-xs">
                                     <Mic className="h-5 w-5" /> Ready for Input
                                 </div>
                             )}
@@ -294,7 +294,7 @@ export default function VoiceInterview() {
 
                             <button
                                 onClick={endInterview}
-                                className="h-16 px-8 rounded-full bg-white/5 border border-white/10 text-white hover:bg-rose-500 hover:border-rose-500 transition-all font-black uppercase tracking-widest text-xs"
+                                className="h-16 px-8 rounded-full bg-slate-50 border border-slate-200 text-slate-900 hover:bg-rose-500 hover:border-rose-500 transition-all font-black uppercase tracking-widest text-xs"
                             >
                                 End
                             </button>
@@ -305,10 +305,10 @@ export default function VoiceInterview() {
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="glass-premium rounded-[60px] border border-white/5 p-12 flex flex-col h-full max-h-[700px] overflow-hidden"
+                        className="bg-white border border-slate-100 rounded-[60px] border border-slate-100 p-12 flex flex-col h-full max-h-[700px] overflow-hidden"
                     >
-                        <div className="mb-8 border-b border-white/5 pb-6">
-                            <h3 className="text-xl font-black text-white italic uppercase tracking-widest">Live Transcript</h3>
+                        <div className="mb-8 border-b border-slate-100 pb-6">
+                            <h3 className="text-xl font-black text-slate-900 italic uppercase tracking-widest">Live Transcript</h3>
                         </div>
 
                         <div className="flex-1 overflow-y-auto space-y-6 custom-scrollbar pr-4">
@@ -325,7 +325,7 @@ export default function VoiceInterview() {
                                                 : "bg-emerald-500/10 border border-emerald-500/20 text-emerald-50 ml-auto rounded-tr-sm"
                                         )}
                                     >
-                                        <p className="text-[10px] font-black uppercase tracking-widest mb-2 opacity-50">
+                                        <p className="text-base font-black uppercase tracking-widest mb-2 opacity-50">
                                             {msg.role === 'ai' ? 'Interviewer' : 'You'}
                                         </p>
                                         <p className="font-bold leading-relaxed whitespace-pre-wrap text-sm">{msg.text}</p>
@@ -335,9 +335,9 @@ export default function VoiceInterview() {
                                     <motion.div
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
-                                        className="p-6 rounded-[24px] max-w-[85%] bg-white/5 border border-white/10 text-slate-300 ml-auto rounded-tr-sm italic"
+                                        className="p-6 rounded-[24px] max-w-[85%] bg-slate-50 border border-slate-200 text-slate-500 ml-auto rounded-tr-sm italic"
                                     >
-                                        <p className="text-[10px] font-black uppercase tracking-widest mb-2 opacity-50">You (Speaking...)</p>
+                                        <p className="text-base font-black uppercase tracking-widest mb-2 opacity-50">You (Speaking...)</p>
                                         <p className="font-bold leading-relaxed">{transcript}</p>
                                     </motion.div>
                                 )}

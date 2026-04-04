@@ -49,7 +49,7 @@ export default function RecruiterAnalytics() {
     if (loading) return (
         <div className="p-20 flex flex-col items-center justify-center space-y-4">
             <div className="h-12 w-12 border-4 border-apple-blue/20 border-t-apple-blue rounded-full animate-spin" />
-            <p className="text-apple-gray-400 font-bold uppercase tracking-widest text-[10px]">Synchronizing Intel...</p>
+            <p className="text-apple-gray-400 font-bold uppercase tracking-widest text-base">Synchronizing Intel...</p>
         </div>
     );
     if (!data) return <div className="p-20 text-center text-apple-gray-400 font-bold">No Data Available</div>;
@@ -68,13 +68,13 @@ export default function RecruiterAnalytics() {
             <motion.div variants={stagger.item} className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-4">
                 <div>
                     <h1 className="text-4xl font-black text-apple-gray-900 tracking-tight mb-2">Hiring Intelligence</h1>
-                    <p className="text-apple-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Dynamic assessment of recruitment velocity & talent acquisition metrics</p>
+                    <p className="text-apple-gray-400 font-bold uppercase tracking-[0.2em] text-base">Dynamic assessment of recruitment velocity & talent acquisition metrics</p>
                 </div>
                 <div className="flex gap-4">
                     <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="flex-1 md:flex-none flex items-center justify-center gap-3 bg-white px-6 py-4 rounded-[22px] text-[11px] font-black uppercase tracking-widest text-apple-gray-900 border border-apple-gray-100 shadow-sm hover:bg-apple-gray-50 transition-all"
+                        className="flex-1 md:flex-none flex items-center justify-center gap-3 bg-white px-6 py-4 rounded-[22px] text-sm font-black uppercase tracking-widest text-apple-gray-900 border border-apple-gray-100 shadow-sm hover:bg-apple-gray-50 transition-all"
                     >
                         <Download className="h-4 w-4" /> Export Report
                     </motion.button>
@@ -102,11 +102,11 @@ export default function RecruiterAnalytics() {
                             <div className="flex items-end justify-between">
                                 <div>
                                     <h3 className="text-4xl font-black text-apple-gray-900 tracking-tighter mb-1 leading-none">{stat.value}</h3>
-                                    <p className="text-[10px] font-black text-apple-gray-400 uppercase tracking-widest mt-3">{stat.label}</p>
+                                    <p className="text-base font-black text-apple-gray-400 uppercase tracking-widest mt-3">{stat.label}</p>
                                 </div>
                                 <div className="text-right">
-                                    <span className={cn("text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-lg border", stat.color, stat.bg.replace('bg-', 'border-').replace('/5', '/20'))}>{stat.trend}</span>
-                                    <p className="text-[8px] font-black text-apple-gray-300 uppercase mt-3">Verified</p>
+                                    <span className={cn("text-base font-black uppercase tracking-widest px-2 py-0.5 rounded-lg border", stat.color, stat.bg.replace('bg-', 'border-').replace('/5', '/20'))}>{stat.trend}</span>
+                                    <p className="text-sm font-black text-apple-gray-300 uppercase mt-3">Verified</p>
                                 </div>
                             </div>
                         </div>
@@ -124,22 +124,22 @@ export default function RecruiterAnalytics() {
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
                         <div>
                             <h3 className="text-2xl font-black text-apple-gray-900 tracking-tight uppercase">Momentum Vector</h3>
-                            <p className="text-[10px] text-apple-gray-400 font-black uppercase tracking-[0.2em] mt-2 flex items-center gap-3">
+                            <p className="text-base text-apple-gray-400 font-black uppercase tracking-[0.2em] mt-2 flex items-center gap-3">
                                 <Activity className="h-4 w-4 text-apple-blue" /> Analytical Flow Matrix
                             </p>
                         </div>
                         <div className="flex gap-8 bg-apple-gray-50 p-4 rounded-2xl border border-apple-gray-100">
-                            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-apple-gray-900">
+                            <div className="flex items-center gap-3 text-base font-black uppercase tracking-widest text-apple-gray-900">
                                 <div className="h-2.5 w-2.5 rounded-full bg-apple-blue shadow-[0_0_8px_rgba(0,113,227,0.5)]"></div> Intake
                             </div>
-                            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-apple-gray-900">
+                            <div className="flex items-center gap-3 text-base font-black uppercase tracking-widest text-apple-gray-900">
                                 <div className="h-2.5 w-2.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(255,159,10,0.5)]"></div> Selection
                             </div>
                         </div>
                     </div>
 
                     <div className="h-[400px] w-full mt-6">
-                        <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={100}>
+                        <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1} debounce={100}>
                             <AreaChart data={recruitmentTrends}>
                                 <defs>
                                     <linearGradient id="colorApp" x1="0" y1="0" x2="0" y2="1">
@@ -202,7 +202,7 @@ export default function RecruiterAnalytics() {
                 >
                     <div className="mb-12 text-center">
                         <h3 className="text-xl font-black text-apple-gray-900 tracking-tight mb-3 uppercase">Sourcing DNA</h3>
-                        <p className="text-[10px] text-apple-gray-400 font-black uppercase tracking-[0.3em]">Origin Signal Distribution</p>
+                        <p className="text-base text-apple-gray-400 font-black uppercase tracking-[0.3em]">Origin Signal Distribution</p>
                     </div>
 
                     <div className="h-[280px] w-full relative">
@@ -214,9 +214,9 @@ export default function RecruiterAnalytics() {
                                 <Globe className="h-6 w-6 text-apple-gray-100 mb-3" />
                             </motion.div>
                             <p className="text-4xl font-black text-apple-gray-900 tracking-tighter leading-none">100%</p>
-                            <p className="text-[9px] font-black text-apple-blue uppercase tracking-widest mt-2">Verified</p>
+                            <p className="text-xs font-black text-apple-blue uppercase tracking-widest mt-2">Verified</p>
                         </div>
-                        <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={100}>
+                        <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1} debounce={100}>
                             <PieChart>
                                 <Pie
                                     data={candidateSource}
@@ -255,7 +255,7 @@ export default function RecruiterAnalytics() {
                                         className="h-3.5 w-3.5 rounded-full shadow-sm"
                                         style={{ backgroundColor: APPLE_COLORS[i % APPLE_COLORS.length] }}
                                     />
-                                    <span className="text-[11px] font-black text-apple-gray-400 uppercase tracking-widest leading-none">{source.name}</span>
+                                    <span className="text-sm font-black text-apple-gray-400 uppercase tracking-widest leading-none">{source.name}</span>
                                 </div>
                                 <div className="flex items-center gap-4">
                                     <div className="h-1.5 w-16 bg-apple-gray-50 rounded-full overflow-hidden shadow-inner">
@@ -266,7 +266,7 @@ export default function RecruiterAnalytics() {
                                             className="h-full bg-apple-blue shadow-[0_0_8px_rgba(0,113,227,0.3)]"
                                         />
                                     </div>
-                                    <span className="text-[13px] font-black text-apple-gray-900 tracking-tight transition-colors group-hover:text-apple-blue">{source.value}%</span>
+                                    <span className="text-base font-black text-apple-gray-900 tracking-tight transition-colors group-hover:text-apple-blue">{source.value}%</span>
                                 </div>
                             </div>
                         ))}
@@ -280,8 +280,8 @@ export default function RecruiterAnalytics() {
                             <ShieldCheck className="h-6 w-6 text-emerald-500" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-apple-gray-900 leading-none mb-1.5">Intel integrity</p>
-                            <p className="text-[10px] font-black text-apple-gray-300 uppercase tracking-tighter">Chain-verified Sourcing</p>
+                            <p className="text-base font-black uppercase tracking-[0.2em] text-apple-gray-900 leading-none mb-1.5">Intel integrity</p>
+                            <p className="text-base font-black text-apple-gray-300 uppercase tracking-tighter">Chain-verified Sourcing</p>
                         </div>
                         <ChevronRight className="h-4 w-4 text-apple-gray-200 ml-auto group-hover:text-apple-blue transition-colors" />
                     </motion.div>

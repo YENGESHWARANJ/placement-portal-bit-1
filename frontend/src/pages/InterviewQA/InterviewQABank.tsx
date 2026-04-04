@@ -34,13 +34,13 @@ export default function InterviewQABank() {
             {/* Header */}
             <motion.div variants={stagger.item} className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <span className="text-[11px] font-bold text-apple-blue uppercase tracking-[0.2em] mb-2 block">Knowledge Base</span>
+                    <span className="text-sm font-bold text-apple-blue uppercase tracking-[0.2em] mb-2 block">Knowledge Base</span>
                     <h1 className="text-4xl font-bold text-apple-gray-900 tracking-tight">Interview Q&A Bank</h1>
                     <p className="text-apple-gray-400 mt-2 font-medium italic">Strategic response patterns for common interview scenarios.</p>
                 </div>
                 <div className="flex items-center gap-2 px-4 py-2 bg-purple-50 text-purple-600 rounded-xl border border-purple-100/50">
                     <Sparkles className="h-4 w-4" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider">AI Curated Responses</span>
+                    <span className="text-base font-bold uppercase tracking-wider">AI Curated Responses</span>
                 </div>
             </motion.div>
 
@@ -66,7 +66,7 @@ export default function InterviewQABank() {
                                 <div className="flex items-center gap-5">
                                     <div className={cn(
                                         "h-12 w-12 rounded-xl flex items-center justify-center transition-all duration-500 border shadow-sm",
-                                        isOpen ? "bg-apple-blue text-white border-apple-blue shadow-apple-blue/20" : "bg-white text-apple-gray-400 border-apple-gray-100 group-hover:bg-apple-blue/5 group-hover:text-apple-blue"
+                                        isOpen ? "bg-apple-blue text-slate-900 border-apple-blue shadow-apple-blue/20" : "bg-white text-apple-gray-400 border-apple-gray-100 group-hover:bg-apple-blue/5 group-hover:text-apple-blue"
                                     )}>
                                         <HelpCircle className="h-6 w-6" />
                                     </div>
@@ -99,8 +99,8 @@ export default function InterviewQABank() {
                                                     <CheckCircle2 className="h-5 w-5" />
                                                 </div>
                                                 <div>
-                                                    <p className="text-[14px] font-bold text-apple-gray-400 uppercase tracking-widest mb-2 italic">Recommended Strategy</p>
-                                                    <p className="text-[15px] font-medium text-apple-gray-600 leading-relaxed">
+                                                    <p className="text-[16.5px] font-bold text-apple-gray-400 uppercase tracking-widest mb-2 italic">Recommended Strategy</p>
+                                                    <p className="text-lg font-medium text-apple-gray-600 leading-relaxed">
                                                         {item.a}
                                                     </p>
                                                 </div>
@@ -119,14 +119,14 @@ export default function InterviewQABank() {
                 variants={stagger.item}
                 className="apple-card p-10 bg-apple-blue relative overflow-hidden group"
             >
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32" />
+                <div className="absolute top-0 right-0 w-64 h-64 bg-slate-100 rounded-full blur-3xl -mr-32 -mt-32" />
                 <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-                    <div className="h-16 w-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20">
-                        <MessageCircle className="h-8 w-8 text-white" />
+                    <div className="h-16 w-16 bg-slate-200 backdrop-blur-md rounded-2xl flex items-center justify-center border border-slate-200">
+                        <MessageCircle className="h-8 w-8 text-slate-900" />
                     </div>
                     <div className="flex-1">
-                        <h4 className="text-xl font-bold text-white tracking-tight mb-1">Practice with AI Coach</h4>
-                        <p className="text-white/80 font-medium">Refine your delivery and get real-time feedback on your mock interview responses.</p>
+                        <h4 className="text-xl font-bold text-slate-900 tracking-tight mb-1">Practice with AI Coach</h4>
+                        <p className="text-slate-900/80 font-medium">Refine your delivery and get real-time feedback on your mock interview responses.</p>
                     </div>
                     <button className="px-8 py-3 bg-white text-apple-blue font-bold rounded-xl text-sm shadow-xl hover:scale-105 transition-transform">
                         Launch Mock Session

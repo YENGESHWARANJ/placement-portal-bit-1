@@ -1,0 +1,17 @@
+--- ALL USERS ---
+Name: ram, Email: ram@gmail.com, Role: student
+Name: ram, Email: ram1@gmail.com, Role: recruiter
+Name: yengesh, Email: yengesh@gmail.com, Role: admin
+Name: yengesh, Email: yengesh1@gmail.com, Role: admin
+Name: arivu, Email: az@gmail.com, Role: student
+Name: arivu, Email: az1@gmail.com, Role: student
+Name: sandy, Email: sandy@gmail.com, Role: recruiter
+Name: yengesh, Email: cz@gmail.com, Role: admin
+Name: yengesh, Email: yryengeshyt6@gmail.com, Role: student
+Name: Yyengeshwaran, Email: yyengeshwaran@gmail.com, Role: student
+Name: Kavinstu, Email: kavinstu@gmail.com, Role: recruiter
+Name: Student, Email: student@gmail.com, Role: student
+Name: Student, Email: student@bitsathy.ac.in, Role: student
+Name: yengeshwaranj, Email: yengeshwaranj.ad23@bitsathy.ac.in, Role: student
+Name: mentor, Email: mentor@bitsathy.ac.in, Role: student
+Name: mentor1, Email: mentor1@bitsathy.ac.in, Role: recruiter

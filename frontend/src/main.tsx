@@ -6,7 +6,6 @@ import { ThemeProvider } from "./theme/ThemeContext";
 import { AuthProvider } from "./features/auth/AuthContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "react-hot-toast";
-import { CustomCursor } from "./components/CustomCursor";
 
 // Validate the Google Client ID — reject placeholder values
 const rawClientId = (import.meta.env.VITE_GOOGLE_CLIENT_ID || "").trim();
@@ -22,7 +21,6 @@ export const GOOGLE_CLIENT_ID = isValidClientId ? rawClientId : "";
 const App = () => (
   <AuthProvider>
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <CustomCursor />
       <Toaster
         position="top-right"
         reverseOrder={false}
@@ -35,7 +33,7 @@ const App = () => (
             borderRadius: '14px',
             border: '1px solid #f1f5f9',
             boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-            fontSize: '13px',
+            fontSize: '15px',
             fontWeight: 500,
             fontFamily: "'Inter', sans-serif",
             padding: '12px 16px',
@@ -61,11 +59,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <App />
     </GoogleOAuthProvider>
   ) : (
-    // Still need GoogleOAuthProvider in tree for GoogleLogin not to crash,
-    // but we'll guard each GoogleLogin with hasGoogleClientId check
-    <GoogleOAuthProvider clientId="__UNCONFIGURED__">
-      <App />
-    </GoogleOAuthProvider>
+    <App />
   )
 );
 

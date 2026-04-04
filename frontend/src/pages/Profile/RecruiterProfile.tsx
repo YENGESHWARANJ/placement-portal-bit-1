@@ -47,25 +47,25 @@ export default function RecruiterProfile() {
                                 <img src={`https://api.dicebear.com/7.x/initials/svg?seed=${profileData.name}&backgroundColor=6366f1`} className="h-full w-full rounded-[40px]" alt="Recruiter" />
                             </div>
                             <div className="absolute -bottom-2 -right-2 h-10 w-10 bg-emerald-500 rounded-2xl flex items-center justify-center border-4 border-slate-900 shadow-lg">
-                                <ShieldCheck className="h-5 w-5 text-white" />
+                                <ShieldCheck className="h-5 w-5 text-slate-900" />
                             </div>
                         </div>
 
                         <div className="text-center md:text-left">
                             <div className="flex items-center gap-3 mb-4 justify-center md:justify-start">
-                                <span className="px-5 py-2 bg-indigo-500/10 text-indigo-400 text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-500/20">
+                                <span className="px-5 py-2 bg-indigo-500/10 text-indigo-600 text-base font-black uppercase tracking-widest rounded-full border border-indigo-500/20">
                                     Verified Corporate Access
                                 </span>
                             </div>
-                            <h1 className="text-5xl font-black text-white tracking-tight mb-2">{profileData.name}</h1>
-                            <p className="text-indigo-400 font-bold text-lg mb-4 flex items-center gap-2 justify-center md:justify-start">
+                            <h1 className="text-5xl font-black text-slate-900 tracking-tight mb-2">{profileData.name}</h1>
+                            <p className="text-indigo-600 font-bold text-lg mb-4 flex items-center gap-2 justify-center md:justify-start">
                                 <Building2 className="h-5 w-5" /> {profileData.company}
                             </p>
                             <div className="flex flex-wrap items-center gap-4 justify-center md:justify-start">
-                                <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-800/50 px-4 py-2 rounded-xl">
+                                <span className="flex items-center gap-2 text-base font-black uppercase tracking-widest text-slate-500 bg-slate-800/50 px-4 py-2 rounded-xl">
                                     <MapPin className="h-3 w-3 text-rose-500" /> {profileData.location}
                                 </span>
-                                <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-800/50 px-4 py-2 rounded-xl">
+                                <span className="flex items-center gap-2 text-base font-black uppercase tracking-widest text-slate-500 bg-slate-800/50 px-4 py-2 rounded-xl">
                                     <AppWindow className="h-3 w-3 text-indigo-500" /> {profileData.role}
                                 </span>
                             </div>
@@ -76,7 +76,7 @@ export default function RecruiterProfile() {
                         <button onClick={() => setIsEditing(!isEditing)} className="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-500/20 active:scale-95">
                             {isEditing ? "Save Ledger" : "Manage Profile"}
                         </button>
-                        <button className="p-4 bg-slate-800 text-slate-400 rounded-2xl hover:text-white transition-all">
+                        <button className="p-4 bg-slate-800 text-slate-500 rounded-2xl hover:text-slate-900 transition-all">
                             <Share2 className="h-5 w-5" />
                         </button>
                     </div>
@@ -93,8 +93,8 @@ export default function RecruiterProfile() {
                             </div>
                             <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                         </div>
-                        <h3 className="text-3xl font-black text-slate-900 dark:text-white mb-1 uppercase tracking-tighter">{stat.value}</h3>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</p>
+                        <h3 className="text-3xl font-black text-slate-900 dark:text-slate-900 mb-1 uppercase tracking-tighter">{stat.value}</h3>
+                        <p className="text-base font-black text-slate-500 uppercase tracking-widest">{stat.label}</p>
                     </div>
                 ))}
             </div>
@@ -103,33 +103,33 @@ export default function RecruiterProfile() {
                 {/* Left: Professional Details */}
                 <div className="space-y-8">
                     <div className="bg-white dark:bg-slate-900 p-10 rounded-[50px] border border-slate-100 dark:border-slate-800 shadow-sm">
-                        <h3 className="text-xl font-black text-slate-900 dark:text-white mb-6 uppercase tracking-tight underline decoration-indigo-500 decoration-4">Company Bio</h3>
-                        <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed font-medium mb-10">
+                        <h3 className="text-xl font-black text-slate-900 dark:text-slate-900 mb-6 uppercase tracking-tight underline decoration-indigo-500 decoration-4">Company Bio</h3>
+                        <p className="text-slate-500 dark:text-slate-500 text-sm leading-relaxed font-medium mb-10">
                             {profileData.about}
                         </p>
                         <div className="space-y-6">
                             <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700">
                                 <Mail className="h-5 w-5 text-indigo-500" />
                                 <div>
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Enterprise Email</p>
-                                    <p className="text-sm font-black text-slate-900 dark:text-white truncate">{user?.email}</p>
+                                    <p className="text-base font-black text-slate-500 uppercase tracking-widest">Enterprise Email</p>
+                                    <p className="text-sm font-black text-slate-900 dark:text-slate-900 truncate">{user?.email}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700">
                                 < Globe className="h-5 w-5 text-indigo-500" />
                                 <div>
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Company Domain</p>
-                                    <p className="text-sm font-black text-slate-900 dark:text-white">{profileData.website}</p>
+                                    <p className="text-base font-black text-slate-500 uppercase tracking-widest">Company Domain</p>
+                                    <p className="text-sm font-black text-slate-900 dark:text-slate-900">{profileData.website}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-indigo-600 rounded-[50px] p-10 text-white shadow-2xl relative overflow-hidden group">
-                        <div className="absolute bottom-0 left-0 h-40 w-40 bg-white/10 rounded-full blur-[80px] -ml-20 -mb-20 group-hover:bg-white/20 transition-all"></div>
+                    <div className="bg-indigo-600 rounded-[50px] p-10 text-slate-900 shadow-2xl relative overflow-hidden group">
+                        <div className="absolute bottom-0 left-0 h-40 w-40 bg-slate-100 rounded-full blur-[80px] -ml-20 -mb-20 group-hover:bg-slate-200 transition-all"></div>
                         <h3 className="text-2xl font-black mb-10 tracking-tight">Recruiting Performance</h3>
                         <div className="h-40 w-full">
-                            <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={100}>
+                            <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1} debounce={100}>
                                 <BarChart data={hiringData}>
                                     <Bar dataKey="hires" radius={[5, 5, 0, 0]}>
                                         {hiringData.map((entry, index) => (
@@ -139,7 +139,7 @@ export default function RecruiterProfile() {
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
-                        <p className="text-indigo-100 text-[10px] font-black uppercase tracking-[0.2em] mt-8 text-center">Hiring Velocity: Normal</p>
+                        <p className="text-indigo-100 text-base font-black uppercase tracking-[0.2em] mt-8 text-center">Hiring Velocity: Normal</p>
                     </div>
                 </div>
 
@@ -147,8 +147,8 @@ export default function RecruiterProfile() {
                 <div className="lg:col-span-2 space-y-8">
                     <div className="bg-white dark:bg-slate-900 p-10 rounded-[50px] border border-slate-100 dark:border-slate-800 shadow-sm">
                         <div className="flex items-center justify-between mb-10">
-                            <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Managed Talent Clusters</h3>
-                            <button className="text-[10px] font-black uppercase tracking-widest text-white bg-slate-900 dark:bg-slate-700 px-6 py-3 rounded-2xl shadow-xl">Audit Nodes</button>
+                            <h3 className="text-2xl font-black text-slate-900 dark:text-slate-900 tracking-tight">Managed Talent Clusters</h3>
+                            <button className="text-base font-black uppercase tracking-widest text-slate-900 bg-slate-900 dark:bg-slate-700 px-6 py-3 rounded-2xl shadow-xl">Audit Nodes</button>
                         </div>
                         <div className="space-y-4">
                             {[
@@ -162,12 +162,12 @@ export default function RecruiterProfile() {
                                             <Briefcase className="h-6 w-6 text-indigo-500" />
                                         </div>
                                         <div>
-                                            <h4 className="font-black text-slate-900 dark:text-white group-hover:text-indigo-600 transition-colors uppercase tracking-tight">{job.role}</h4>
-                                            <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{job.applicants} Candidate Nodes</p>
+                                            <h4 className="font-black text-slate-900 dark:text-slate-900 group-hover:text-indigo-600 transition-colors uppercase tracking-tight">{job.role}</h4>
+                                            <p className="text-base text-slate-500 font-black uppercase tracking-widest">{job.applicants} Candidate Nodes</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-4">
-                                        <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg ${job.status === 'Active' ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}`}>{job.status}</span>
+                                        <span className={`text-xs font-black uppercase tracking-widest px-3 py-1 rounded-lg ${job.status === 'Active' ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}`}>{job.status}</span>
                                         <Linkedin className="h-5 w-5 text-slate-200 group-hover:text-indigo-500 transition-all" />
                                     </div>
                                 </div>

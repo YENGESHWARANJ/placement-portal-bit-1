@@ -32,7 +32,7 @@ export function ProfileCompleteness({ profile, className }: ProfileCompletenessP
         <div className={cn("rounded-2xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800/50 p-5 shadow-sm", className)}>
             <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight">Profile completeness</h3>
-                <span className="text-lg font-black text-indigo-600 dark:text-indigo-400">{pct}%</span>
+                <span className="text-lg font-black text-indigo-600 dark:text-indigo-600">{pct}%</span>
             </div>
             <div className="h-2 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden mb-4">
                 <div
@@ -45,8 +45,8 @@ export function ProfileCompleteness({ profile, className }: ProfileCompletenessP
                     const v = profile[f.key];
                     const done = f.isArray ? Array.isArray(v) && v.length > 0 : v != null && String(v).trim() !== "";
                     return (
-                        <li key={f.key} className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-                            {done ? <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" /> : <Circle className="h-3.5 w-3.5 text-slate-300 dark:text-slate-500 shrink-0" />}
+                        <li key={f.key} className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-500">
+                            {done ? <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" /> : <Circle className="h-3.5 w-3.5 text-slate-500 dark:text-slate-500 shrink-0" />}
                             {f.label}
                         </li>
                     );

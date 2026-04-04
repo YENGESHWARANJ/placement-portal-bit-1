@@ -55,8 +55,8 @@ export default function AssessmentAnalysis() {
         <div className="space-y-10 animate-in fade-in slide-in-from-top-4 duration-1000 pb-20 italic">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>
-                    <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter italic">Cognitive <span className="text-blue-600">Sync</span></h1>
-                    <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em] mt-1">Cross-platform Performance Intelligence</p>
+                    <h1 className="text-4xl font-black text-slate-900 dark:text-slate-900 tracking-tighter italic">Cognitive <span className="text-blue-600">Sync</span></h1>
+                    <p className="text-slate-500 text-base font-black uppercase tracking-[0.3em] mt-1">Cross-platform Performance Intelligence</p>
                 </div>
             </div>
 
@@ -65,13 +65,13 @@ export default function AssessmentAnalysis() {
                 <div className="lg:col-span-2 bg-white dark:bg-slate-900 p-10 rounded-[50px] border border-slate-100 dark:border-slate-800 shadow-sm relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-20 bg-blue-600/5 rounded-full blur-3xl -mr-10 -mt-10" />
                     <div className="flex items-center justify-between mb-10">
-                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter italic uppercase flex items-center gap-3">
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-slate-900 tracking-tighter italic uppercase flex items-center gap-3">
                             <TrendingUp className="h-6 w-6 text-indigo-500" />
                             Growth Velocity
                         </h3>
                     </div>
-                    <div className="h-[350px] w-full">
-                        <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={100}>
+                    <div className="h-[350px] w-full min-h-[350px]">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1} debounce={100}>
                             <AreaChart data={recentScores}>
                                 <defs>
                                     <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
@@ -91,9 +91,9 @@ export default function AssessmentAnalysis() {
 
                 {/* Radar Chart */}
                 <div className="bg-white dark:bg-slate-900 p-10 rounded-[50px] border border-slate-100 dark:border-slate-800 shadow-sm">
-                    <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tighter mb-8 italic uppercase text-center">Skill Mapping</h3>
-                    <div className="h-[350px] w-full">
-                        <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={100}>
+                    <h3 className="text-xl font-black text-slate-900 dark:text-slate-900 tracking-tighter mb-8 italic uppercase text-center">Skill Mapping</h3>
+                    <div className="h-[350px] w-full min-h-[350px]">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1} debounce={100}>
                             <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
                                 <PolarGrid stroke="#e2e8f0" />
                                 <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 900 }} />
@@ -107,7 +107,7 @@ export default function AssessmentAnalysis() {
 
             {/* Assessment History */}
             <div className="bg-white dark:bg-slate-900 p-10 rounded-[50px] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
-                <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter mb-10 italic uppercase">Submission Log</h3>
+                <h3 className="text-2xl font-black text-slate-900 dark:text-slate-900 tracking-tighter mb-10 italic uppercase">Submission Log</h3>
                 <div className="space-y-4">
                     {data.map((assessment, i) => (
                         <div key={i} className="group p-8 bg-slate-50 dark:bg-slate-950/50 hover:bg-white dark:hover:bg-slate-900 rounded-[35px] border border-transparent hover:border-blue-500/30 transition-all flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -119,12 +119,12 @@ export default function AssessmentAnalysis() {
                                     {assessment.type === 'Aptitude' ? <Brain className="h-7 w-7" /> : <Code2 className="h-7 w-7" />}
                                 </div>
                                 <div>
-                                    <h4 className="text-lg font-black text-slate-900 dark:text-white uppercase italic">{assessment.title}</h4>
+                                    <h4 className="text-lg font-black text-slate-900 dark:text-slate-900 uppercase italic">{assessment.title}</h4>
                                     <div className="flex items-center gap-4 mt-1">
-                                        <span className="text-[10px] font-black text-slate-400 flex items-center gap-2 uppercase tracking-widest italic">
+                                        <span className="text-base font-black text-slate-500 flex items-center gap-2 uppercase tracking-widest italic">
                                             <Calendar className="h-3 w-3" /> {new Date(assessment.createdAt).toLocaleDateString()}
                                         </span>
-                                        <span className="text-[10px] font-black text-slate-400 flex items-center gap-2 uppercase tracking-widest italic">
+                                        <span className="text-base font-black text-slate-500 flex items-center gap-2 uppercase tracking-widest italic">
                                             <Zap className="h-3 w-3" /> {Math.floor(assessment.timeTaken / 60)}m Taken
                                         </span>
                                     </div>
@@ -132,11 +132,11 @@ export default function AssessmentAnalysis() {
                             </div>
                             <div className="flex items-center gap-8">
                                 <div className="text-right">
-                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Index Result</p>
-                                    <h4 className="text-3xl font-black text-slate-900 dark:text-white italic">{Math.round((assessment.score / assessment.totalQuestions) * 100)}%</h4>
+                                    <p className="text-xs font-black text-slate-500 uppercase tracking-widest mb-1">Index Result</p>
+                                    <h4 className="text-3xl font-black text-slate-900 dark:text-slate-900 italic">{Math.round((assessment.score / assessment.totalQuestions) * 100)}%</h4>
                                 </div>
                                 <div className="h-14 w-px bg-slate-200 dark:bg-slate-800" />
-                                <button className="h-14 w-14 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400 hover:text-blue-600 transition-all shadow-sm">
+                                <button className="h-14 w-14 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-500 hover:text-blue-600 transition-all shadow-sm">
                                     <ArrowRight className="h-6 w-6" />
                                 </button>
                             </div>

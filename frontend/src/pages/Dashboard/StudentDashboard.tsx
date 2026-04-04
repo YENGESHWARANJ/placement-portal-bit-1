@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../features/auth/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import {
@@ -13,6 +13,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../../services/api';
 import { cn } from '../../utils/cn';
+import PlacedShowcase from '../../components/common/PlacedShowcase';
 
 const stagger = {
     container: { animate: { transition: { staggerChildren: 0.1 } } },
@@ -31,10 +32,10 @@ function MetricCard({ icon: Icon, label, value, sub, trend, colorClass }: {
             className="apple-card p-6 flex flex-col justify-between hover:shadow-apple-hover transition-all duration-500">
             <div className="flex items-start justify-between">
                 <div className={cn("h-12 w-12 rounded-2xl flex items-center justify-center shadow-sm", colorClass)}>
-                    <Icon className="h-6 w-6 text-white" />
+                    <Icon className="h-6 w-6 text-slate-900" />
                 </div>
                 {trend !== undefined && (
-                    <div className={cn("flex items-center gap-1 text-[11px] font-bold px-2 py-1 rounded-full", trend > 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600")}>
+                    <div className={cn("flex items-center gap-1 text-sm font-bold px-2 py-1 rounded-full", trend > 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600")}>
                         <TrendingUp className={cn("h-3 w-3", trend < 0 && "rotate-180")} />
                         {Math.abs(trend)}%
                     </div>
@@ -42,8 +43,8 @@ function MetricCard({ icon: Icon, label, value, sub, trend, colorClass }: {
             </div>
             <div className="mt-6">
                 <h3 className="text-3xl font-bold text-apple-gray-900 tracking-tight">{value}</h3>
-                <p className="text-[13px] font-semibold text-apple-gray-400 mt-1 uppercase tracking-wider">{label}</p>
-                {sub && <p className="text-[11px] text-apple-gray-300 mt-2 font-medium">{sub}</p>}
+                <p className="text-base font-semibold text-apple-gray-400 mt-1 uppercase tracking-wider">{label}</p>
+                {sub && <p className="text-sm text-apple-gray-300 mt-2 font-medium">{sub}</p>}
             </div>
         </motion.div>
     );
@@ -57,23 +58,28 @@ export default function StudentDashboard() {
     const [applications, setApplications] = useState<any[]>([]);
     const [activeTab, setActiveTab] = useState<'applications' | 'jobs'>('jobs');
 
+    const fetchData = useCallback(async () => {
+        try {
+            const [profileRes, jobsRes, appsRes] = await Promise.all([
+                api.get('/students/profile'),
+                api.get('/jobs/recommendations'),
+                api.get('/applications/my').catch(() => ({ data: { applications: [] } }))
+            ]);
+            setProfile((profileRes.data as any).data);
+            setRecommendedJobs((jobsRes.data as any).jobs || []);
+            setApplications((appsRes.data as any).applications || []);
+        } catch (e: any) {
+            if (e.response?.status === 401) logout();
+        } finally {
+            setLoading(false);
+        }
+    }, [logout]);
+
     useEffect(() => {
-        if (authLoading || !isAuthenticated) return;
-        (async () => {
-            try {
-                const [profileRes, jobsRes, appsRes] = await Promise.all([
-                    api.get('/students/profile'),
-                    api.get('/jobs/recommendations'),
-                    api.get('/applications/my').catch(() => ({ data: { applications: [] } }))
-                ]);
-                setProfile((profileRes.data as any).data);
-                setRecommendedJobs((jobsRes.data as any).jobs || []);
-                setApplications((appsRes.data as any).applications || []);
-            } catch (e: any) {
-                if (e.response?.status === 401) logout();
-            } finally { setLoading(false); }
-        })();
-    }, [authLoading, isAuthenticated, logout]);
+        if (!authLoading && isAuthenticated) {
+            fetchData();
+        }
+    }, [authLoading, isAuthenticated, fetchData]);
 
     const firstName = user?.name?.split(' ')[0] || 'Student';
     const hour = new Date().getHours();
@@ -121,37 +127,42 @@ export default function StudentDashboard() {
             {/* Header / Welcome */}
             <motion.div variants={stagger.item} className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <span className="text-[11px] font-black text-apple-blue uppercase tracking-[0.4em] mb-3 block">Student Hub</span>
+                    <span className="text-sm font-black text-apple-blue uppercase tracking-[0.4em] mb-3 block">BIT Student Hub</span>
                     <h1 className="text-4xl font-black text-apple-gray-900 tracking-tight leading-none">
                         {greeting}, <span className="text-apple-blue font-black">{firstName}</span>
                     </h1>
-                    <p className="text-apple-gray-400 mt-3 font-bold uppercase tracking-widest text-[10px]">Strategic Readiness & Intelligence Overview</p>
+                    <p className="text-apple-gray-400 mt-3 font-bold uppercase tracking-widest text-base">Strategic Readiness & Intelligence Overview</p>
                 </div>
                 <div className="flex items-center gap-3 w-full md:w-auto">
-                    <Link to="/profile" className="w-full md:w-auto h-[52px] px-8 bg-apple-gray-900 text-white rounded-2xl flex items-center justify-center gap-3 text-[11px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-apple-hover">
-                        <User className="h-4 w-4" />
+                    <Link to="/profile" className="w-full md:w-auto h-[52px] px-8 bg-white text-slate-900 rounded-2xl flex items-center justify-center gap-3 text-sm font-black uppercase tracking-widest hover:bg-black transition-all shadow-apple-hover">
+                        <UserIcon className="h-4 w-4" />
                         <span>Update Dossier</span>
                     </Link>
                 </div>
             </motion.div>
 
             {/* Metrics Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                 {metrics.map((m, i) => <MetricCard key={i} {...m} />)}
             </div>
+
+            {/* Placed Students Showcase */}
+            <motion.div variants={stagger.item}>
+                <PlacedShowcase />
+            </motion.div>
 
             {/* Main Content Area */}
             <div className="grid lg:grid-cols-3 gap-8">
                 {/* AI Insights - Apple Card */}
                 <motion.div variants={stagger.item} className="lg:col-span-2 apple-card p-10 flex flex-col md:flex-row items-center gap-10 relative overflow-hidden group bg-white border border-apple-gray-50">
                     <div className="absolute top-0 right-0 w-80 h-80 bg-apple-blue/5 rounded-full blur-[60px] -mr-32 -mt-32 group-hover:bg-apple-blue/10 transition-all duration-1000" />
-                    <div className="w-24 h-24 bg-apple-gray-900 rounded-[30px] flex items-center justify-center shrink-0 shadow-2xl relative z-10">
-                        <Bot className="h-12 w-12 text-white" />
+                    <div className="w-24 h-24 bg-white rounded-[30px] flex items-center justify-center shrink-0 shadow-2xl relative z-10">
+                        <Bot className="h-12 w-12 text-slate-900" />
                     </div>
                     <div className="flex-1 text-center md:text-left z-10">
                         <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
                             <Sparkles className="h-4 w-4 text-apple-blue" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-apple-blue">Neural Insights Engine</span>
+                            <span className="text-base font-black uppercase tracking-[0.3em] text-apple-blue">Neural Insights Engine</span>
                         </div>
                         <h3 className="text-2xl font-black text-apple-gray-900 leading-tight tracking-tight mb-6">
                             "Optimal readiness detected. 3 premium challenges synchronized with your skill matrix."
@@ -159,7 +170,7 @@ export default function StudentDashboard() {
                         <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
                             {quickActions.map((ax, i) => (
                                 <Link key={i} to={ax.to} className="group/ax">
-                                    <span className={cn("text-[10px] font-black px-5 py-3 rounded-2xl bg-apple-gray-50 hover:bg-white border border-apple-gray-100 hover:border-apple-blue/30 hover:text-apple-blue transition-all flex items-center gap-3 uppercase tracking-widest shadow-sm", ax.color)}>
+                                    <span className={cn("text-base font-black px-5 py-3 rounded-2xl bg-apple-gray-50 hover:bg-white border border-apple-gray-100 hover:border-apple-blue/30 hover:text-apple-blue transition-all flex items-center gap-3 uppercase tracking-widest shadow-sm", ax.color)}>
                                         <ax.icon className="h-3.5 w-3.5" />
                                         {ax.label}
                                     </span>
@@ -174,13 +185,13 @@ export default function StudentDashboard() {
                     <div className="flex items-center justify-between mb-10">
                         <div>
                             <h2 className="text-lg font-black text-apple-gray-900 tracking-tight">Skill Matrix</h2>
-                            <p className="text-[10px] font-black text-apple-gray-300 uppercase tracking-widest mt-1">Multi-dimensional Proficiency</p>
+                            <p className="text-base font-black text-apple-gray-300 uppercase tracking-widest mt-1">Multi-dimensional Proficiency</p>
                         </div>
                         <div className="h-12 w-12 rounded-[18px] bg-indigo-50 flex items-center justify-center shadow-inner">
                             <Brain className="h-6 w-6 text-indigo-600" />
                         </div>
                     </div>
-                    <div className="h-[300px] w-full">
+                    <div className="h-[300px] w-full min-h-[300px]">
                         <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1} debounce={100}>
                             <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
                                 <PolarGrid stroke="#f2f2f7" />
@@ -199,11 +210,11 @@ export default function StudentDashboard() {
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10">
                         <div>
                             <h2 className="text-lg font-black text-apple-gray-900 tracking-tight">Engagement Pulse</h2>
-                            <p className="text-[10px] font-black text-apple-gray-300 uppercase tracking-widest mt-1">Platform Interaction Velocity</p>
+                            <p className="text-base font-black text-apple-gray-300 uppercase tracking-widest mt-1">Platform Interaction Velocity</p>
                         </div>
-                        <div className="px-4 py-1.5 bg-apple-blue/10 text-apple-blue rounded-full text-[10px] font-black uppercase tracking-widest border border-apple-blue/5">Neural Link Active</div>
+                        <div className="px-4 py-1.5 bg-apple-blue/10 text-apple-blue rounded-full text-base font-black uppercase tracking-widest border border-apple-blue/5">Neural Link Active</div>
                     </div>
-                    <div className="h-72 w-full">
+                    <div className="h-72 w-full min-h-[18rem]">
                         <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1} debounce={100}>
                             <AreaChart data={activityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                 <defs>
@@ -228,22 +239,22 @@ export default function StudentDashboard() {
                     <div className="p-10 border-b border-apple-gray-50 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                         <div>
                             <h2 className="text-lg font-black text-apple-gray-900 tracking-tight">High Resonance Targets</h2>
-                            <p className="text-[10px] font-black text-apple-gray-300 uppercase tracking-widest mt-1">Matched by Neural Matrix</p>
+                            <p className="text-base font-black text-apple-gray-300 uppercase tracking-widest mt-1">Matched by Neural Matrix</p>
                         </div>
-                        <Link to="/job-recommendations" className="text-[10px] font-black text-apple-blue uppercase tracking-widest hover:underline">Market Access</Link>
+                        <Link to="/job-recommendations" className="text-base font-black text-apple-blue uppercase tracking-widest hover:underline">Market Access</Link>
                     </div>
                     <div className="flex-1 overflow-y-auto px-6 py-6 custom-scrollbar max-h-[340px]">
                         {recommendedJobs.length > 0 ? recommendedJobs.slice(0, 5).map((job, i) => (
                             <Link key={i} to={`/jobs/${job._id}`} className="flex items-center gap-6 p-5 rounded-[24px] hover:bg-apple-gray-50 transition-all border border-transparent hover:border-apple-gray-50 mb-3 group">
-                                <div className="h-14 w-14 rounded-[18px] bg-apple-gray-900 flex items-center justify-center text-white font-black text-base shrink-0 shadow-lg group-hover:scale-105 transition-transform">
+                                <div className="h-14 w-14 rounded-[18px] bg-white flex items-center justify-center text-slate-900 font-black text-base shrink-0 shadow-lg group-hover:scale-105 transition-transform">
                                     {(job.company || "C").charAt(0)}
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-[15px] font-black text-apple-gray-900 truncate leading-none mb-2">{job.title}</p>
-                                    <p className="text-[11px] font-bold text-apple-gray-400 uppercase tracking-wide truncate">{job.company} · {job.location}</p>
+                                    <p className="text-lg font-black text-apple-gray-900 truncate leading-none mb-2">{job.title}</p>
+                                    <p className="text-sm font-bold text-apple-gray-400 uppercase tracking-wide truncate">{job.company} · {job.location}</p>
                                 </div>
                                 <div className="text-right shrink-0">
-                                    <span className="text-emerald-500 text-[10px] font-black bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100 shadow-sm">
+                                    <span className="text-emerald-500 text-base font-black bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100 shadow-sm">
                                         {job.matchScore}%
                                     </span>
                                 </div>
@@ -251,7 +262,7 @@ export default function StudentDashboard() {
                         )) : (
                             <div className="py-20 text-center">
                                 <Rocket className="h-12 w-12 text-apple-gray-100 mx-auto mb-6" />
-                                <p className="text-[10px] font-black text-apple-gray-300 uppercase tracking-[0.2em]">Synthesizing Opportunity Matrix...</p>
+                                <p className="text-base font-black text-apple-gray-300 uppercase tracking-[0.2em]">Synthesizing Opportunity Matrix...</p>
                             </div>
                         )}
                     </div>
@@ -262,7 +273,7 @@ export default function StudentDashboard() {
 }
 
 // Helper mock icon for User
-function User(props: any) {
+function UserIcon(props: any) {
     return (
         <svg
             {...props}

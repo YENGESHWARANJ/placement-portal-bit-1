@@ -198,7 +198,7 @@ export default function MockInterview() {
             <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-[#080B1A] rounded-t-[40px] px-8 py-5 flex justify-between items-center border border-white/5 shadow-xl relative overflow-hidden"
+                className="bg-[#080B1A] rounded-t-2xl sm:rounded-t-[40px] px-4 sm:px-8 py-4 sm:py-5 flex flex-col sm:flex-row justify-between items-center border border-slate-100 shadow-xl relative overflow-hidden gap-4"
             >
                 {/* Voice Active Background Pulsing */}
                 <AnimatePresence>
@@ -225,17 +225,17 @@ export default function MockInterview() {
                             transition={{ repeat: isSpeaking ? Infinity : 0, duration: 0.8 }}
                             className="relative h-12 w-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-[20px] flex items-center justify-center shadow-lg shadow-blue-500/30 ring-1 ring-white/10"
                         >
-                            {isListening ? <Mic className="h-6 w-6 text-white animate-pulse" /> : <Bot className="h-6 w-6 text-white" />}
+                            {isListening ? <Mic className="h-6 w-6 text-slate-900 animate-pulse" /> : <Bot className="h-6 w-6 text-slate-900" />}
                         </motion.div>
                     </div>
                     <div>
                         <div className="flex items-center gap-3">
-                            <h2 className="text-lg font-black tracking-tight text-white italic">AI Coach</h2>
-                            <span className="text-blue-400 text-[9px] font-black uppercase px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full flex items-center gap-1.5">
+                            <h2 className="text-lg font-black tracking-tight text-slate-900 italic">AI Coach</h2>
+                            <span className="text-blue-600 text-xs font-black uppercase px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full flex items-center gap-1.5">
                                 <Activity className="h-3 w-3" /> Voice Model Active
                             </span>
                         </div>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Real-time Audio Intelligence</p>
+                        <p className="text-base text-slate-500 font-bold uppercase tracking-widest mt-0.5">Real-time Audio Intelligence</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-4 relative z-10">
@@ -247,8 +247,8 @@ export default function MockInterview() {
                                 exit={{ opacity: 0, scale: 0.8 }}
                                 className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full"
                             >
-                                <Volume2 className="h-3 w-3 text-blue-400 animate-pulse" />
-                                <span className="text-[9px] font-black uppercase tracking-widest text-blue-400">Synthesizing Voice</span>
+                                <Volume2 className="h-3 w-3 text-blue-600 animate-pulse" />
+                                <span className="text-xs font-black uppercase tracking-widest text-blue-600">Synthesizing Voice</span>
                             </motion.div>
                         )}
                         {isListening && (
@@ -258,21 +258,21 @@ export default function MockInterview() {
                                 exit={{ opacity: 0, scale: 0.8 }}
                                 className="flex items-center gap-2 px-4 py-2 bg-rose-500/10 border border-rose-500/20 rounded-full"
                             >
-                                <Mic className="h-3 w-3 text-rose-400 animate-pulse" />
-                                <span className="text-[9px] font-black uppercase tracking-widest text-rose-400">Listening to you ({input.length > 0 ? 'Hearing' : 'Silent'})</span>
+                                <Mic className="h-3 w-3 text-rose-600 animate-pulse" />
+                                <span className="text-xs font-black uppercase tracking-widest text-rose-600">Listening to you ({input.length > 0 ? 'Hearing' : 'Silent'})</span>
                             </motion.div>
                         )}
                     </AnimatePresence>
                     {questions.length > 0 && (
-                        <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full">
-                            <span className="text-[9px] font-black uppercase text-slate-400">
+                        <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 rounded-full">
+                            <span className="text-xs font-black uppercase text-slate-500">
                                 Q: {Math.min(currentIndex + 1, questions.length)} / {questions.length}
                             </span>
                         </div>
                     )}
                     <button
                         onClick={() => navigate('/dashboard')}
-                        className="h-10 w-10 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+                        className="h-10 w-10 bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all"
                     >
                         <X className="h-4 w-4" />
                     </button>
@@ -280,7 +280,7 @@ export default function MockInterview() {
             </motion.div>
 
             {/* ── Chat Area ── */}
-            <div className="flex-1 overflow-y-auto px-8 py-8 space-y-6 bg-slate-50 border-x border-slate-100">
+            <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6 bg-slate-50 border-x border-slate-100">
                 <AnimatePresence>
                     {messages.map(msg => (
                         <motion.div
@@ -294,7 +294,7 @@ export default function MockInterview() {
                                 className={cn(
                                     "h-12 w-12 shrink-0 rounded-[20px] flex items-center justify-center shadow-lg",
                                     msg.sender === 'user'
-                                        ? "bg-gradient-to-br from-blue-500 to-indigo-600 text-white"
+                                        ? "bg-gradient-to-br from-blue-500 to-indigo-600 text-slate-900"
                                         : "bg-white border border-slate-100 text-slate-700 shadow-sm"
                                 )}
                             >
@@ -305,7 +305,7 @@ export default function MockInterview() {
                                 <div className={cn(
                                     "p-6 rounded-[28px] shadow-sm",
                                     msg.sender === 'user'
-                                        ? "bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-tr-none shadow-[0_8px_20px_rgba(59,130,246,0.25)]"
+                                        ? "bg-gradient-to-br from-blue-600 to-indigo-600 text-slate-900 rounded-tr-none shadow-[0_8px_20px_rgba(59,130,246,0.25)]"
                                         : "bg-white border border-slate-100 rounded-tl-none text-slate-700"
                                 )}>
                                     <p className="text-sm leading-relaxed font-bold italic">{msg.text}</p>
@@ -320,16 +320,16 @@ export default function MockInterview() {
                                         <div className="flex items-center justify-between mb-2">
                                             <div className="flex items-center gap-2">
                                                 <Sparkles className="h-3 w-3 text-blue-500" />
-                                                <span className="text-[9px] font-black text-blue-600 uppercase tracking-widest">Live Feedback</span>
+                                                <span className="text-xs font-black text-blue-600 uppercase tracking-widest">Live Feedback</span>
                                             </div>
                                             <div className="flex items-center gap-1.5">
                                                 {[...Array(5)].map((_, i) => (
-                                                    <Star key={i} className={cn("h-3 w-3", i < Math.round((msg.score || 0) / 2) ? "text-amber-400 fill-amber-400" : "text-slate-200")} />
+                                                    <Star key={i} className={cn("h-3 w-3", i < Math.round((msg.score || 0) / 2) ? "text-amber-600 fill-amber-400" : "text-slate-200")} />
                                                 ))}
-                                                <span className="text-[9px] font-black text-blue-500 ml-1">{msg.score}/10</span>
+                                                <span className="text-xs font-black text-blue-500 ml-1">{msg.score}/10</span>
                                             </div>
                                         </div>
-                                        <p className="text-[11px] font-bold text-blue-700 leading-relaxed italic">"{msg.feedback}"</p>
+                                        <p className="text-sm font-bold text-blue-700 leading-relaxed italic">"{msg.feedback}"</p>
                                     </motion.div>
                                 )}
                             </div>
@@ -347,7 +347,7 @@ export default function MockInterview() {
                                 <motion.div key={i} animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, duration: 0.8, delay: d }}
                                     className="w-2 h-2 bg-blue-500 rounded-full" />
                             ))}
-                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Generating...</span>
+                            <span className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Generating...</span>
                         </div>
                     </motion.div>
                 )}
@@ -358,7 +358,7 @@ export default function MockInterview() {
             <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-b-[40px] p-6 border border-slate-100 border-t-0 shadow-xl relative z-20"
+                className="bg-white rounded-b-2xl sm:rounded-b-[40px] p-4 sm:p-6 border border-slate-100 border-t-0 shadow-xl relative z-20"
             >
                 {/* Live Speech Waveform overlay inside input area */}
                 <AnimatePresence>
@@ -397,7 +397,7 @@ export default function MockInterview() {
                                 "relative z-10 h-14 w-14 rounded-[22px] flex items-center justify-center transition-all shadow-lg shrink-0",
                                 isListening
                                     ? "bg-rose-500 text-white shadow-rose-200"
-                                    : "bg-slate-50 text-slate-400 hover:bg-slate-100 border border-slate-100 hover:text-rose-500"
+                                    : "bg-slate-50 text-slate-500 hover:bg-slate-100 border border-slate-100 hover:text-rose-500"
                             )}
                         >
                             {isListening ? <StopCircle className="h-6 w-6" /> : <Mic className="h-6 w-6" />}
@@ -409,7 +409,7 @@ export default function MockInterview() {
                         <input
                             type="text"
                             className={cn(
-                                "w-full h-14 border-2 rounded-[22px] px-6 pr-[100px] focus:outline-none focus:bg-white text-sm font-bold transition-all placeholder:text-slate-300",
+                                "w-full h-14 border-2 rounded-[22px] px-6 pr-[100px] focus:outline-none focus:bg-white text-sm font-bold transition-all placeholder:text-slate-500",
                                 isListening ? "bg-rose-50/50 border-rose-100 text-rose-900 focus:border-rose-400" : "bg-slate-50 border-slate-100 text-slate-700 focus:border-blue-400"
                             )}
                             placeholder={isListening ? "Listening... Speak your answer loudly." : "Type your answer or click the Mic..."}
@@ -433,7 +433,7 @@ export default function MockInterview() {
                                 disabled={!input.trim() || isTyping}
                                 className={cn(
                                     "h-9 w-9 rounded-xl flex items-center justify-center transition-all disabled:opacity-40 shadow-md",
-                                    isListening ? "bg-rose-600 hover:bg-rose-500 shadow-rose-200 text-white" : "bg-blue-600 hover:bg-blue-500 shadow-blue-200 text-white"
+                                    isListening ? "bg-rose-600 hover:bg-rose-500 shadow-rose-200 text-slate-900" : "bg-blue-600 hover:bg-blue-500 shadow-blue-200 text-slate-900"
                                 )}
                             >
                                 <Send className="h-4 w-4" />
@@ -444,9 +444,9 @@ export default function MockInterview() {
                     <motion.button
                         whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
                         onClick={() => setShowReport(true)}
-                        className="h-14 px-7 bg-slate-900 text-white rounded-[22px] font-black text-[10px] uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl whitespace-nowrap flex items-center gap-2"
+                        className="h-14 px-4 sm:px-7 bg-slate-900 text-slate-900 rounded-xl sm:rounded-[22px] font-black text-xs sm:text-base uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl whitespace-nowrap flex items-center gap-2"
                     >
-                        <TrendingUp className="h-4 w-4" /> Review
+                        <TrendingUp className="h-4 w-4" /> <span className="hidden sm:inline">Review</span>
                     </motion.button>
                 </div>
             </motion.div>
@@ -458,59 +458,59 @@ export default function MockInterview() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="absolute inset-0 z-[110] bg-slate-950/70 backdrop-blur-xl flex items-center justify-center p-8"
+                        className="fixed inset-0 z-[110] bg-slate-950/70 backdrop-blur-xl flex items-center justify-center p-4 sm:p-8"
                     >
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="bg-white w-full max-w-2xl rounded-[50px] shadow-[0_40px_100px_rgba(0,0,0,0.5)] overflow-hidden"
+                            className="bg-white w-full max-w-2xl mx-4 rounded-3xl sm:rounded-[50px] shadow-[0_40px_100px_rgba(0,0,0,0.5)] overflow-hidden max-h-[90vh] overflow-y-auto"
                         >
                             {/* Report Header */}
-                            <div className="p-12 bg-gradient-to-br from-[#080B1A] to-indigo-950 text-white relative overflow-hidden">
+                            <div className="p-6 sm:p-12 bg-gradient-to-br from-[#080B1A] to-indigo-950 text-slate-900 relative overflow-hidden">
                                 <div className="absolute -top-10 -right-10 h-64 w-64 bg-blue-500/15 rounded-full blur-[80px]" />
                                 <div className="relative z-10">
-                                    <div className="flex items-center gap-4 mb-6">
-                                        <div className="h-14 w-14 rounded-[24px] bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
-                                            <Brain className="h-7 w-7 text-white" />
+                                    <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                                        <div className="h-10 w-10 sm:h-14 sm:w-14 rounded-xl sm:rounded-[24px] bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shrink-0">
+                                            <Brain className="h-5 w-5 sm:h-7 sm:w-7 text-slate-900" />
                                         </div>
                                         <div>
-                                            <h3 className="text-3xl font-black italic tracking-tight">Arena <span className="text-blue-400">Insight</span></h3>
-                                            <p className="text-[10px] text-blue-300 font-black tracking-widest uppercase opacity-70">Session Performance Certificate</p>
+                                            <h3 className="text-xl sm:text-3xl font-black italic tracking-tight">Arena <span className="text-blue-600">Insight</span></h3>
+                                            <p className="text-[10px] sm:text-base text-blue-300 font-black tracking-widest uppercase opacity-70">Performance Certificate</p>
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-3 gap-4">
+                                    <div className="grid grid-cols-3 gap-2 sm:gap-4">
                                         {[
-                                            { label: 'Questions', value: questions.length || '--', color: 'text-blue-400' },
-                                            { label: 'Avg Score', value: sessionScore.length > 0 ? `${avgScore}%` : '--', color: 'text-emerald-400' },
-                                            { label: 'Rank', value: avgScore >= 80 ? 'Elite' : avgScore >= 60 ? 'Pro' : 'Dev', color: 'text-amber-400' },
+                                            { label: 'Questions', value: questions.length || '--', color: 'text-blue-600' },
+                                            { label: 'Avg Score', value: sessionScore.length > 0 ? `${avgScore}%` : '--', color: 'text-emerald-600' },
+                                            { label: 'Rank', value: avgScore >= 80 ? 'Elite' : avgScore >= 60 ? 'Pro' : 'Dev', color: 'text-amber-600' },
                                         ].map((s, i) => (
-                                            <div key={i} className="bg-white/5 border border-white/10 rounded-[22px] p-5 text-center">
-                                                <p className={cn("text-2xl font-black italic", s.color)}>{s.value}</p>
-                                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mt-1">{s.label}</p>
+                                            <div key={i} className="bg-slate-50 border border-slate-200 rounded-xl sm:rounded-[22px] p-2.5 sm:p-5 text-center">
+                                                <p className={cn("text-lg sm:text-2xl font-black italic", s.color)}>{s.value}</p>
+                                                <p className="text-[8px] sm:text-xs font-black uppercase tracking-widest text-slate-500 mt-1 truncate">{s.label}</p>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="p-12 space-y-8">
-                                <div className="flex items-center justify-between p-6 bg-slate-50 rounded-[28px] border border-slate-100">
-                                    <div>
-                                        <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Technical Readiness</p>
-                                        <h4 className="text-4xl font-black text-slate-900 italic">
+                            <div className="p-6 sm:p-12 space-y-6 sm:space-y-8">
+                                <div className="flex flex-col sm:flex-row items-center justify-between p-6 bg-slate-50 rounded-2xl sm:rounded-[28px] border border-slate-100 gap-4">
+                                    <div className="text-center sm:text-left">
+                                        <p className="text-[10px] sm:text-base text-slate-500 font-black uppercase tracking-widest mb-1">Technical Readiness</p>
+                                        <h4 className="text-2xl sm:text-4xl font-black text-slate-900 italic">
                                             {avgScore >= 80 ? 'Elite' : avgScore >= 60 ? 'Proficient' : 'Developing'}
-                                            <span className="text-blue-600 text-lg font-black not-italic ml-3">Node</span>
+                                            <span className="text-blue-600 text-sm sm:text-lg font-black not-italic ml-2 sm:ml-3">Node</span>
                                         </h4>
                                     </div>
-                                    <div className="h-16 w-16 rounded-[24px] bg-emerald-50 border border-emerald-100 flex items-center justify-center">
-                                        <CheckCircle className="h-8 w-8 text-emerald-500" />
+                                    <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-xl sm:rounded-[24px] bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0">
+                                        <CheckCircle className="h-6 w-6 sm:h-8 sm:w-8 text-emerald-500" />
                                     </div>
                                 </div>
 
                                 {sessionScore.length > 0 && (
                                     <div className="space-y-3">
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Score Progression</p>
+                                        <p className="text-base font-black uppercase tracking-widest text-slate-500">Score Progression</p>
                                         <div className="flex items-end gap-2 h-16">
                                             {sessionScore.map((s, i) => (
                                                 <motion.div
@@ -525,7 +525,7 @@ export default function MockInterview() {
                                     </div>
                                 )}
 
-                                <div className="grid grid-cols-2 gap-5">
+                                <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">
                                     <motion.button
                                         whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                                         onClick={async () => {
@@ -551,16 +551,16 @@ export default function MockInterview() {
                                             }
                                         }}
 
-                                        className="py-5 bg-slate-900 text-white rounded-[28px] font-black text-[10px] uppercase tracking-widest shadow-xl flex items-center justify-center gap-3"
+                                        className="w-full py-4 sm:py-5 bg-slate-900 text-slate-900 rounded-2xl sm:rounded-[28px] font-black text-xs sm:text-base uppercase tracking-widest shadow-xl flex items-center justify-center gap-3"
                                     >
                                         <Zap className="h-4 w-4" /> Seal Progress
                                     </motion.button>
                                     <motion.button
                                         whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                                         onClick={() => setShowReport(false)}
-                                        className="py-5 bg-white border-2 border-slate-100 text-slate-900 rounded-[28px] font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3"
+                                        className="w-full py-4 sm:py-5 bg-white border-2 border-slate-100 text-slate-900 rounded-2xl sm:rounded-[28px] font-black text-xs sm:text-base uppercase tracking-widest flex items-center justify-center gap-3"
                                     >
-                                        <RefreshCcw className="h-4 w-4" /> Continue Session
+                                        <RefreshCcw className="h-4 w-4" /> Continue
                                     </motion.button>
                                 </div>
                             </div>

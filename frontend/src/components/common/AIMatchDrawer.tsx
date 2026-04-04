@@ -4,7 +4,7 @@ export default function AIMatchDrawer({ candidate, onClose }: any) {
   return (
     <div className="fixed inset-0 bg-black/40 flex justify-end">
 
-      <div className="w-[420px] bg-white p-6 shadow-xl">
+      <div className="w-full sm:w-[420px] bg-white p-6 shadow-xl h-full overflow-y-auto">
 
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold">

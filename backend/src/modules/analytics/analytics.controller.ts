@@ -5,20 +5,40 @@ import Application from "../applications/application.model";
 import { AuthRequest } from "../../middleware/auth.middleware";
 import Assessment from "../assessments/assessment.model";
 
+import PlacementDrive from "../placement-drives/drive.model";
+
 export const getAdminStats = async (req: Request, res: Response) => {
     try {
         const totalStudents = await Student.countDocuments();
         const placedStudents = await Student.countDocuments({ status: "Placed" });
-        const totalJobs = await Job.countDocuments({ active: true });
-        const totalCompanies = await Job.distinct("company").then(res => res.length);
+        const eligibleStudents = await Student.countDocuments({ cgpa: { $gte: 6.0 }, isActive: true });
+        const totalDrives = await PlacementDrive.countDocuments();
+        const totalApplications = await Application.countDocuments();
+        const totalSelected = placedStudents;
+        const totalCompanies = await PlacementDrive.distinct("company").then(res => res.length);
 
-        const placementTrend = [
-            { name: 'Jan', count: 12 },
-            { name: 'Feb', count: 25 },
-            { name: 'Mar', count: 45 },
-            { name: 'Apr', count: 68 },
-            { name: 'May', count: 92 },
-        ];
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
+
+        const trendAggregation = await Application.aggregate([
+            { $match: { status: "Selected", createdAt: { $gte: sixMonthsAgo } } },
+            {
+                $group: {
+                    _id: { $month: "$createdAt" },
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const placementTrend = [];
+        for (let i = 0; i < 6; i++) {
+            const d = new Date();
+            d.setMonth(d.getHours() < 5 ? d.getMonth() - 5 + i : d.getMonth() - 5 + i); // Simple logic
+            const monthIdx = d.getMonth();
+            const stats = trendAggregation.find(t => t._id === (monthIdx + 1)) || { count: 0 };
+            placementTrend.push({ name: monthNames[monthIdx], count: stats.count });
+        }
 
         const departmentAggregation = await Student.aggregate([
             {
@@ -91,10 +111,12 @@ export const getAdminStats = async (req: Request, res: Response) => {
         return res.json({
             stats: {
                 totalStudents,
-                placedStudents,
-                totalJobs,
+                eligibleStudents,
+                totalDrives,
+                totalApplications,
+                totalSelected,
                 totalCompanies,
-                placementRate: totalStudents > 0 ? Math.round((placedStudents / totalStudents) * 100) : 0
+                placementRate: totalStudents > 0 ? Math.round((totalSelected / totalStudents) * 100) : 0
             },
             placementTrend,
             departmentStats,
