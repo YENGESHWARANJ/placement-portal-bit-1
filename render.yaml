@@ -1,5 +1,6 @@
-# Monorepo: default service root is the Git repo root. Install + build MUST run in backend/
-# so node_modules exists before `tsup` (or tsc). Start uses dist output from repo root.
+# Monorepo: repo root is the service root. One command installs backend deps then builds.
+# Dashboard "Build Command" must NOT be only `npm run build` unless Root Directory = `backend`
+# and the default install already ran there (then tsup is on disk).
 # https://render.com/docs/monorepo-support
 services:
   - type: web
