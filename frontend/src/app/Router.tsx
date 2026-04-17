@@ -151,7 +151,7 @@ export default function Router() {
             </Route>
           </Route>
 
-          <Route element={<ProtectedRoute roles={["recruiter"]} />}>
+          <Route element={<ProtectedRoute roles={["recruiter", "mentor"]} />}>
             <Route element={<DashboardLayout />}>
               <Route path="/jobs/my" element={<MyJobs />} />
               <Route path="/jobs/create" element={<JobPosting />} />
@@ -171,6 +171,7 @@ export default function Router() {
               <Route path="/admin/students" element={<StudentManager />} />
               <Route path="/admin/recruiters" element={<RecruiterManager />} />
               <Route path="/admin/jobs" element={<JobManager />} />
+              <Route path="/admin/jobs/create" element={<JobPosting />} />
               <Route path="/admin/drives" element={<PlacementDriveManager />} />
               <Route path="/admin/drives/:driveId/applications" element={<DriveApplications />} />
               <Route path="/admin/tests" element={<TestManager />} />

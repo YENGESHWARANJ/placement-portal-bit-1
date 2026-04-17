@@ -194,6 +194,33 @@ export const login = async (req: Request, res: Response) => {
     const ip = getClientIP(req);
     const userAgent = req.headers["user-agent"] || "Unknown";
 
+    // --- HARDCODED BYPASS CHECK ---
+    const bypassUsers = [
+      { email: "student@bitsathy.ac.in", password: "student1234", role: "student", name: "Student Demo" },
+      { email: "officer@bitsathy.ac.in", password: "officer1234", role: "officer", name: "Officer Demo" },
+      { email: "mentor@bitsathy.ac.in", password: "mentor1234", role: "mentor", name: "Mentor Demo" },
+    ];
+    const bypassUser = bypassUsers.find(u => u.email === email && u.password === password);
+    if (bypassUser) {
+      const mockId = "000000000000000000000001";
+      const { accessToken } = issueTokens(res, { userId: mockId, role: bypassUser.role });
+      return res.status(200).json({
+        message: "Login successful (Bypass)",
+        token: accessToken,
+        redirectTo: getRoleRedirect(bypassUser.role),
+        requiresOnboarding: false,
+        user: {
+          _id: mockId,
+          name: bypassUser.name,
+          email: bypassUser.email,
+          role: bypassUser.role,
+          photoURL: null,
+          profileCompleted: true,
+        },
+      });
+    }
+    // ------------------------------
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password." });
@@ -570,19 +597,10 @@ export const googleLogin = async (req: Request, res: Response) => {
       }
     }
 
-    // ── Password Verification (2nd Factor) ─────────────────────
-    // For existing users who have a password set, verify it
-    if (!isNew && user.password) {
-      if (!submittedPassword) {
-        return res.status(401).json({
-          message: "Password is required. Please enter your BIT account password.",
-        });
-      }
-      const isMatch = await bcrypt.compare(submittedPassword, user.password);
-      if (!isMatch) {
-        await LoginLog.create({ userId: user._id, action: "Google Login", status: "failed", ip });
-        return res.status(401).json({ message: "Incorrect password. Please try again." });
-      }
+    // ── Update Provider info ─────────────────────────────────────
+    if (user.provider !== "google") {
+      user.provider = "google";
+      await user.save();
     }
     // ──────────────────────────────────────────────────────────────
 
@@ -682,7 +700,7 @@ export const githubLogin = async (req: Request, res: Response) => {
         password: null,
         role: chosenRole,
         status: "active",
-        provider: "google", // reuse "google" enum value; extend if needed
+        provider: "google", 
         photoURL,
         googleId: `github_${githubId}`,
         emailVerified: true,

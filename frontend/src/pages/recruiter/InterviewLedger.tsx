@@ -11,7 +11,8 @@ import {
     User,
     Briefcase,
     Brain,
-    Users
+    Users,
+    Plus
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getInterviews } from '../../services/recruiter.service';
@@ -69,6 +70,13 @@ export default function InterviewLedger() {
                     <p className="text-sm font-black text-apple-gray-300 uppercase tracking-[0.4em]">Unified Feedback & Scheduling Intelligence</p>
                 </div>
                 <div className="flex items-center gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+                    <button 
+                        onClick={() => toast('Interview scheduling module will be available in the next release!', { icon: '📅' })}
+                        className="shrink-0 bg-blue-600 text-white px-6 py-2.5 rounded-2xl text-base font-black uppercase tracking-widest hover:bg-blue-700 transition-all flex items-center gap-2 shadow-lg shadow-blue-500/30 active:scale-95 border-2 border-blue-600/50"
+                    >
+                        <Plus className="h-5 w-5" />
+                        Add Interview
+                    </button>
                     <div className="shrink-0 bg-emerald-50 text-emerald-600 px-5 py-2.5 rounded-2xl text-base font-black uppercase tracking-widest border border-emerald-100 flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4" />
                         {interviews.filter(i => i.status === 'Completed').length} Completed

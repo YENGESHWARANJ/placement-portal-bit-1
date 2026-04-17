@@ -146,6 +146,46 @@ export const updateStudentStatus = async (req: Request, res: Response) => {
 export const getAllTests = async (req: Request, res: Response) => {
     try {
         const tests = await Assessment.find().sort({ createdAt: -1 });
+        
+        // Provide mock test data for Exam Control demo if database is empty/offline
+        if (tests.length === 0) {
+            const mockTests = [
+                {
+                    _id: "test_mock_1",
+                    title: "Advanced Java & Spring Boot",
+                    duration: 60,
+                    questionsCount: 45,
+                    jobRole: "Software Engineer",
+                    status: 'active'
+                },
+                {
+                    _id: "test_mock_2",
+                    title: "Frontend Engineering (React/TS)",
+                    duration: 45,
+                    questionsCount: 30,
+                    jobRole: "UI Developer",
+                    status: 'active'
+                },
+                {
+                    _id: "test_mock_3",
+                    title: "Quantitative & Logical Reasoning",
+                    duration: 30,
+                    questionsCount: 40,
+                    jobRole: "Associate Consultant",
+                    status: 'active'
+                },
+                {
+                    _id: "test_mock_4",
+                    title: "Database Systems & Design",
+                    duration: 40,
+                    questionsCount: 25,
+                    jobRole: "DBA Trainee",
+                    status: 'draft'
+                }
+            ];
+            return res.json({ tests: mockTests });
+        }
+
         return res.json({ tests });
     } catch (error) {
         console.error("GET ALL TESTS ERROR:", error);

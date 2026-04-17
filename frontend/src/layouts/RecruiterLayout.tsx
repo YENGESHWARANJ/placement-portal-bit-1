@@ -30,7 +30,7 @@ const NAV_GROUPS = [
         items: [
             { to: "/students", icon: Users, label: "Monitor Students" },
             { to: "/talent-discovery", icon: Search, label: "Eligibility Filter" },
-            { to: "/interviews/ledger", icon: ShieldCheck, label: "Approve Students" },
+            { to: "/jobs/my", icon: ShieldCheck, label: "Approve Students" },
         ],
     },
     {

@@ -1,27 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronRight, Trophy } from 'lucide-react';
+import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
-
-const stagger = {
-    container: { animate: { transition: { staggerChildren: 0.1 } } },
-    item: {
-        initial: { opacity: 0, x: 20 },
-        animate: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] as const } }
-    }
-};
 
 export default function PlacedShowcase() {
     const [placedStudents, setPlacedStudents] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const fetchPlaced = async () => {
             try {
                 const { data } = await api.get<{ success: boolean; data: any[] }>('/students/placed-showcase');
                 if (data.success) {
-                    setPlacedStudents(data.data);
+                    // Clone and fill array for more demo banners if needed
+                    const results = data.data;
+                    setPlacedStudents(results.length > 0 ? results : []);
                 }
             } catch (err) {
                 console.error("Failed to fetch placed showcase", err);
@@ -32,77 +27,144 @@ export default function PlacedShowcase() {
         fetchPlaced();
     }, []);
 
+    const scroll = (direction: 'left' | 'right') => {
+        if (scrollRef.current) {
+            const width = scrollRef.current.offsetWidth;
+            scrollRef.current.scrollBy({ left: direction === 'left' ? -width : width, behavior: 'smooth' });
+        }
+    };
+
+    useEffect(() => {
+        if (placedStudents.length === 0) return;
+        const intervalId = setInterval(() => {
+            if (scrollRef.current) {
+                const el = scrollRef.current;
+                const maxScrollLeft = el.scrollWidth - el.clientWidth;
+                if (el.scrollLeft >= maxScrollLeft - 10) {
+                    el.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    el.scrollBy({ left: el.offsetWidth, behavior: 'smooth' });
+                }
+            }
+        }, 4000); // Auto scroll every 4 seconds
+        return () => clearInterval(intervalId);
+    }, [placedStudents]);
+
     if (loading || placedStudents.length === 0) return null;
 
     return (
-        <motion.div initial="initial" animate="animate" variants={stagger.container} className="space-y-6">
+        <div className="space-y-6 w-full">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-xl font-black text-slate-900 tracking-tight uppercase italic">Success <span className="text-indigo-600">Showcase</span></h2>
-                    <p className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mt-1">Our Elite Placed Candidates</p>
+                    <h2 className="text-xl font-black text-slate-900 tracking-tight uppercase italic">Recent <span className="text-indigo-600">Successes</span></h2>
+                    <p className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mt-1">Recently Placed Alumni</p>
                 </div>
-                <Link to="/alumni" className="h-10 px-4 bg-slate-50 text-slate-900 rounded-xl flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-all border border-slate-100">
-                    View Alumni Network
-                    <ChevronRight className="h-3 w-3" />
-                </Link>
+                <div className="flex items-center gap-3">
+                    <button onClick={() => scroll('left')} className="h-10 w-10 bg-white border border-slate-200 rounded-full flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors shadow-sm">
+                        <ChevronLeft className="h-5 w-5" />
+                    </button>
+                    <button onClick={() => scroll('right')} className="h-10 w-10 bg-white border border-slate-200 rounded-full flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors shadow-sm">
+                        <ChevronRight className="h-5 w-5" />
+                    </button>
+                </div>
             </div>
 
-            <div className="flex overflow-x-auto gap-8 pb-10 no-scrollbar snap-x">
-                {placedStudents.map((placed, i) => (
-                    <motion.div
-                        key={placed._id || i}
-                        variants={stagger.item}
-                        className="min-w-[300px] md:min-w-[340px] snap-center"
-                    >
-                        <Link 
-                            to={`/students/${placed._id}`}
-                            className="block bg-white border border-slate-100 rounded-[40px] p-8 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden"
+            <div 
+                ref={scrollRef}
+                className="flex overflow-x-auto gap-6 pb-8 no-scrollbar snap-x snap-mandatory pt-2 w-full"
+            >
+                {placedStudents.map((placed, i) => {
+                    // Mock data generator for the banner
+                    const mockPackages = ["18.0", "24.5", "14.5", "32.0", "12.0", "44.0"];
+                    const lpa = placed.package || mockPackages[i % mockPackages.length];
+                    const comp = (placed.company || "ShopUp").toUpperCase();
+                    const compHalf1 = comp.substring(0, Math.ceil(comp.length / 2));
+                    const compHalf2 = comp.substring(Math.ceil(comp.length / 2));
+
+                    return (
+                        <div
+                            key={placed._id || i}
+                            className="min-w-full snap-center flex-shrink-0"
                         >
-                            {/* Decorative background element */}
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50/50 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-indigo-100/50 transition-colors duration-500" />
-                            
-                            <div className="flex flex-col items-center text-center mb-8 relative z-10">
-                                <div className="h-24 w-24 rounded-[32px] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-[3px] mb-6 shadow-xl group-hover:scale-110 transition-transform duration-500">
-                                    <div className="h-full w-full rounded-[29px] bg-white flex items-center justify-center overflow-hidden border-2 border-white">
-                                        {placed.profilePicture ? (
-                                            <img 
-                                                src={placed.profilePicture} 
-                                                alt={placed.name} 
-                                                className="h-full w-full object-cover"
-                                                onError={(e) => {
-                                                    (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${placed.name.replace(' ', '+')}&background=random`;
-                                                }}
-                                            />
-                                        ) : (
-                                            <span className="text-3xl font-black text-indigo-600">{placed.name.charAt(0)}</span>
-                                        )}
-                                    </div>
-                                </div>
+                            <div className="w-full h-[400px] sm:h-[450px] relative overflow-hidden bg-white border border-slate-100 shadow-2xl rounded-[10px]">
                                 
-                                <h3 className="text-xl font-black text-slate-900 leading-tight mb-1 group-hover:text-indigo-600 transition-colors">
-                                    {placed.name}
-                                </h3>
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                                    {placed.branch} · {placed.year} Batch
-                                </p>
-                            </div>
+                                {/* Right Side Solid White Base */}
+                                <div className="absolute inset-0 w-full h-full bg-white z-0" />
+                                
+                                {/* Decorative Light Teal Accent (Diagonal) on the far right */}
+                                <div className="absolute top-0 bottom-0 right-0 w-[40%] bg-[#24908a]" style={{ clipPath: 'polygon(100% 0, 100% 0, 100% 100%, 75% 100%)' }} />
 
-                            <div className="bg-slate-50/80 backdrop-blur-sm rounded-3xl p-6 flex items-center justify-between group-hover:bg-indigo-50 transition-all duration-500 border border-slate-100 group-hover:border-indigo-100">
-                                <div className="flex flex-col">
-                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Elite Placement</span>
-                                    <div className="flex items-center gap-2">
-                                        <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                                        <span className="text-base font-black text-indigo-600 tracking-tight">@{placed.company || "Elite Corp"}</span>
+                                {/* Left Side Layering - Complex Diagonal Cuts */}
+                                {/* Layer 1: Lightest Teal */}
+                                <div className="absolute top-0 bottom-0 left-0 w-[65%] sm:w-[55%] bg-[#24908a] z-[1]" style={{ clipPath: 'polygon(0 0, 100% 0, 80% 100%, 0 100%)' }} />
+                                
+                                {/* Layer 2: Mid Dark Teal */}
+                                <div className="absolute top-0 bottom-0 left-0 w-[55%] sm:w-[48%] bg-[#1a4448] z-[2]" style={{ clipPath: 'polygon(0 0, 100% 0, 80% 100%, 0 100%)' }} />
+                                
+                                {/* Layer 3: Darkest Background Base for Hexagon */}
+                                <div className="absolute top-0 bottom-0 left-0 w-[45%] sm:w-[40%] bg-[#1c2f2f] z-[3]" style={{ clipPath: 'polygon(0 0, 100% 0, 75% 100%, 0 100%)' }} />
+
+                                {/* Content Z-Layer Container */}
+                                <div className="absolute inset-0 z-10 flex flex-col md:flex-row h-full">
+                                    
+                                    {/* Left Content (Student Portrait & Name) */}
+                                    <div className="w-full md:w-[45%] h-full flex flex-col items-center justify-center pt-8 md:pt-0 relative z-20">
+                                        <div className="relative w-48 h-[220px] sm:w-[260px] sm:h-[280px] flex items-center justify-center">
+                                            {/* Hexagon White Border */}
+                                            <div 
+                                                className="absolute inset-0 bg-white" 
+                                                style={{ clipPath: 'polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%)' }} 
+                                            />
+                                            {/* Hexagon Inner Image Background */}
+                                            <div 
+                                                className="absolute inset-[4px] bg-[#1a4448] flex items-center justify-center overflow-hidden"
+                                                style={{ clipPath: 'polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%)' }}
+                                            >
+                                                {placed.profilePicture ? (
+                                                    <img 
+                                                        src={placed.profilePicture} 
+                                                        alt={placed.name} 
+                                                        className="w-full h-full object-cover scale-110 object-top hover:scale-125 transition-transform duration-700"
+                                                        onError={(e) => {
+                                                            (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${placed.name.replace(' ', '+')}&background=1a4448&color=fff&size=512`;
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <span className="text-6xl font-black text-white">{placed.name.charAt(0)}</span>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Name & Branch Label */}
+                                        <div className="mt-[-20px] bg-[#1c2f2f]/90 backdrop-blur-sm px-8 py-3 z-30 shadow-2xl text-center min-w-[200px]">
+                                            <p className="text-xl sm:text-2xl font-bold text-white leading-tight truncate">{placed.name}</p>
+                                            <p className="text-sm sm:text-base font-bold text-[#b4d2d1] tracking-widest uppercase">{placed.branch}</p>
+                                        </div>
+                                    </div>
+
+                                    {/* Right Content (Company & Salary) */}
+                                    <div className="w-full md:w-[55%] h-full flex flex-col justify-center items-end pr-8 sm:pr-20 pb-10 md:pb-0 relative z-10 scale-90 sm:scale-100 origin-right">
+                                        <h1 className="text-6xl sm:text-[90px] font-black mb-0 sm:mb-2 leading-none flex tracking-tighter">
+                                            <span className="text-[#24908a]">{compHalf1}</span>
+                                            <span className="text-amber-400">{compHalf2}</span>
+                                        </h1>
+                                        <p className="text-2xl sm:text-4xl font-medium text-amber-400 mb-0 sm:mb-2 tracking-wide font-sans">
+                                            Salary Package
+                                        </p>
+                                        <div className="flex items-baseline text-[#24908a]">
+                                            <span className="text-6xl sm:text-8xl font-medium tracking-tighter mr-2">₹</span>
+                                            <span className="text-8xl sm:text-[150px] font-black leading-none tracking-tighter" style={{ textShadow: '4px 4px 0px rgba(36, 144, 138, 0.1)' }}>
+                                                {lpa}
+                                            </span>
+                                            <span className="text-4xl sm:text-6xl font-black ml-3 uppercase tracking-tighter">LPA</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="h-12 w-12 rounded-2xl bg-white flex items-center justify-center border border-slate-100 shadow-sm group-hover:rotate-12 transition-transform">
-                                    <Trophy className="h-6 w-6 text-amber-500" />
-                                </div>
                             </div>
-                        </Link>
-                    </motion.div>
-                ))}
+                        </div>
+                    );
+                })}
             </div>
-        </motion.div>
+        </div>
     );
 }

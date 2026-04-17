@@ -100,8 +100,8 @@ export default function StudentDashboard() {
 
     const metrics = [
         { icon: Briefcase, label: "Applications", value: applications.length, sub: "In review", colorClass: "bg-apple-blue", trend: 12 },
-        { icon: Target, label: "Job Matches", value: recommendedJobs.length, sub: "New matches found", colorClass: "bg-indigo-500", trend: 8 },
-        { icon: Trophy, label: "Readiness", value: `${profile?.aptitudeScore || 0}%`, sub: "Skill Level", colorClass: "bg-emerald-500", trend: 5 },
+        { icon: Target, label: "Job Matches", value: recommendedJobs.length, sub: "Recommended for you", colorClass: "bg-indigo-500", trend: 8 },
+        { icon: Trophy, label: "Aptitude", value: `${profile?.aptitudeScore || 0}%`, sub: "Test Score", colorClass: "bg-emerald-500", trend: 5 },
         { icon: Star, label: "CGPA", value: profile?.cgpa || "—", sub: "Academic Standing", colorClass: "bg-amber-500" },
     ];
 
@@ -127,16 +127,16 @@ export default function StudentDashboard() {
             {/* Header / Welcome */}
             <motion.div variants={stagger.item} className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <span className="text-sm font-black text-apple-blue uppercase tracking-[0.4em] mb-3 block">BIT Student Hub</span>
+                    <span className="text-sm font-black text-apple-blue uppercase tracking-[0.4em] mb-3 block">BIT Student Portal</span>
                     <h1 className="text-4xl font-black text-apple-gray-900 tracking-tight leading-none">
                         {greeting}, <span className="text-apple-blue font-black">{firstName}</span>
                     </h1>
-                    <p className="text-apple-gray-400 mt-3 font-bold uppercase tracking-widest text-base">Strategic Readiness & Intelligence Overview</p>
+                    <p className="text-apple-gray-400 mt-3 font-bold uppercase tracking-widest text-base">Your Placement Dashboard Overview</p>
                 </div>
                 <div className="flex items-center gap-3 w-full md:w-auto">
                     <Link to="/profile" className="w-full md:w-auto h-[52px] px-8 bg-white text-slate-900 rounded-2xl flex items-center justify-center gap-3 text-sm font-black uppercase tracking-widest hover:bg-black transition-all shadow-apple-hover">
                         <UserIcon className="h-4 w-4" />
-                        <span>Update Dossier</span>
+                        <span>Update Profile</span>
                     </Link>
                 </div>
             </motion.div>
@@ -162,10 +162,10 @@ export default function StudentDashboard() {
                     <div className="flex-1 text-center md:text-left z-10">
                         <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
                             <Sparkles className="h-4 w-4 text-apple-blue" />
-                            <span className="text-base font-black uppercase tracking-[0.3em] text-apple-blue">Neural Insights Engine</span>
+                            <span className="text-base font-black uppercase tracking-[0.3em] text-apple-blue">AI Career Assistant</span>
                         </div>
                         <h3 className="text-2xl font-black text-apple-gray-900 leading-tight tracking-tight mb-6">
-                            "Optimal readiness detected. 3 premium challenges synchronized with your skill matrix."
+                            "You're doing great! Keep practicing to improve your placement chances."
                         </h3>
                         <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
                             {quickActions.map((ax, i) => (
@@ -184,8 +184,8 @@ export default function StudentDashboard() {
                 <motion.div variants={stagger.item} className="apple-card p-10 flex flex-col bg-white border border-apple-gray-50">
                     <div className="flex items-center justify-between mb-10">
                         <div>
-                            <h2 className="text-lg font-black text-apple-gray-900 tracking-tight">Skill Matrix</h2>
-                            <p className="text-base font-black text-apple-gray-300 uppercase tracking-widest mt-1">Multi-dimensional Proficiency</p>
+                            <h2 className="text-lg font-black text-apple-gray-900 tracking-tight">Your Skill Progress</h2>
+                            <p className="text-base font-black text-apple-gray-300 uppercase tracking-widest mt-1">Skills Breakdown</p>
                         </div>
                         <div className="h-12 w-12 rounded-[18px] bg-indigo-50 flex items-center justify-center shadow-inner">
                             <Brain className="h-6 w-6 text-indigo-600" />
@@ -209,10 +209,10 @@ export default function StudentDashboard() {
                 <motion.div variants={stagger.item} className="apple-card p-10 bg-white border border-apple-gray-50">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10">
                         <div>
-                            <h2 className="text-lg font-black text-apple-gray-900 tracking-tight">Engagement Pulse</h2>
-                            <p className="text-base font-black text-apple-gray-300 uppercase tracking-widest mt-1">Platform Interaction Velocity</p>
+                            <h2 className="text-lg font-black text-apple-gray-900 tracking-tight">Your Activity</h2>
+                            <p className="text-base font-black text-apple-gray-300 uppercase tracking-widest mt-1">Weekly Activity</p>
                         </div>
-                        <div className="px-4 py-1.5 bg-apple-blue/10 text-apple-blue rounded-full text-base font-black uppercase tracking-widest border border-apple-blue/5">Neural Link Active</div>
+                        <div className="px-4 py-1.5 bg-apple-blue/10 text-apple-blue rounded-full text-base font-black uppercase tracking-widest border border-apple-blue/5">Live Sync</div>
                     </div>
                     <div className="h-72 w-full min-h-[18rem]">
                         <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1} debounce={100}>
@@ -238,10 +238,10 @@ export default function StudentDashboard() {
                 <motion.div variants={stagger.item} className="apple-card p-0 flex flex-col bg-white border border-apple-gray-50 overflow-hidden">
                     <div className="p-10 border-b border-apple-gray-50 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                         <div>
-                            <h2 className="text-lg font-black text-apple-gray-900 tracking-tight">High Resonance Targets</h2>
-                            <p className="text-base font-black text-apple-gray-300 uppercase tracking-widest mt-1">Matched by Neural Matrix</p>
+                            <h2 className="text-lg font-black text-apple-gray-900 tracking-tight">Recommended Jobs</h2>
+                            <p className="text-base font-black text-apple-gray-300 uppercase tracking-widest mt-1">Best matches for your profile</p>
                         </div>
-                        <Link to="/job-recommendations" className="text-base font-black text-apple-blue uppercase tracking-widest hover:underline">Market Access</Link>
+                        <Link to="/job-recommendations" className="text-base font-black text-apple-blue uppercase tracking-widest hover:underline">View All Jobs</Link>
                     </div>
                     <div className="flex-1 overflow-y-auto px-6 py-6 custom-scrollbar max-h-[340px]">
                         {recommendedJobs.length > 0 ? recommendedJobs.slice(0, 5).map((job, i) => (
@@ -262,7 +262,7 @@ export default function StudentDashboard() {
                         )) : (
                             <div className="py-20 text-center">
                                 <Rocket className="h-12 w-12 text-apple-gray-100 mx-auto mb-6" />
-                                <p className="text-base font-black text-apple-gray-300 uppercase tracking-[0.2em]">Synthesizing Opportunity Matrix...</p>
+                                <p className="text-base font-black text-apple-gray-300 uppercase tracking-[0.2em]">Finding the best jobs for you...</p>
                             </div>
                         )}
                     </div>
