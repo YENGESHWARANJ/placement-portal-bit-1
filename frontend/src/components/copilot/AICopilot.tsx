@@ -205,3 +205,11 @@ export function AICopilot() {
         </>
     );
 }
+export interface Metric {
+    label: string;
+    value: string;
+    change: number;
+    trend: "up" | "down";
+    icon: any;
+    color: string;
+}

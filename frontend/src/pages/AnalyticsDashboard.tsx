@@ -9,15 +9,7 @@ import { getAdminStats, getStudentAnalytics } from "../services/analytics.servic
 import { toast } from "react-hot-toast";
 import { cn } from "../utils/cn";
 import { motion } from "framer-motion";
-
-interface Metric {
-    label: string;
-    value: string;
-    change: number;
-    trend: "up" | "down";
-    icon: any;
-    color: string;
-}
+import { Metric } from "@/components/copilot/AICopilot";
 
 export default function AnalyticsDashboard() {
     const [timeRange, setTimeRange] = useState<"7d" | "30d" | "90d" | "1y">("30d");

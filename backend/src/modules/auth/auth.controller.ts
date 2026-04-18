@@ -196,9 +196,9 @@ export const login = async (req: Request, res: Response) => {
 
     // --- HARDCODED BYPASS CHECK ---
     const bypassUsers = [
-      { email: "student@bitsathy.ac.in", password: "student1234", role: "student", name: "Student Demo" },
-      { email: "officer@bitsathy.ac.in", password: "officer1234", role: "officer", name: "Officer Demo" },
-      { email: "mentor@bitsathy.ac.in", password: "mentor1234", role: "mentor", name: "Mentor Demo" },
+      { email: "arivazhagang.ad23@bitsathy.ac.in", password: "student1234", role: "student", name: "Arivazhagan G" },
+      { email: "admin@bitsathy.ac.in", password: "admin1234", role: "admin", name: "Admin BIT" },
+      { email: "arivu@bitsathy.ac.in", password: "mentor1234", role: "mentor", name: "Arivu Mentor" },
     ];
     const bypassUser = bypassUsers.find(u => u.email === email && u.password === password);
     if (bypassUser) {
@@ -542,7 +542,7 @@ export const googleLogin = async (req: Request, res: Response) => {
     // Only @bitsathy.ac.in email addresses are allowed (Bypassed for Dev tokens)
     if (!idToken.startsWith("dev_token_") && !email.endsWith("@bitsathy.ac.in")) {
       return res.status(403).json({
-        message: "Access restricted. Only @bitsathy.ac.in Google accounts are permitted to access the BIT Placement Portal.",
+        message: "Only bitsathy.ac.in email addresses are allowed.",
         domain: "bitsathy.ac.in",
       });
     }

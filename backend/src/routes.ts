@@ -22,6 +22,7 @@ import recommendationRoutes from "./modules/recommendation/recommendation.routes
 import salaryRoutes from "./modules/salary/salary.routes";
 import resumeAIRoutes from "./modules/resume-ai/resume-ai.routes";
 import jobAggregatorRoutes from "./modules/job-aggregator/job-aggregator.routes";
+import talentIntelligenceRoutes from "./modules/talent-intelligence/talent-intelligence.routes";
 
 const router = Router();
 
@@ -46,5 +47,6 @@ router.use("/recommendations", recommendationRoutes);
 router.use("/salary", salaryRoutes);
 router.use("/resume-ai", resumeAIRoutes);
 router.use("/job-aggregator", jobAggregatorRoutes);
+router.use("/talent-intelligence", talentIntelligenceRoutes);
 
 export default router;

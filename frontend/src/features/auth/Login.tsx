@@ -73,9 +73,32 @@ export default function Login() {
     }
   };
 
+  function parseIdTokenPayload(idToken: string) {
+    try {
+      const base64Url = idToken.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join("")
+      );
+      return JSON.parse(jsonPayload);
+    } catch {
+      return null;
+    }
+  }
+
   // ── Google Fallback Login ─────────────────────────────────────────────
   const handleGoogle = async (cr: CredentialResponse) => {
     if (!cr.credential) return toast.error("Google sign-in failed.");
+
+    const payload = parseIdTokenPayload(cr.credential);
+    const googleEmail = typeof payload?.email === "string" ? payload.email.toLowerCase().trim() : null;
+
+    if (!googleEmail || !googleEmail.endsWith("@bitsathy.ac.in")) {
+      return toast.error("Only bitsathy.ac.in email addresses are allowed.", { duration: 6000 });
+    }
 
     setLoading(true);
     const tid = toast.loading("Verifying Identity...");
@@ -213,7 +236,7 @@ export default function Login() {
                   </button>
                 </div>
                 <div className="flex justify-end pr-2">
-                  <Link to="/forgot-password" size-10 className="text-[11px] font-bold text-blue-400/80 hover:text-blue-400 transition-colors uppercase tracking-widest">
+                  <Link to="/forgot-password" className="text-[11px] font-bold text-blue-400/80 hover:text-blue-400 transition-colors uppercase tracking-widest">
                     Forgot Access Key?
                   </Link>
                 </div>
@@ -270,7 +293,5 @@ export default function Login() {
         </motion.div>
       </motion.div>
     </div>
-  );
-}
   );
 }
